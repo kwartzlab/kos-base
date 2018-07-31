@@ -19,3 +19,7 @@ storage/*.key
 Homestead.yaml
 Homestead.json
 backups
+
+# VS Code
+.vscode
+
