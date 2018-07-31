@@ -207,7 +207,7 @@ class UsersController extends Controller
         // build array for email use
         $email_data = array(
             'name' => $user->first_name . ' ' . $user->last_name,
-            'photo' =>  env('APP_URL') . '/storage/photos/' .  $user->photo,
+            'photo' =>  str_replace( 'https://', 'http://', env('APP_URL')) . '/storage/photos/' .  $user->photo,
             'form_data' => $form_data
         );
 
