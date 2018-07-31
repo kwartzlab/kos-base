@@ -1,0 +1,48 @@
+.vcenter {
+  position: absolute;
+  top: 45%;
+  left:50%;
+  transform:translate(-50%,-45%);
+
+}
+
+h1 {
+	font-size:60px;
+}
+
+h2 {
+	font-size:40px;
+
+}
+
+.no-opacity {
+	opacity:0;
+	filter:alpha(opacity=0);
+}
+
+.bigbutton {
+	font-size:30px;
+	font-weight:bold;
+	padding-top:18px;
+	padding-bottom:18px;
+	margin-bottom:20px;
+
+}
+
+.userbutton {
+	font-size:24px;
+	padding-top:16px;
+	padding-bottom:16px;
+	margin-bottom:20px;
+
+}
+
+.confirmbutton {
+	font-size:30px;
+	font-weight:bold;
+	padding-top:20px;
+	padding-bottom:20px;
+	margin-bottom:20px;
+	width:150px;
+	margin-top:30px;
+}

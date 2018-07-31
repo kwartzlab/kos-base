@@ -1,0 +1,27 @@
+body {
+
+}
+
+
+.form-heading {
+
+    margin-bottom:25px;
+    border-bottom:1px solid #AAA;
+    padding-bottom:5px;
+
+}
+
+.contact-info {
+    list-style-type: none;
+    font-size:1.3em;
+    padding-left:0;
+    margin-top:25px;
+}
+
+.contact-info i { 
+    margin-right:10px;
+}
+
+.member-profile p {
+    font-size:1.2em;
+}
