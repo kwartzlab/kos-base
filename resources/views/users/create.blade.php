@@ -50,7 +50,7 @@
 
       <div class="row">
         <div class="form-group col-md-6">
-          <label for="int_q4">Have you been a member of a similar organization before?</label>
+          <label for="int_q4">Have you been a member of a volunteer-based organization before?</label>
           <input type="text" class="form-control" name="int_q4" id="int_q4" value="{{ old('int_q4') }}">
         </div>
       </div>

@@ -11,13 +11,13 @@ If for any reason you believe they should not be accepted, leave a -1. If you're
 @if ($destination == 'admin')
 Email: **{{ $form_data[15]['value'] }}**
 
-Photo: {{ $photo }}
-@else
-Email: **{{ $form_data[15]['value'] }}**
-
 Phone Number: **{{ $form_data[16]['value'] }}**
 
 Mailing Address: **{{ $form_data[17]['value'] }}, {{ $form_data[18]['value'] }}, {{ $form_data[19]['value'] }}  {{ $form_data[20]['value'] }}**
+
+Photo: {{ $photo }}
+@else
+Email: **{{ $form_data[15]['value'] }}**
 
 Photo: {{ $photo }}
 @endif

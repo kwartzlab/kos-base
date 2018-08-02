@@ -96,7 +96,7 @@ class KioskController extends Controller
                 if (!$request->input('user_id')) {
 
                     // select user to assign key to
-                    $users = \App\User::orderby('name')->where('status','active')->get();
+                    $users = \App\User::orderby('first_name')->where('status','active')->get();
 
                     $rfid = $request->input('rfid');
                     $page_title = 'KeyKiosk';

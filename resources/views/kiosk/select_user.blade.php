@@ -18,7 +18,7 @@
 		<input type="hidden" name="rfid" value="{{ $rfid }}">
 
 		@foreach ($users as $user)
-			<button type="submit" name="user_id" class="btn btn-primary btn-lg btn-block userbutton" value="{{ $user->id }}">{{ $user->name }}</button>
+			<button type="submit" name="user_id" class="btn btn-primary btn-lg btn-block userbutton" value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</button>
 
 		@endforeach
 

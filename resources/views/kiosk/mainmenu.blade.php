@@ -8,7 +8,7 @@
 
 <div style="text-align:center;">
 
-	      <h2 style="margin-bottom:20px"><strong>Hello {{ Auth::user()->name }}</strong></h2>
+	      <h2 style="margin-bottom:20px"><strong>Hello {{ Auth::user()->first_name }}</strong></h2>
 
 	      <div style="width:50%;margin:0 auto">
 
