@@ -78,7 +78,6 @@ class UsersController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'email' => 'required|unique:users',
-                'phone' => 'required',
                 'address' => 'required',
                 'city' => 'required',
                 'province' => 'required',
