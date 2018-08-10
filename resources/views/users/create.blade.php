@@ -200,3 +200,17 @@
 
 
 @endsection
+
+
+@section('extra_js')
+
+<script src="/js/jquery.inputmask.bundle.min.js"></script>
+
+ <script>
+  $(document).ready(function(){
+    $("#phone").inputmask("(999) 999-9999");
+    $("#postal").inputmask("A9A 9A9");
+
+  });
+</script>
+@stop

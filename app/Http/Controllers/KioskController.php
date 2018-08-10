@@ -131,7 +131,7 @@ class KioskController extends Controller
             $key = \App\Key::create([
                 'user_id' => $request->input('user_id'),
                 'rfid' => md5($request->input('rfid')),
-                'description' => 'Added via kiosk by ' . \Auth::user()->first_name . " " . \Auth::user()->last_name;
+                'description' => 'Added via kiosk by ' . \Auth::user()->first_name . " " . \Auth::user()->last_name
                 ]);
 
             if (!$key->id) {

@@ -31,7 +31,7 @@
         @if((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) 
           <li @if($controller=="users" && $current_route!="users.create")class="active"@endif><a href="/users"><i class="fa fa-user"></i> <span>Member Register</span></a></li>
         @endif
-        <li @if($controller=="training")class="active"@endif><a href="/training"><i class="fa fa-mortar-board"></i> <span>Training</span></a></li>
+        <li @if($controller=="training")class="active"@endif><a href="/training"><i class="fa fa-mortar-board"></i> <span>Trainers</span></a></li>
         @if(\Auth::user()->acl == 'admin') 
         <li @if($controller=="gatekeepers")class="active"@endif><a href="/gatekeepers"><i class="fa fa-expeditedssl"></i> <span>Gatekeepers</span></a></li>
 <?php /*        <li @if($controller=="forms")class="active"@endif><a href="/forms"><i class="fa fa-edit"></i> <span>Web Forms</span></a></li> */ ?>
