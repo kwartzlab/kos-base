@@ -73,7 +73,7 @@ class KioskController extends Controller
     public function create_key(Request $request) {
 
 
-        if (\Auth::user()->acl == 'admin') {
+	 if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
 
             if (\Request::isMethod('get')) {
 
@@ -126,8 +126,7 @@ class KioskController extends Controller
     // saves key to database
     public function store_key(Request $request) {
 
-        if (\Auth::user()->acl == 'admin') {
-
+	 if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
             $key = \App\Key::create([
                 'user_id' => $request->input('user_id'),
                 'rfid' => md5($request->input('rfid')),
@@ -153,7 +152,7 @@ class KioskController extends Controller
     // unlocks a gatekeeper (if allowable)
     public function unlock() {
 
-        if (\Auth::user()->acl == 'admin') {
+	 if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
 
 
         }

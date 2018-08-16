@@ -14,7 +14,7 @@
 
 	      <!-- <a href="/kiosk/unlock" class="btn btn-success btn-lg btn-block bigbutton">Unlock Front Door</a> -->
 
-		  @if (Auth::user()->acl == 'admin')
+		  @if ((Auth::user()->acl == 'admin') || (Auth::user()->acl == 'keyadmin'))
 
 		      <a href="/kiosk/create_key" class="btn btn-warning btn-lg btn-block bigbutton">Assign Key to User</a>
 		      <!-- <a href="/kiosk/authorizations" class="btn btn-warning btn-lg btn-block bigbutton">Manage Authorizations</a> -->
