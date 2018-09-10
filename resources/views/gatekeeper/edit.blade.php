@@ -112,7 +112,7 @@
   </div>
 </div>
 
-@if ($gatekeeper->type == 'lockout')
+@if ($gatekeeper->is_default == 0)
 
 <div class="box box-success">
   <div class="box-header">

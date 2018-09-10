@@ -127,7 +127,7 @@ class GatekeepersController extends Controller
             $user_ids = array();
             foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
                 
-                if ($user->is_authorized($id) === FALSE) {
+                if ($user->is_trainer($id) === FALSE) {
                     $user_ids[$user->id] = $user->first_name . " " . $user->last_name;
                 }
 

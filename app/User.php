@@ -75,6 +75,19 @@ class User extends Authenticatable implements Auditable
 
     }
 
+    // returns true or false if user is a trainer for specified gatekeeper
+    public function is_trainer($gatekeeper_id) {
+        $result = \App\Trainers::where('user_id',$this->id)->where('gatekeeper_id',$gatekeeper_id)->get();
+        if ($result->count() === 0 ) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+
+
     public function add_authorization($gatekeeper_id) {
 
         \App\Authorization::create([
