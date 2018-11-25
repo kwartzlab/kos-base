@@ -6,7 +6,14 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b><i class="fa fa-database"></i></b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><i class="fa fa-database"></i> <b>kOS</b></span>
+    <?php
+        if (App::environment() == 'development') {
+          $app_title = 'kOS [DEV]';
+        } else {
+          $app_title = 'kOS';
+        }
+    ?>
+      <span class="logo-lg"><i class="fa fa-database"></i> <b>{{ $app_title }}</b></span>
     </a>
 
     <!-- Header Navbar -->
