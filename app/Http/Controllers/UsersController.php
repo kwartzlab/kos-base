@@ -216,7 +216,7 @@ class UsersController extends Controller
             'to' => config('kwartzlabos.membership_app.admin.to'),
             'cc' => config('kwartzlabos.membership_app.admin.cc'),
             'replyto' => config('kwartzlabos.membership_app.admin.replyto'),
-            'subject' => 'New Member Application - ' . $user->first_name . ' ' . $user->last_name
+            'subject' => 'New Member App [BoD Version] - ' . $user->first_name . ' ' . $user->last_name
         );
 
         \Mail::send(new \App\Mail\MemberApp($email_data,'admin'));            
