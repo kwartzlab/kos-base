@@ -125,7 +125,7 @@ class UsersController extends Controller
             'value' => request('int_q3')
         );
         $form_data[] = array(
-            'label' => 'Have you been a member of a similar organization before?',
+            'label' => 'Have you been a member of an organization, club or association like Kwartzlab before?',
             'value' => request('int_q4')
         );
         $form_data[] = array(
@@ -151,6 +151,10 @@ class UsersController extends Controller
         $form_data[] = array(
             'label' => 'There is an annual general meeting you would be expected to attend, where we vote on anything that concerns our space as a whole, like changing rules or electing board members. Are you OK with attending such a meeting?',
             'value' => request('int_q10')
+        );
+        $form_data[] = array(
+            'label' => 'Kwartzlab members are responsible for their health and safety at all times - including observing all safety and training requirements for tools and other equipment. It is the responsibility of all Members and Guests to maintain and promote this culture in their own usage, as well as addressing inappropriate or unsafe use of tools by others. If you see another person operating tools in an unsafe or inappropriate manner, you are expected to address the issue. If you are not comfortable speaking with the person directly, you need to raise the issue immediately with the Team for that tool/area or the Board of Directors. Do you agree?',
+            'value' => request('int_q13')
         );
         $form_data[] = array(
             'label' => 'Have you read and agreed to the Kwartzlab Code of Conduct?',

@@ -7,9 +7,17 @@
   <div class="box-body" style="font-size:1.2em;">
 
   <p>This form is intended for use by Kwartzlab members when interviewing new applicants.</p>
+  <p>Once the form is submitted, it will be sent to the member’s list so Kwartzlabbers can weigh in on the applicant. <strong>If you are interviewing, please leave your feedback on the mailing list as well.</strong></p>
 
-  <p>Once the form is submitted, it will be sent to the member’s list so Kwartzlabbers can weigh in on the applicant. If you are interviewing, please leave your feedback on the mailing list as well. There is a minimum 5-day waiting period when applications are held for feedback.</p>
-  <p>The applicant will need 5 votes from active Kwartzlab Members to be approved.</p>
+  <p><strong>Let the applicant know:</strong>
+  <ul>
+  <li>Following the interview, the completed form will be sent to the membership to review. Personal information like the mailing address and phone number are only visible to the Board of Directors, but their email address and answers will be sent to the member's list.</li>
+  <li>There is a minimum 5-day waiting period when applications are held for feedback. Typically, the membership coordinator will get back to you by Monday to let you know if your application has been approved, or present options in case it hasn't (such as attend another TON, etc) </li>
+  <li>Members are able to give endorsements, and may also voice any concerns regarding applicants. Avoid mentioning the five-endorsement threshold.</li>
+  <li>Applicants must provide payment within 4 weeks of acceptance, otherwise their acceptance expires, and they must re-interview if they wish to pursue membership.</li>
+  </ul>
+  </p>
+  <p>&nbsp;</p>
 
     <form method="POST" action="/users" enctype="multipart/form-data">
       {{ csrf_field() }}
@@ -42,7 +50,7 @@
 
       <div class="row">
         <div class="form-group col-md-6">
-          <label for="int_q3">Can you tell us a bit about yourself?</label>
+          <label for="int_q3">Can you tell us a bit about yourself? (Most applicants talk about where they work, what they study, if they grew up elsewhere etc.)</label>
           <textarea class="form-control" name="int_q3" id="int_q3">{{ old('int_q3') }}</textarea>
         </div>
       </div>
@@ -50,7 +58,7 @@
 
       <div class="row">
         <div class="form-group col-md-6">
-          <label for="int_q4">Have you been a member of a volunteer-based organization before?</label>
+          <label for="int_q4">Have you been a member of an organization, club or association like Kwartzlab before?</label>
           <input type="text" class="form-control" name="int_q4" id="int_q4" value="{{ old('int_q4') }}">
         </div>
       </div>
@@ -77,16 +85,10 @@
         </div>
       </div>
 
-
       <div class="row">
         <div class="form-group col-md-6">
           <label for="int_q8">Kwartzlab is a member-run organization. As such, we all share some duties, such as clean up and general equipment maintenance. Are you OK with volunteering some of your time (generally 1-2 hours a month) to help keep Kwartzlab up and running?</label>
-            <div class="radio">
-              <label><input type="radio" name="int_q8" id="int_q8_1" value="yes" checked="">Yes</label>
-            </div>
-            <div class="radio">
-              <label><input type="radio" name="int_q8" id="int_q8_2" value="no" checked="">No</label>
-            </div>
+          <input type="text" class="form-control" name="int_q8" id="int_q8" value="{{ old('int_q8') }}">
         </div>
       </div>
 
@@ -100,30 +102,27 @@
       <div class="row">
         <div class="form-group col-md-6">
           <label for="int_q10">There is an annual general meeting you would be expected to attend, where we vote on anything that concerns our space as a whole, like changing rules or electing board members. Are you OK with attending such a meeting?</label>
-          <div class="radio">
-              <label><input type="radio" name="int_q10" id="int_q10_1" value="yes" checked="">Yes</label>
-            </div>
-            <div class="radio">
-              <label><input type="radio" name="int_q10" id="int_q10_2" value="no" checked="">No</label>
-            </div>
+          <input type="text" class="form-control" name="int_q10" id="int_q10" value="{{ old('int_q10') }}">
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col-md-6">
-          <label for="int_q11">Have you read and agreed to the Kwartzlab Code of Conduct? <a href="" target="_blank">(link)</a></label>
-          <div class="radio">
-              <label><input type="radio" name="int_q11" id="int_q11_1" value="yes" checked="">Yes</label>
-            </div>
-            <div class="radio">
-              <label><input type="radio" name="int_q11" id="int_q11_2" value="no" checked="">No</label>
-            </div>
+          <label for="int_q13">Kwartzlab members are responsible for their health and safety at all times - including observing all safety and training requirements for tools and other equipment. It is the responsibility of all Members and Guests to maintain and promote this culture in their own usage, as well as addressing inappropriate or unsafe use of tools by others. If you see another person operating tools in an unsafe or inappropriate manner, you are expected to address the issue. If you are not comfortable speaking with the person directly, you need to raise the issue immediately with the Team for that tool/area or the Board of Directors. Do you agree?</label>
+          <input type="text" class="form-control" name="int_q13" id="int_q13" value="{{ old('int_q13') }}">
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col-md-6">
-          <label for="int_q12">Is there anything else you'd like us or the membership to know?</label>
+          <label for="int_q11">Have you read and agreed to the Kwartzlab Code of Conduct?</label>
+          <input type="text" class="form-control" name="int_q11" id="int_q11" value="{{ old('int_q11') }}">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="int_q12">Is there anything else you would like us or the membership to know?</label>
           <input type="text" class="form-control" name="int_q12" id="int_q12" value="{{ old('int_q12') }}">
         </div>
       </div>
