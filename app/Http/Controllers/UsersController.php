@@ -82,7 +82,7 @@ class UsersController extends Controller
                 'city' => 'required',
                 'province' => 'required',
                 'postal' => 'required',
-                'photo' => 'image|required|max:8000'
+                'photo' => 'image|required|mimes:jpeg,png,jpg|max:8000'
                 ]);
 
         // process photo
