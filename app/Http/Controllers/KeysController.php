@@ -16,12 +16,14 @@ class KeysController extends Controller
 		if ($gatekeeper != NULL) {
 
 			$endpoint = $request->input('endpoint');
+			$payload = json_decode($request->input('payload'), true);
+
 			$response = NULL;
 			switch ($endpoint) {
-				case 'get_keys':$response = $this->getkeys($request->input('payload'),$gatekeeper);break;
-				case 'get_user':$response = $this->get_user($request->input('payload'));break;
-				case 'get_all_users':$response = $this->get_all_users($request->input('payload'));break;
-				case 'send_auths':$response = $this->sendauths($request->input('payload'),$gatekeeper);break;
+				case 'get_keys':$response = $this->getkeys($payload,$gatekeeper);break;
+				//case 'get_user':$response = $this->get_user($request->input('payload'));break;
+				//case 'get_all_users':$response = $this->get_all_users($request->input('payload'));break;
+				case 'send_auths':$response = $this->sendauths($payload,$gatekeeper);break;
 			}
 
 			if ($response != NULL) {
@@ -30,7 +32,7 @@ class KeysController extends Controller
 				return response()->json([
 					'code' => '404',
 					'text' => 'Not Found',
-					'timestamp' => date('c'),
+					'timestamp' => date('Y-m-d H:i:s'),
 				]);
 			}
 
@@ -39,8 +41,7 @@ class KeysController extends Controller
 			return response()->json([
 				'code' => '403',
 				'text' => 'Unauthorized: ' . $request->input('auth_key'),
-				'timestamp' => date('c'),
-				'payload' => $request->input('payload')
+				'timestamp' => date('Y-m-d H:i:s')
 			]);
 		}
 
@@ -63,6 +64,24 @@ class KeysController extends Controller
 
 	}
 
+	// Formats a response with required parameters
+	private function build_response($code,$text,$payload = NULL) {
+
+		$response_array = array(
+			'code' => $code,
+			'text' => $text,
+			'timestamp' => date('Y-m-d H:i:s')
+		);
+
+		if ($payload != NULL) {
+			$response_array['payload'] = $payload;
+		}
+
+		return $response_array;
+
+	}
+
+
 	# returns a user record
 	private function get_user($payload) {
 	
@@ -81,7 +100,7 @@ class KeysController extends Controller
 		return array(
 			'code' => '0',
 			'text' => 'OK',
-			'timestamp' => date('c'),
+			'timestamp' => date('Y-m-d H:i:s'),
 			'payload' => $user_rec
 			);
 
@@ -121,7 +140,7 @@ class KeysController extends Controller
 		return array(
 			'code' => '0',
 			'text' => 'OK',
-			'timestamp' => date('c'),
+			'timestamp' => date('Y-m-d H:i:s'),
 			'payload' => $user_list
 			);
 
@@ -154,12 +173,7 @@ class KeysController extends Controller
 				}
 			}
 
-			return array(
-				'code' => '0',
-				'text' => 'OK',
-				'timestamp' => date('c'),
-				'payload' => $key_list
-				);
+			return $this->build_response('0','OK',$key_list);
 	}
 
 	# receives authentications from gatekeeper
@@ -186,6 +200,8 @@ class KeysController extends Controller
 	            'meta_data' => $row['metadata'],
 	            'key_id' => $key_id,
 	            'user_id' => $user_id,
+	            'lock_in' => $row['lock_in'],
+	            'lock_out' => $row['lock_out'],
 	            'created_at' => $row['created_at'],
 	            'updated_at' => $row['created_at']
 	            ]);
@@ -196,12 +212,7 @@ class KeysController extends Controller
 
 		}
 
-		return array(
-			'code' => '0',
-			'text' => 'OK',
-			'timestamp' => date('c'),
-			'payload' => $payload_array
-			);
+		return $this->build_response('0','OK');
 
 	}
 
