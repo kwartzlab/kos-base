@@ -56,10 +56,10 @@ class KeysController extends Controller
 			$result = NULL;
 		}
 
-		if ($result) {
-			return $result;
-		} else {
+		if (count($result) === 0) {
 			return NULL;
+		} else {
+			return $result;
 		}
 
 	}
