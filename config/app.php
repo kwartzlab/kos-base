@@ -120,9 +120,10 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    // logging config moved to logging.php (5.6)
 
-    'log_level' => env('APP_LOG_LEVEL', 'debug'),
+    //'log' => env('APP_LOG', 'single'),
+    //'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
     /*
     |--------------------------------------------------------------------------
