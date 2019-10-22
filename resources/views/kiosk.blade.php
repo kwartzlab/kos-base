@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{{ $page_title or "Keymaster" }}</title>
+  <title>{{ $page_title ?? "kOS" }}</title>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -44,7 +44,7 @@
   <div class="content-wrapper"  style="margin:0">
 
     <div class="row">
-    <div class="col-lg-1 center-block {{ $vcenter or "vcenter" }}" style="text-align:center;width:95%;>
+    <div class="col-lg-1 center-block {{ $vcenter ?? "vcenter" }}" style="text-align:center;width:95%;>
       
       @yield('content')
 
