@@ -1,7 +1,13 @@
-@extends('layout')
+@extends('adminlte::page')
+
+@section('title', 'Editing ' . $gatekeeper->name)
+
+@section('content_header')
+    <h1>Editing {{ $gatekeeper->name }}</h1>
+@stop
 
 @section('content')
-
+@include('shared.alerts')
 
 <div class="box box-primary">
 
@@ -197,17 +203,8 @@
   </div>
 </div>
 
-@endsection
+@stop
 
-
-@section('extra_js')
-
-<script src="/js/jquery.inputmask.bundle.min.js"></script>
-
- <script>
-  $(document).ready(function(){
-    $("#ip_address").inputmask("ip");
-
-  });
-</script>
+@section('css')
+    <link rel="stylesheet" href="/css/kos.css">
 @stop

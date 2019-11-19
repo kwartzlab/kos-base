@@ -1,8 +1,13 @@
-@extends('layout')
+@extends('adminlte::page')
 
+@section('title', 'Add Gatekeeper')
+
+@section('content_header')
+    <h1>Add Gatekeeper</h1>
+@stop
 
 @section('content')
-
+@include('shared.alerts')
 
 <div class="box box-primary">
 
@@ -89,4 +94,8 @@
   </div>
 </div>
 
-@endsection
+@stop
+
+@section('css')
+    <link rel="stylesheet" href="/css/kos.css">
+@stop

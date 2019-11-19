@@ -1,6 +1,13 @@
-@extends('layout')
+@extends('adminlte::page')
+
+@section('title', 'Membership Application')
+
+@section('content_header')
+    <h1>Membership Application</h1>
+@stop
 
 @section('content')
+@include('shared.alerts')
 
 <div class="box box-primary">
 
@@ -197,11 +204,13 @@
   </div>
 </div>
 
+@stop
 
-@endsection
+@section('css')
+    <link rel="stylesheet" href="/css/kos.css">
+@stop
 
-
-@section('extra_js')
+@section('js')
 
 <script src="/js/jquery.inputmask.bundle.min.js"></script>
 

@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class GatekeepersController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
 
     /**
      * Display a listing of the resource.
@@ -26,8 +21,7 @@ class GatekeepersController extends Controller
      
             $gatekeepers = \App\Gatekeeper::orderby('name')->get();
 
-            $page_title = "Gatekeepers";
-            return view('gatekeeper.index', compact('page_title','gatekeepers'));
+            return view('gatekeeper.index', compact('gatekeepers'));
         }
     }
 
@@ -94,7 +88,7 @@ class GatekeepersController extends Controller
                 ]);
 
             $message = "Gatekeeper added successfully.";
-            return redirect('/gatekeepers')->withMessage($message);
+            return redirect('/gatekeepers')->with('success', $message);
 
         }
     }
@@ -133,9 +127,7 @@ class GatekeepersController extends Controller
 
             }
 
-
-            $page_title = "Editing: " . $gatekeeper->name;
-            return view('gatekeeper.edit', compact('page_title','gatekeeper','user_ids'));
+            return view('gatekeeper.edit', compact('gatekeeper','user_ids'));
 
         }            
     }
@@ -179,7 +171,7 @@ class GatekeepersController extends Controller
                 $message .= "<br />Authentication key changed.";
             }
 
-            return redirect('/gatekeepers')->withMessage($message);
+            return redirect('/gatekeepers')->with('success', $message);
         }
     }
 
@@ -205,7 +197,7 @@ class GatekeepersController extends Controller
             $result = \App\Authorization::where('gatekeeper_id',$id)->delete();
 
             $message = "Gatekeeper and related authorizations deleted.";
-            return redirect('/gatekeepers')->withMessage($message);
+            return redirect('/gatekeepers')->with('success', $message);
 
         }
     }
@@ -234,7 +226,7 @@ class GatekeepersController extends Controller
         
             }
 
-            return redirect('/gatekeepers/' . $gatekeeper_id . '/edit')->withMessage($message);
+            return redirect('/gatekeepers/' . $gatekeeper_id . '/edit')->with('success', $message);
 
         }
 

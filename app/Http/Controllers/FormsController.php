@@ -13,14 +13,9 @@ class FormsController extends Controller
      */
     public function index()
     {
-        //
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
-     
-            $forms = \App\Forms::orderby('name')->get();
+        $forms = \App\Forms::orderby('name')->get();
 
-            $page_title = "Forms";
-            return view('forms.index', compact('page_title','forms'));
-        }
+        return view('forms.index', compact('forms'));
 
     }
 

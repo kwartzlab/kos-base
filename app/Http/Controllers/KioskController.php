@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 class KioskController extends Controller
 {
     
-    public function __construct()
-    {
-        //$this->middleware('auth');
-    }
-
-
     public function index() {
 
     	if (\Auth::check()) {
@@ -72,90 +66,81 @@ class KioskController extends Controller
     // presents interface to add a new card ID to database
     public function create_key(Request $request) {
 
+        if (\Request::isMethod('get')) {
 
-	 if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
+            // scanning key
+            return view('kiosk.create_key', ['page_title' => 'KeyKiosk']);
 
-            if (\Request::isMethod('get')) {
+        } else {                
+            // make sure we have at least some input for rfid key
+            if (!$request->input('rfid')) {
+                return redirect('/kiosk/create_key');           
+            }   
 
-                // scanning key
-                return view('kiosk.create_key', ['page_title' => 'KeyKiosk']);
+            // see if key is already in database
+            $key = \App\Key::where('rfid', md5($request->input('rfid')))->first();
+            if (count($key)>0) {
+                $error_message = 'Key Already in Database';
+                return view('kiosk.error', compact('error_message'));
+            }
 
-            } else {                
-                // make sure we have at least some input for rfid key
-                if (!$request->input('rfid')) {
-                    return redirect('/kiosk/create_key');           
-                }   
+            if (!$request->input('user_id')) {
 
-                // see if key is already in database
-                $key = \App\Key::where('rfid', md5($request->input('rfid')))->first();
-                if (count($key)>0) {
-                    $error_message = 'Key Already in Database';
-                    return view('kiosk.error', compact('error_message'));
-                }
+                // select user to assign key to
+                $users = \App\User::orderby('first_name')->where('status','active')->get();
 
-                if (!$request->input('user_id')) {
+                $rfid = $request->input('rfid');
+                $page_title = 'KeyKiosk';
+                $vcenter = '' ; // disables vertical center
+                return view('kiosk.select_user', compact('page_title','users','rfid','vcenter'));
 
-                    // select user to assign key to
-                    $users = \App\User::orderby('first_name')->where('status','active')->get();
+            } else {
 
-                    $rfid = $request->input('rfid');
-                    $page_title = 'KeyKiosk';
-                    $vcenter = '' ; // disables vertical center
-                    return view('kiosk.select_user', compact('page_title','users','rfid','vcenter'));
-
-                } else {
-
-                    // confirm user to assign key to
-                    $keyuser = \App\User::find($request->input('user_id'));
-                    
-                    $rfid = $request->input('rfid');
-                    $page_title = 'KeyKiosk';
-                    return view('kiosk.confirm_user', compact('page_title','keyuser','rfid'));
-
-                }
+                // confirm user to assign key to
+                $keyuser = \App\User::find($request->input('user_id'));
+                
+                $rfid = $request->input('rfid');
+                $page_title = 'KeyKiosk';
+                return view('kiosk.confirm_user', compact('page_title','keyuser','rfid'));
 
             }
 
-
-        } else {
-            return redirect('/kiosk');            
         }
 
+
+    } else {
+        return redirect('/kiosk');            
     }
+
 
     // saves key to database
     public function store_key(Request $request) {
 
-	 if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
-            $key = \App\Key::create([
-                'user_id' => $request->input('user_id'),
-                'rfid' => md5($request->input('rfid')),
-                'description' => 'Added via kiosk by ' . \Auth::user()->first_name . " " . \Auth::user()->last_name
-                ]);
+        $key = \App\Key::create([
+            'user_id' => $request->input('user_id'),
+            'rfid' => md5($request->input('rfid')),
+            'description' => 'Added via kiosk by ' . \Auth::user()->first_name . " " . \Auth::user()->last_name
+            ]);
 
-            if (!$key->id) {
+        if (!$key->id) {
 
-                $error_message = 'Error adding key; contact admin';
-                return view('kiosk.error', compact('error_message'));
+            $error_message = 'Error adding key; contact admin';
+            return view('kiosk.error', compact('error_message'));
 
-            } else {
+        } else {
 
-                $message = 'Key Added Successfully';
-                return view('kiosk.success', compact('message'));
-
-            }
+            $message = 'Key Added Successfully';
+            return view('kiosk.success', compact('message'));
 
         }
+
 
     }
 
     // unlocks a gatekeeper (if allowable)
     public function unlock() {
 
-	 if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
 
-
-        }
     }
 
 

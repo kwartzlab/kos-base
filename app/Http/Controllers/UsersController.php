@@ -5,15 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Gate;
 
 class UsersController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
 
     /**
      * Display a listing of the resource.
@@ -22,20 +17,17 @@ class UsersController extends Controller
      */
     public function index($filter = 'active')
     {
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
-
-            switch ($filter) {
-                case 'applicant': $users = \App\User::where('status','applicant')->orderby('first_name')->get();$title_filter = 'Applicants';break;
-                case 'inactive': $users = \App\User::where('status','inactive')->orderby('first_name')->get();$title_filter = 'Withdrawn';break;
-                case 'active': $users = \App\User::where('status','active')->orderby('first_name')->get();$title_filter = 'Active';break;
-                case 'hiatus': $users = \App\User::where('status','hiatus')->orderby('first_name')->get();$title_filter = 'On Hiatus';break;
-                default: $users = \App\User::orderby('first_name')->get();$title_filter = 'All';break;
-            }
-
-            $page_title = 'Membership Register - ' . $title_filter . ' (' . count($users) . ')';
-            return view('users.index', compact('page_title','users'));
-
+        switch ($filter) {
+            case 'applicant': $users = \App\User::where('status','applicant')->orderby('first_name')->get();$title_filter = 'Applicants';break;
+            case 'inactive': $users = \App\User::where('status','inactive')->orderby('first_name')->get();$title_filter = 'Withdrawn';break;
+            case 'active': $users = \App\User::where('status','active')->orderby('first_name')->get();$title_filter = 'Active';break;
+            case 'hiatus': $users = \App\User::where('status','hiatus')->orderby('first_name')->get();$title_filter = 'On Hiatus';break;
+            default: $users = \App\User::orderby('first_name')->get();$title_filter = 'All';break;
         }
+
+        $page_title = 'Membership Register - ' . $title_filter . ' (' . count($users) . ')';
+        return view('users.index', compact('page_title','users'));
+
     }
 
     private function generate_random_password() {
@@ -261,14 +253,23 @@ class UsersController extends Controller
     public function edit($id)
     {
 
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
+        $user = \App\User::find($id);
 
-            $user = \App\User::find($id);
+        $all_roles = \App\Role::get()->toArray();
 
-            $page_title = "Membership Register";
-            return view('users.edit', compact('page_title','user'));
-
+        $user_roles = [];
+        if (old()) {
+            foreach (old('user-roles') as $role) {
+                $user_roles[] = $role;
+            }
+        } else {
+            foreach ($user->roles()->get() as $key => $role) {
+                $user_roles[] = $role['id'];
+            }
         }
+
+        return view('users.edit', compact('user','all_roles','user_roles'));
+
     }
 
     /**
@@ -280,8 +281,8 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
+        
+        if (Gate::allows('manage-users')) {
 
             $this->validate(request(),[
                 'first_name' => 'required',
@@ -331,12 +332,14 @@ class UsersController extends Controller
             }
 
             $user->save();
+
+
             $message = "User updated successfully.";
             if ($request->input('password') != NULL) {
-                $message .= "<br />Password changed.";      }
+                $message .= " Password changed.";      }
 
-            return redirect('/users/' . $user->id . '/edit' )->withMessage($message);
-        }
+            return redirect('/users/' . $user->id . '/edit' )->with('success', $message);
+       }
     }
 
     /**
@@ -348,27 +351,31 @@ class UsersController extends Controller
     public function destroy($id)
     {
 
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
+        if (Gate::allows('manage-users')) {
 
-            
             $this->validate(request(),[
                 'confirm' => 'required'
             ]);
 
-
             if ($id == \Auth::user()->id) {
-
                 $message = "Cannot delete yourself.";
-                return redirect('/users')->withErrors($message);
+                return redirect('/users')->with('error', $message);
             } else {
 
-                $user->clear_authorizations();
-
                 $user = \App\User::find($id);
-                $user->delete();
 
-                $message = "User deleted.";
-                return redirect('/users')->withMessage($message);
+                if ($user->status == "applicant") {
+
+                    $user->delete();
+                    $message = "User deleted.";
+                    return redirect('/users')->with('success', $message);
+
+                } else {
+
+                    $message = "Only applicants can be deleted.";
+                    return redirect('/users/' . $user->id . '/edit' )->with('error', $message);
+                    
+                }
             }
         }
 
@@ -377,54 +384,42 @@ class UsersController extends Controller
     // get key add form
     public function create_key($user_id) {
 
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
+        $user = \App\User::find($user_id);
+        if (count($user) != 0) {
+            $page_title = "Adding key for " . $user->name;
 
-
-            $user = \App\User::find($user_id);
-            if (count($user) != 0) {
-                $page_title = "Adding key for " . $user->name;
-
-                return view('keys.create', compact('page_title','user'));
-            }
-
+            return view('keys.create', compact('page_title','user'));
         }
+
 
     }
 
     // post new key
     public function store_key($user_id) {
         
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
-      
-            $this->validate(request(),[
-                    'rfid' => 'required'
-                ]);
+        $this->validate(request(),[
+                'rfid' => 'required'
+            ]);
 
-            $user = \App\Key::create([
-                'user_id' => $user_id,
-                'rfid' => md5(request('rfid')),
-                'description' => request('description'),
-                ]);
+        $user = \App\Key::create([
+            'user_id' => $user_id,
+            'rfid' => md5(request('rfid')),
+            'description' => request('description'),
+            ]);
 
-            $message = "Key added successfully.";
-            return redirect('/users/' . $user_id . '/edit')->withMessage($message);
-
-        }
+        $message = "Key added successfully.";
+        return redirect('/users/' . $user_id . '/edit')->with('success', $message);
 
     }   
 
     // delete single key
     public function destroy_key($user_id, $key_id) {
 
-        if ((\Auth::user()->acl == 'admin') || (\Auth::user()->acl == 'keyadmin')) {
+        $key = \App\Key::find($key_id);
+        $key->delete();
 
-            $key = \App\Key::find($key_id);
-            $key->delete();
-
-            $message = "Key deleted successfully.";
-            return redirect('/users/' . $user_id . '/edit')->withMessage($message);
-
-        }
+        $message = "Key deleted successfully.";
+        return redirect('/users/' . $user_id . '/edit')->with('success', $message);
 
     }
 

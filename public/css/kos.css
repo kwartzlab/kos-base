@@ -1,8 +1,3 @@
-body {
-
-}
-
-
 .form-heading {
 
     margin-bottom:25px;
@@ -24,4 +19,8 @@ body {
 
 .member-profile p {
     font-size:1.2em;
+}
+
+.sidebar-menu li i {
+    margin-right:8px;
 }

@@ -11,48 +11,62 @@
 |
 */
 
-Route::get('/', 'DashboardController@index');
-Route::get('/home', 'DashboardController@index');
 
+// Dashboard
+Route::middleware('auth')->group(function() {
+    Route::get('/', 'DashboardController@index');
+    Route::get('/home', 'DashboardController@index');
+});
 
-Route::resource('gatekeepers', 'GatekeepersController');
-Route::get('/gatekeepers/{id}/remove_trainer/{key}', 'GatekeepersController@remove_trainer');
-Route::post('/gatekeepers/{id}/add_trainer', 'GatekeepersController@add_trainer');
+// Gatekeeper Management
+Route::middleware(['auth','can:manage-gatekeepers'])->group(function() {
+    Route::resource('gatekeepers', 'GatekeepersController');
+    Route::get('/gatekeepers/{id}/remove_trainer/{key}', 'GatekeepersController@remove_trainer');
+    Route::post('/gatekeepers/{id}/add_trainer', 'GatekeepersController@add_trainer');
+});
 
-Route::resource('users', 'UsersController');
-Route::get('/users/index/{filter?}', 'UsersController@index');
-Route::get('/users/{user}/destroy_key/{key}', 'UsersController@destroy_key');
-Route::post('/users/{user}/store_key', 'UsersController@store_key');
+// Membership Register
+Route::middleware(['auth','can:manage-users-keys'])->group(function() {
+    Route::resource('users', 'UsersController');
+    Route::get('/users/index/{filter?}', 'UsersController@index');
+    Route::get('/users/{user}/destroy_key/{key}', 'UsersController@destroy_key');
+    Route::post('/users/{user}/store_key', 'UsersController@store_key');
+});
 
-Route::get('members', 'MembersController@index');
-Route::get('members/index/{filter?}', 'MembersController@index');
-Route::get('members/{user}/profile', 'MembersController@profile');
+// Member Directory
+Route::middleware('auth')->group(function() {
+    Route::get('members', 'MembersController@index');
+    Route::get('members/index/{filter?}', 'MembersController@index');
+    Route::get('members/{user}/profile', 'MembersController@profile');
+});
 
-Route::resource('training', 'TrainingController');
-Route::get('/training/{user}/destroy/{key}', 'TrainingController@destroy');
+// Training
+Route::middleware('auth')->group(function() {
+    Route::resource('training', 'TrainingController');
+    Route::get('/training/{user}/destroy/{key}', 'TrainingController@destroy');
+});
 
-Route::resource('forms', 'FormsController');
+// Web Forms
+Route::resource('forms', 'FormsController')->middleware(['auth','can:manage-forms']);
 
-Route::get('/reports', 'ReportsController@index');
+// Reports
+Route::get('/reports', 'ReportsController@index')->middleware('auth');
 
+// Gatekeeper sync and key authentication routes
 Route::post('/keys', 'KeysController@index');
 Route::get('/keys', 'KeysController@index');
-//Route::post('/keys/authenticate', 'KeysController@authenticate');
-//Route::get('/keys/getkeys', 'KeysController@getkeys');
-//Route::post('/keys/getkeys', 'KeysController@getkeys');
-//Route::post('/keys/sendauths', 'KeysController@sendauths');
+
+// User Roles
+Route::resource('roles', 'RoleController')->middleware(['auth','can:manage-roles']);
 
 // Kiosk routes
-
 Route::get('/kiosk', 'KioskController@index');
 Route::post('/kiosk/authenticate', 'KioskController@authenticate');
 Route::get('/kiosk/logout', 'KioskController@logout');
-Route::get('/kiosk/unlock', 'KioskController@unlock');
-Route::get('/kiosk/create_key', 'KioskController@create_key');
-Route::post('/kiosk/create_key', 'KioskController@create_key');
-Route::post('/kiosk/store_key', 'KioskController@store_key');
+Route::get('/kiosk/unlock', 'KioskController@unlock')->middleware(['auth','can:manage-keys']);
+Route::get('/kiosk/create_key', 'KioskController@create_key')->middleware(['auth','can:manage-keys']);
+Route::post('/kiosk/create_key', 'KioskController@create_key')->middleware(['auth','can:manage-keys']);
+Route::post('/kiosk/store_key', 'KioskController@store_key')->middleware(['auth','can:manage-keys']);
 
-
+// Authentication routes
 Auth::routes();
-
-

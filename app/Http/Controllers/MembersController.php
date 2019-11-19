@@ -9,12 +9,6 @@ use Illuminate\Support\Facades\Route;
 class MembersController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-
     // creates a user profile directory
     public function index($view = 'default') {
 

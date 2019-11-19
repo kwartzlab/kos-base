@@ -1,43 +1,57 @@
-@extends('layout')
 
+@extends('adminlte::page')
+
+@section('title', 'Forms')
+
+@section('content_header')
+    <h1>Forms</h1>
+@stop
 
 @section('content')
+@include('shared.alerts')
 
 <div class="box">
-<div class="box-header">
-<a class="btn btn-primary" href="/forms/create" role="button">Add Form</a>
-</div>
+	<div class="box-header">
+	<a class="btn btn-primary" href="/forms/create" role="button">Add Form</a>
+	</div>
+	
+	<div class="box-body no-padding">
+	<table class="table table-striped">
+		<thead><tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Status</th>
+			<th>Actions</th>
+		</tr></thead>
+		<tbody>
+			@foreach($forms as $form)
+				<tr>
+					<td>{{ $form->name }}</td>
+					<td>{{ $form->description }}</td>
+					<td>@if($form->status == 'enabled')<span class="label label-success">Enabled</span>
+					@else
+					<span class="label label-danger">Disabled</span>@endif</td>
+					<td>
+					<a class="btn btn-default btn-sm" href="/form/{{ $form->id }}/edit" role="button">Edit</a>
+	
+					</td>
+				</tr>
+	
+			@endforeach
+		</tbody>
+	</table>
+	</div>
+	</div>
 
-<div class="box-body no-padding">
-<table class="table table-striped">
-	<thead><tr>
-		<th>Name</th>
-		<th>Description</th>
-		<th>Status</th>
-		<th>Actions</th>
-	</tr></thead>
-	<tbody>
-		@foreach($forms as $form)
-			<tr>
-				<td>{{ $form->name }}</td>
-				<td>{{ $form->description }}</td>
-				<td>@if($form->status == 'enabled')<span class="label label-success">Enabled</span>
-				@else
-				<span class="label label-danger">Disabled</span>@endif</td>
-				<td>
-				<a class="btn btn-default btn-sm" href="/form/{{ $form->id }}/edit" role="button">Edit</a>
 
-				</td>
-			</tr>
 
-		@endforeach
-	</tbody>
-</table>
-</div>
-</div>
-@endsection
+@stop
 
-@section('extra_js')
+@section('css')
+    <link rel="stylesheet" href="/css/kos.css">
+@stop
+
+@section('js')
 	<script src="/js/datatables.min.js"></script>
 	<script>
         $(document).ready(function () {

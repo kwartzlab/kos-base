@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable implements Auditable
 {
@@ -125,8 +126,39 @@ class User extends Authenticatable implements Auditable
 
     }
 
+    public function has_role($role_id) {
+        if (count($this->roles()->where('role_id',$role_id)->get())>0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    // returns all roles the user holds
+    public function roles() {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
 
+    // check user roles to verify permissions
+    public function is_allowed($object, $operation) {
+        return Db::table('role_permissions')
+            ->where('object', $object)
+            ->where('operation', $operation)
+            ->join('user_roles', 'user_roles.role_id', '=', 'role_permissions.role_id')
+            ->where('user_roles.user_id', $this->id)
+            ->exists();
+    }
+
+    // can the user program the system?
+    public function is_superuser() {
+        
+        if (count($this->roles()->where('role_id','1')->get())>0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
 
 }

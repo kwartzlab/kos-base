@@ -1,7 +1,13 @@
-@extends('layout')
+@extends('adminlte::page')
+
+@section('title', 'Managing ' . $gatekeeper->name)
+
+@section('content_header')
+    <h1>Managing {{ $gatekeeper->name }}</h1>
+@stop
 
 @section('content')
-
+@include('shared.alerts')
 
 <div class="box box-success">
   <div class="box-header">
@@ -58,9 +64,13 @@
   </div>
 </div>
 
-@endsection
+@stop
 
-@section('extra_js')
+@section('css')
+    <link rel="stylesheet" href="/css/kos.css">
+@stop
+
+@section('js')
 	<script src="/js/datatables.min.js"></script>
 	<script>
         $(document).ready(function () {

@@ -1,13 +1,13 @@
-@extends('layout')
+@extends('adminlte::page')
 
+@section('title', 'Membership Register - ' . $user['first_name'] . ' ' . $user['last_name'])
 
-@section('extra_css')
-
-<link rel="stylesheet" type="text/css" href="/bower_components/AdminLTE/plugins/datepicker/datepicker3.css"/>
-
+@section('content_header')
+    <h1>Membership Register</h1>
 @stop
 
 @section('content')
+@include('shared.alerts')
 
 @include('users.profile')
 
@@ -65,7 +65,6 @@
       </select>
     </div>
   </div>
-
 
   <div class="row">
     <div class="form-group col-md-2">
@@ -216,7 +215,7 @@
 </div>
 </div>
 
-
+@if ($user->status == 'applicant'):
 <div class="box box-danger">
 
   <div class="box-body">
@@ -254,12 +253,17 @@
   </div>
 </div>
 
+@endif
 
-@endsection
+@stop
 
-@section('extra_js')
+@section('css')
+    <link rel="stylesheet" href="/css/kos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
+@stop
 
-  <script src="/bower_components/AdminLTE/plugins/datepicker/bootstrap-datepicker.js"></script>	
+@section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="/js/jquery.inputmask.bundle.min.js"></script>
 
    <script>
@@ -268,6 +272,12 @@
       $("#postal").inputmask("A9A 9A9");
       $('.datepicker').datepicker({
         format: 'yyyy-mm-dd'
+      });
+      $('#user-roles').select2({
+        placeholder: 'Select roles to assign',
+        tags: true,
+        allowClear: true,
+        multiple: true
       });
 
     });

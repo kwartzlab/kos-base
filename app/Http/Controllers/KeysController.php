@@ -81,7 +81,6 @@ class KeysController extends Controller
 
 	}
 
-
 	# returns a user record
 	private function get_user($payload) {
 	
@@ -94,7 +93,6 @@ class KeysController extends Controller
 			'email' => $user->email,
 			'status' => $user->status,
 			'member_id' => $user->member_id,
-			'acl' => $user->acl,
 			);
 
 		return array(

@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 class TrainingController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-
     /**
      * Display a listing of the resource.
      *
@@ -24,8 +18,7 @@ class TrainingController extends Controller
         $gatekeeper_ids = \App\Trainers::where('user_id', \Auth::user()->id)->get()->pluck('gatekeeper_id');
         $gatekeepers = \App\Gatekeeper::whereIn('id',$gatekeeper_ids)->get();
 
-        $page_title = "Training";
-        return view('training.index', compact('page_title','gatekeepers'));
+        return view('training.index', compact('gatekeepers'));
     }
 
     /**
@@ -58,6 +51,7 @@ class TrainingController extends Controller
 
             if (count($authorization)>0) {
                 $message = "Authorization already exists for this gatekeeper.";
+                $message_type = "info";
             } else {
                 $authorization = \App\Authorization::create([
                     'user_id' => request('user_id'),
@@ -65,9 +59,10 @@ class TrainingController extends Controller
                     ]);
         
                 $message = "Authorization added successfully.";
+                $message_type = "success";
             }
 
-            return redirect('/training/' . $gatekeeper->id . '/edit')->withMessage($message);
+            return redirect('/training/' . $gatekeeper->id . '/edit')->with($message_type, $message);
 
         }
 
@@ -109,9 +104,8 @@ class TrainingController extends Controller
 
             // get records for all authorized users
             $authorized_users = \App\Authorization::where('gatekeeper_id', $gatekeeper->id)->get();
-   
-            $page_title = "Managing: " . $gatekeeper->name;
-            return view('training.edit', compact('page_title','gatekeeper','user_ids','authorized_users'));
+
+            return view('training.edit', compact('gatekeeper','user_ids','authorized_users'));
 
         }
 
@@ -146,7 +140,7 @@ class TrainingController extends Controller
             $authorization->delete();
     
             $message = "Authorization removed successfully.";
-            return redirect('/training/' . $gatekeeper_id . '/edit')->withMessage($message);
+            return redirect('/training/' . $gatekeeper_id . '/edit')->with('success', $message);
         }
 
 
