@@ -57,7 +57,13 @@ Route::post('/keys', 'KeysController@index');
 Route::get('/keys', 'KeysController@index');
 
 // User Roles
-Route::resource('roles', 'RoleController')->middleware(['auth','can:manage-roles']);
+Route::middleware(['auth','can:manage-roles'])->group(function() {
+    Route::resource('roles', 'RoleController');
+    Route::get('/roles/{id}/remove_user/{key}', 'RoleController@remove_user');
+    Route::post('/roles/{id}/add_user', 'RoleController@add_user');
+});
+
+
 
 // Kiosk routes
 Route::get('/kiosk', 'KioskController@index');

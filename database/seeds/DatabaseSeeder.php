@@ -24,7 +24,7 @@ class RoleTableSeeder extends Seeder {
     public function run()
     {
         DB::table('roles')->delete();
-        \App\Role::create(['name' => 'superuser', 'description' => 'Access to all KwartzlabOS functions']);
+        \App\Role::create(['name' => 'Superusers', 'description' => 'Access to all KwartzlabOS functions']);
     }
 
 }

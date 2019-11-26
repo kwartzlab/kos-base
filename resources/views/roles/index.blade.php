@@ -34,7 +34,7 @@
                         <span class="label label-success">[{{ $permission->object }}] {{ $permission->operation }}</span>&nbsp;&nbsp;
 
                         @endforeach
-                        @if($role->name == "superuser")
+                        @if($role->id == 1)
                         <span class="label label-success">All Permissions</span>&nbsp;&nbsp;
                         @endif
 

@@ -12,11 +12,11 @@
 
 <div class="box">
 	<div class="box-header">
-	<a class="btn btn-primary" href="/forms/create" role="button">Add Form</a>
+	<a class="btn btn-primary" href="/forms/create" role="button">New Form</a>
 	</div>
 	
-	<div class="box-body no-padding">
-	<table class="table table-striped">
+	<div class="box-body">
+	<table class="table table-striped" id="data-table">
 		<thead><tr>
 			<th>Name</th>
 			<th>Description</th>
@@ -42,8 +42,6 @@
 	</table>
 	</div>
 	</div>
-
-
 
 @stop
 

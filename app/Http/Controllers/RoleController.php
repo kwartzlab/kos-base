@@ -8,7 +8,7 @@ class RoleController extends Controller
 {
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource. 
      *
      * @return \Illuminate\Http\Response
      */
@@ -121,17 +121,29 @@ class RoleController extends Controller
             $permissions[$permission['object'] . ':' . $permission['operation']] = 'selected';
         }
 
-        // Get users list not already assigned to this role
+        // Get users list unassigned to this role
         $user_list = array();
         foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
-            
+
             if ($user->has_role($id) === FALSE) {
                 $user_list[$user->id] = $user->first_name . " " . $user->last_name;
             }
 
         }
 
-        return view('roles.edit', compact('role','permissions','user_list'));
+        // grab existing users assigned to this role
+        $assigned_list = array();
+        foreach (\App\UserRole::where('role_id',$role->id)->get() as $assigned_user_role) {
+            $assigned_user = \App\User::find($assigned_user_role['user_id']);
+            $assigned_list[] = [
+                'name' => $assigned_user->first_name . ' ' . $assigned_user->last_name,
+                'id' => $assigned_user->id,
+                'created_at' => $assigned_user_role->created_at->diffForHumans()
+            ];
+        }
+
+
+        return view('roles.edit', compact('role','permissions','user_list','assigned_list'));
 
     }
 
@@ -212,4 +224,53 @@ class RoleController extends Controller
         $message = "User Role deleted successfully.";
         return redirect('/roles')->with('success', $message);
     }
+
+
+    // post new trainer to gatekeeper
+    public function add_user($role_id) {
+
+        // make sure trainer isn't already in there
+        
+        $assigned_user = \App\UserRole::where(['role_id' => $role_id,'user_id' => request('assign-user')])->get();
+
+        if (count($assigned_user)>0) {
+            $message = "User is already assigned to this role.";
+            return redirect('/roles/' . $role_id . '/edit')->with('info', $message);
+        } else {
+
+            $assigned_user = \App\UserRole::create([
+                'user_id' => request('assign-user'),
+                'role_id' => $role_id
+                ]);
+    
+            $message = "User added successfully.";
+    
+        }
+
+        return redirect('/roles/' . $role_id . '/edit')->with('success', $message);
+
+    }   
+
+    // delete trainer from gatekeeper
+    public function remove_user($role_id, $user_id) {
+
+        // ensure there is at least one superuser remaining
+        if ($role_id == 1) {
+            $role = \App\Role::find(1);
+            if (count($role->users()->get()) < 2) {
+                $message = 'Need to have at least one Superuser.';
+                return redirect('/roles/' . $role_id . '/edit')->with('error',$message);
+            }
+
+        }
+
+        $assigned_user = \App\UserRole::where(['user_id' => $user_id, 'role_id' => $role_id]);
+        $assigned_user->delete();
+
+        $message = "User removed successfully."; 
+        return redirect('/roles/' . $role_id . '/edit')->with('success',$message);
+
+    }
+
+
 }

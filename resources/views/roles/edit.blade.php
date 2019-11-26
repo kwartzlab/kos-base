@@ -9,52 +9,54 @@
 @section('content')
 @include('shared.alerts')
 
-<div class="box box-primary">
+@if ($role->id != 1)
+  <div class="box box-primary">
 
-  <div class="box-body">
+    <div class="box-body">
 
-    <form method="POST" action="/roles/{{ $role->id }}">
+      <form method="POST" action="/roles/{{ $role->id }}">
 
-    {{ method_field('PATCH') }}
-    {{ csrf_field() }}
+      {{ method_field('PATCH') }}
+      {{ csrf_field() }}
 
-          <div class="row">
-            <div class="form-group col-md-3">
-              <label for="name">Role Name</label>
-              <input type="text" class="form-control" name="name" maxlength="50" id="name" value="@if(!old('name')){{$role->name}}@endif{{ old('name') }}">
+            <div class="row">
+              <div class="form-group col-md-3">
+                <label for="name">Role Name</label>
+                <input type="text" class="form-control" name="name" maxlength="50" id="name" value="@if(!old('name')){{$role->name}}@endif{{ old('name') }}">
+              </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label for="description">Role Description</label>
-              <input type="text" class="form-control" name="description" id="description" value="@if(!old('description')){{$role->description}}@endif{{ old('description') }}">
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="description">Role Description</label>
+                <input type="text" class="form-control" name="description" id="description" value="@if(!old('description')){{$role->description}}@endif{{ old('description') }}">
+              </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="form-group col-md-6">
-              <label for="acl-attributes">Permissions</label>
-              <select multiple class="form-control" name="acl-attributes[]" id="acl-attributes">
-               
-              @foreach(config('acl.permissions') as $acl_object => $acl_operations)
-                @foreach($acl_operations as $acl_operation)
-                    <option value="{'{{ $acl_object }}':'{{ $acl_operation }}'}" @if (array_key_exists($acl_object . ':' . $acl_operation, $permissions)) selected="selected" @endif>[{{ $acl_object }}] {{ $acl_operation }}</option>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="acl-attributes">Permissions</label>
+                <select multiple class="form-control" name="acl-attributes[]" id="acl-attributes">
+                
+                @foreach(config('acl.permissions') as $acl_object => $acl_operations)
+                  @foreach($acl_operations as $acl_operation)
+                      <option value="{'{{ $acl_object }}':'{{ $acl_operation }}'}" @if (array_key_exists($acl_object . ':' . $acl_operation, $permissions)) selected="selected" @endif>[{{ $acl_object }}] {{ $acl_operation }}</option>
+                  @endforeach          
                 @endforeach          
-              @endforeach          
 
-              </select>
+                </select>
+              </div>
             </div>
+            
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
-          
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">Save Changes</button>
-        </div>
 
-    </form>
+      </form>
 
+    </div>
   </div>
-</div>
+@endif
 
 <div class="box box-success">
   <div class="box-header">
@@ -85,23 +87,23 @@
 
         </form>
 
-    <div class="box-body no-padding">
-    <table class="table table-striped">
+    <div class="box-body">
+    <table class="table table-striped" id="data-table">
       <thead><tr>
         <th>User Name</th>
         <th>Added</th>
         <th>Actions</th>
       </tr></thead>
       <tbody>
-        @foreach($role->users() as $assigned_user)
+        @foreach($assigned_list as $assigned_user)
           <tr>
-<?php /*            <td>{{ $assigned_user->first_name }} {{ $assigned_user->last_name }}</td>
-            <td>{{ $assigned_user->created_at->diffForHumans() }}</td>
+            <td>{{ $assigned_user['name'] }}</td>
+            <td>{{ $assigned_user['created_at'] }}</td>
             <td>
-              <a class="btn btn-danger btn-sm" href="/roles/{{ $role->id }}/remove_user/{{ $assigned_user->id }}" role="button">Remove</a>
+              <a class="btn btn-danger btn-sm" href="/roles/{{ $role->id }}/remove_user/{{ $assigned_user['id'] }}" role="button">Remove</a>
 
             </td>
-*/ ?>
+
 
          </tr>
 
@@ -111,38 +113,39 @@
   </div>
 </div>
 
+@if ($role->id != 1)
 
 
-<div class="box box-danger">
+  <div class="box box-danger">
 
-  <div class="box-body">
+    <div class="box-body">
 
-    <h3 class="form-heading">Delete User Role</h3>
+      <h3 class="form-heading">Delete User Role</h3>
 
-    <form method="POST" action="/roles/{{ $role->id }}">
+      <form method="POST" action="/roles/{{ $role->id }}">
 
-      {{ method_field('DELETE') }}
-      {{ csrf_field() }}
+        {{ method_field('DELETE') }}
+        {{ csrf_field() }}
 
-      <div class="form-group">
-      <p><strong>Warning: This action cannot be undone!</strong></p>
+        <div class="form-group">
+        <p><strong>Warning: This action cannot be undone!</strong></p>
 
-      <div class="checkbox">
-          <label>
-            <input type="checkbox" name="confirm"> Confirmed
-          </label>
+        <div class="checkbox">
+            <label>
+              <input type="checkbox" name="confirm"> Confirmed
+            </label>
+          </div>
+
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-danger">Delete Permanently</button>
         </div>
 
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-danger">Delete Permanently</button>
-      </div>
+        </form>
 
-      </form>
-
+    </div>
   </div>
-</div>
-
+@endif
 
 @stop
 
@@ -154,8 +157,9 @@
 <script>
   $(document).ready(function () {
     $('#data-table').dataTable({
-      ordering: true,
-      pagingType: "simple_numbers",
+      ordering: false,
+      paging: false,
+      searching: false,
       iDisplayLength: 25,
       "language": {
         "emptyTable": "No authorized users."
@@ -172,7 +176,6 @@
     $('#assign-user').select2({
       placeholder: 'Select user to assign role',
     });
-
 
   });
 
