@@ -1,7 +1,7 @@
 @extends('kiosk')
 
 @section ('customhead')
-<meta http-equiv="refresh" content="10; url=/kiosk">
+<meta http-equiv="refresh" content="20; url=/kiosk">
 @endsection
 
 @section('content')
@@ -9,7 +9,7 @@
 <div style="text-align:center;">
 
 <img src="/img/kiosk/rfid.png" style="width:50%;"><br />
-	      <h1><strong>Scan card to be added</strong></h1>
+	      <h1><strong>Tap key to be added</strong></h1>
 
 <form method="POST" action="/kiosk/create_key">
 

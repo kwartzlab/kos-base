@@ -19,10 +19,12 @@ Route::middleware('auth')->group(function() {
 });
 
 // Gatekeeper Management
-Route::middleware(['auth','can:manage-gatekeepers'])->group(function() {
+Route::middleware('auth')->group(function() {
     Route::resource('gatekeepers', 'GatekeepersController');
     Route::get('/gatekeepers/{id}/remove_trainer/{key}', 'GatekeepersController@remove_trainer');
     Route::post('/gatekeepers/{id}/add_trainer', 'GatekeepersController@add_trainer');
+    Route::get('/gatekeepers/{id}/dashboard', 'GatekeepersController@dashboard');
+    Route::get('/gatekeepers/revoke/{auth_id}', 'GatekeepersController@revoke_auth');
 });
 
 // Membership Register
@@ -63,8 +65,6 @@ Route::middleware(['auth','can:manage-roles'])->group(function() {
     Route::post('/roles/{id}/add_user', 'RoleController@add_user');
 });
 
-
-
 // Kiosk routes
 Route::get('/kiosk', 'KioskController@index');
 Route::post('/kiosk/authenticate', 'KioskController@authenticate');
@@ -76,3 +76,25 @@ Route::post('/kiosk/store_key', 'KioskController@store_key')->middleware(['auth'
 
 // Authentication routes
 Auth::routes();
+
+// Image manipulation routes
+Route::middleware(['auth'])->group(function() {
+   Route::resource('image', 'ImageController');
+});
+
+// Teams routes
+Route::middleware(['auth'])->group(function() {
+    Route::get('/teams/manage', 'TeamsController@manage');
+    Route::get('/teams/training', 'TeamsController@training');
+    Route::get('/teams/training_request/{gatekeeper}', 'TeamsController@training_request');
+    Route::get('/teams/training_cancel/{request_id}', 'TeamsController@training_cancel');
+    Route::get('/teams/training_pass/{request_id}', 'TeamsController@training_pass');
+    Route::get('/teams/training_fail/{request_id}', 'TeamsController@training_fail');
+    Route::get('/teams/{team_id}/requests/{request_type}', 'TeamsController@requests');
+    Route::resource('teams', 'TeamsController');
+});
+
+ // Helpdesk routes
+Route::middleware(['auth'])->group(function() {
+    Route::resource('helpdesk', 'HelpdeskController');
+ });

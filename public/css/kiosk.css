@@ -46,3 +46,21 @@ h2 {
 	width:150px;
 	margin-top:30px;
 }
+
+.form-group {
+   text-align:center;
+
+}
+
+#inputimage {
+   display:inline;
+   text-align:center;
+   border:1px solid #999;
+   border-radius:15px;
+   padding:10px;
+}
+
+#previewimage { 
+   height:400px;
+
+}

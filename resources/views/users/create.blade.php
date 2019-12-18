@@ -9,9 +9,9 @@
 @section('content')
 @include('shared.alerts')
 
-<div class="box box-primary">
+<div class="card card-primary">
 
-  <div class="box-body" style="font-size:1.2em;">
+  <div class="card-body" style="font-size:1.2em;">
 
   <p>This form is intended for use by Kwartzlab members when interviewing new applicants.</p>
   <p>Once the form is submitted, it will be sent to the member’s list so Kwartzlabbers can weigh in on the applicant. <strong>If you are interviewing, please leave your feedback on the mailing list as well.</strong></p>

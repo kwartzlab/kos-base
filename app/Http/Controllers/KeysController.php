@@ -10,7 +10,7 @@ class KeysController extends Controller
 	// main json parsing function - redirects to internal procs and outputs result
 	public function index(Request $request) {
 
-		$gatekeeper = $this->process_auth($request->input('auth_key'));
+		$gatekeeper = $this->process_auth($request->input('auth_key'), \Request::ip());
 
 		// only continue if we have a gatekeeper object...
 		if ($gatekeeper != NULL) {
@@ -47,17 +47,19 @@ class KeysController extends Controller
 
 	}
 
-	// authenticates the key sent by the gatekeeper
-	private function process_auth($auth_key) {
+	// authenticates the key sent by the gatekeeper and updates ip address
+	private function process_auth($auth_key,$ip_address) {
 
 		if ($auth_key != NULL) {
 			$result = \App\Gatekeeper::where('auth_key',$auth_key)->where('status','enabled')->get()->first();
-		} else {
-			$result = NULL;
-		}
-
-		if ($result) {
-			return $result;
+			if ($result) {
+				$result->last_seen = now();
+				$result->ip_address = $ip_address;
+				$result->save();
+				return $result;
+			} else {
+				return NULL;
+			}
 		} else {
 			return NULL;
 		}

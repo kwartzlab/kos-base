@@ -25,7 +25,58 @@ return [
         ],
 
     ],
+    'special_forms' => [
+        'new_user_app' => [
+            'name' => 'New Member Application'
+        ],
+        'helpdesk' => [
+            'name' => 'Helpdesk Form'
+        ],
+    ],
+    'team_roles' => [
+        'lead' => [
+            'name' => 'Team Lead',
+            'is_admin' => true,
+            'is_trainer' => true,
+            'is_maintainer' => true
+        ],
+        'trainer' => [
+            'name' => 'Trainer',
+            'is_admin' => false,
+            'is_trainer' => true,
+            'is_maintainer' => false
+        ],
+        'maintainer' => [
+            'name' => 'Maintainer',
+            'is_admin' => false,
+            'is_trainer' => false,
+            'is_maintainer' => true
+        ],
+        'sme' => [
+            'name' => 'Subject Expert',
+            'is_admin' => false,
+            'is_trainer' => false,
+            'is_maintainer' => false
+        ],
 
+    ],
+    'team_requests' => [
+        'training' => [
+            'name' => 'Training',
+            'notify' => ['lead','trainer']
+        ],
+        'maintenance' => [
+            'name' => 'Maintenance',
+            'notify' => ['lead','maintenance']
+        ],
+    ],
+    'team_request_status' => [
+        'new' => 'New',
+        'cancelled' => 'Cancelled',
+        'completed' => 'Completed',
+        'failed' => 'Did Not Finish',
+    ],
+    
 ];
 
 

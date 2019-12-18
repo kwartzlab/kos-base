@@ -1,26 +1,283 @@
-.form-heading {
 
-    margin-bottom:25px;
+/* used in forms for separating sections */
+.form-heading {
+    margin-top:15px;
+    margin-bottom:20px;
     border-bottom:1px solid #AAA;
     padding-bottom:5px;
-
 }
 
-.contact-info {
+/* extra styles for member profile */
+.member-profile .contact-info {
     list-style-type: none;
     font-size:1.3em;
     padding-left:0;
     margin-top:25px;
 }
 
-.contact-info i { 
+.member-profile .contact-info i { 
     margin-right:10px;
 }
 
-.member-profile p {
-    font-size:1.2em;
+/* AdmiinLTE-related styles */
+
+/* make card title text larger */
+.card-title { font-size:1.75em;}
+
+.smaller { 
+  font-size:1.0rem; 
+  font-weight:bold;
 }
 
-.sidebar-menu li i {
-    margin-right:8px;
+.small { 
+  font-size:1.3rem; 
 }
+
+.large { 
+  font-size:1.0em; 
+  font-weight:bold;
+}
+
+
+#form-elements .card-header:hover  {
+  cursor: move;
+
+}
+
+/* customize badge padding and colours from default */
+.badge { padding:.3em .6em; }
+.badge-warning { color:#fff; }
+
+/* offset text from sidebar icons */
+.nav-link p {
+    padding-left:3px;
+}
+
+/* disable brand image */
+.brand-image {
+    display:none;
+}
+
+/* force styling for brand text */
+.brand-text-override {
+    font-weight:bold !important;
+    margin-left:20px;
+}
+
+.brand-link {
+    font-size:1.3rem;
+    padding: .9rem .5rem .5rem;
+}
+
+/* set titlebar to match navbar */
+.brand-link:not([class*=navbar]) {
+    background-color:#3c8dbc !important;
+
+}
+
+.login-logo {
+  font-weight:bold;
+}
+
+.login-logo .icon-Kwartzlab-Logo-square:before {
+  font-size:2.5rem;
+
+}
+
+/* classic kOS colours */
+.classicblue {
+    background-color:#367fa9;
+}
+
+.sidebargrey {
+    background-color:#222d32; 
+}
+
+/* kwartzlab logo vector font */
+
+@font-face {
+  font-family: 'icomoon';
+  src:  url('/fonts/icomoon.eot?fd37vi');
+  src:  url('/fonts/icomoon.eot?fd37vi#iefix') format('embedded-opentype'),
+    url('/fonts/icomoon.ttf?fd37vi') format('truetype'),
+    url('/fonts/icomoon.woff?fd37vi') format('woff'),
+    url('/fonts/icomoon.svg?fd37vi#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-Kwartzlab-Logo-square:before {
+  content: "\e900";
+  font-size:1.8rem;
+}
+
+/* image overlay styles */
+
+.profile-image { 
+   max-height:240px;
+   max-width:240px;
+
+}
+
+.hovereffect {
+   width:100%;
+   height:100%;
+   float:left;
+   overflow:hidden;
+   position:relative;
+   text-align:center;
+   cursor:default;
+   }
+   
+   .hovereffect .overlay {
+   width:100%;
+   height:100%;
+   position:absolute;
+   overflow:hidden;
+   top:0;
+   left:0;
+   opacity:0;
+   background-color:rgba(0,0,0,0.5);
+   -webkit-transition:all .3s ease-in-out;
+   transition:all .3s ease-in-out
+   border-radius:50%;
+   }
+   
+   .hovereffect img {
+   display:block;
+   position:relative;
+   -webkit-transition:all .4s linear;
+   transition:all .4s linear;
+   }
+   
+ 
+   .hovereffect a.img-upload {
+   text-decoration:none;
+   display:inline-block;
+   color:#fff;
+   border:1px solid #fff;
+   background-color:transparent;
+   opacity:0;
+   filter:alpha(opacity=0);
+   -webkit-transition:all .1s ease-in-out;
+   transition:all .1s ease-in-out;
+   margin:25px 0 0;
+   padding:7px 14px;
+   }
+   
+   .hovereffect a.img-upload:hover {
+   box-shadow:0 0 5px #fff;
+   }
+   
+   .hovereffect:hover img {
+   }
+   
+   .hovereffect:hover .overlay {
+   opacity:1;
+   filter:alpha(opacity=100);
+   }
+   
+   .hovereffect:hover h2,.hovereffect:hover a.img-upload {
+   opacity:1;
+   filter:alpha(opacity=100);
+   -ms-transform:translatey(0);
+   -webkit-transform:translatey(0);
+   transform:translatey(0);
+   }
+   
+   .hovereffect:hover a.img-upload {
+   -webkit-transition-delay:.2s;
+   transition-delay:.2s;
+   }
+
+/* use a custom toggle switch since bootstrap doesn't support resizing the default one */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+    margin-left:10px;
+    margin-right:10px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {display:none;}
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input.default:checked + .slider {
+    background-color: #444;
+  }
+  input.primary:checked + .slider {
+    background-color: #2196F3;
+  }
+  input.success:checked + .slider {
+    background-color: #8bc34a;
+  }
+  input.info:checked + .slider {
+    background-color: #3de0f5;
+  }
+  input.warning:checked + .slider {
+    background-color: #FFC107;
+  }
+  input.danger:checked + .slider {
+    background-color: #f44336;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 24px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }

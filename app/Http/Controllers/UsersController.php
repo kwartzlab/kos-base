@@ -66,8 +66,8 @@ class UsersController extends Controller
     public function store(Request $request)
     {
     
-        $this->validate(request(),[
-                'first_name' => 'required',
+         $request->validate([
+               'first_name' => 'required',
                 'last_name' => 'required',
                 'email' => 'required|unique:users',
                 'address' => 'required',
@@ -82,17 +82,16 @@ class UsersController extends Controller
 
         // create the applicant user
         $user = \App\User::create([
-            'first_name' => request('first_name'),
-            'last_name' => request('last_name'),
-            'email' => request('email'),
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
             'status' => 'applicant',
-            'acl' => 'user',
             'date_applied' => date("Y-m-d"),
-            'phone' => request('phone'),
-            'address' => request('address'),
-            'city' => request('city'),
-            'province' => request('province'),
-            'postal' => request('postal'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'postal' => $request->input('postal'),
             'password' => Hash::make($this->generate_random_password()),
             'member_id' => rand(1000,9999),
             'photo' => $photo
@@ -102,91 +101,91 @@ class UsersController extends Controller
         $form_data = array();
         $form_data[] = array(
             'label' => 'Interviewing Members (three are required)',
-            'value' => request('int_members')
+            'value' => $request->input('int_members')
         );
         $form_data[] = array(
             'label' => 'How did you hear about Kwartzlab? Were you referred by a member?',
-            'value' => request('int_q1')
+            'value' => $request->input('int_q1')
         );
         $form_data[] = array(
             'label' => 'Have you visited Kwartzlab before? If so, any particular events or just Tuesday Open Nights in general?',
-            'value' => request('int_q2')
+            'value' => $request->input('int_q2')
         );
         $form_data[] = array(
             'label' => 'Can you tell us a bit about yourself?',
-            'value' => request('int_q3')
+            'value' => $request->input('int_q3')
         );
         $form_data[] = array(
             'label' => 'Have you been a member of an organization, club or association like Kwartzlab before?',
-            'value' => request('int_q4')
+            'value' => $request->input('int_q4')
         );
         $form_data[] = array(
             'label' => 'What sort of projects are you looking to work on at Kwartzlab?',
-            'value' => request('int_q5')
+            'value' => $request->input('int_q5')
         );
         $form_data[] = array(
             'label' => 'Can you tell us about a project youve worked on in the past?',
-            'value' => request('int_q6')
+            'value' => $request->input('int_q6')
         );
         $form_data[] = array(
             'label' => 'Are you looking to develop any particular skills or tool experience as a Kwartzlab member?',
-            'value' => request('int_q7')
+            'value' => $request->input('int_q7')
         );
         $form_data[] = array(
             'label' => 'Kwartzlab is a member-run organization. As such, we all share some duties, such as clean up and general equipment maintenance. Are you OK with volunteering some of your time (generally 1-2 hours a month) to help keep Kwartzlab up and running?',
-            'value' => request('int_q8')
+            'value' => $request->input('int_q8')
         );
         $form_data[] = array(
             'label' => 'Do you have any special skills in this regard to help out? i.e tool/equipment experience, etc.',
-            'value' => request('int_q9')
+            'value' => $request->input('int_q9')
         );
         $form_data[] = array(
             'label' => 'There is an annual general meeting you would be expected to attend, where we vote on anything that concerns our space as a whole, like changing rules or electing board members. Are you OK with attending such a meeting?',
-            'value' => request('int_q10')
+            'value' => $request->input('int_q10')
         );
         $form_data[] = array(
             'label' => 'Kwartzlab members are responsible for their health and safety at all times - including observing all safety and training requirements for tools and other equipment. It is the responsibility of all Members and Guests to maintain and promote this culture in their own usage, as well as addressing inappropriate or unsafe use of tools by others. If you see another person operating tools in an unsafe or inappropriate manner, you are expected to address the issue. If you are not comfortable speaking with the person directly, you need to raise the issue immediately with the Team for that tool/area or the Board of Directors. Do you agree?',
-            'value' => request('int_q13')
+            'value' => $request->input('int_q13')
         );
         $form_data[] = array(
             'label' => 'Have you read and agreed to the Kwartzlab Code of Conduct?',
-            'value' => request('int_q11')
+            'value' => $request->input('int_q11')
         );
         $form_data[] = array(
             'label' => 'Is there anything else you would like us or the membership to know?',
-            'value' => request('int_q12')
+            'value' => $request->input('int_q12')
         );
         $form_data[] = array(
             'label' => 'First Name',
-            'value' => request('first_name')
+            'value' => $request->input('first_name')
         );
         $form_data[] = array(
             'label' => 'Last Name',
-            'value' => request('last_name')
+            'value' => $request->input('last_name')
         );
         $form_data[] = array(
             'label' => 'Email Address',
-            'value' => request('email')
+            'value' => $request->input('email')
         );
         $form_data[] = array(
             'label' => 'Phone Number',
-            'value' => request('phone')
+            'value' => $request->input('phone')
         );
         $form_data[] = array(
             'label' => 'Street Address',
-            'value' => request('address')
+            'value' => $request->input('address')
         );
         $form_data[] = array(
             'label' => 'City',
-            'value' => request('city')
+            'value' => $request->input('city')
         );
         $form_data[] = array(
             'label' => 'Province',
-            'value' => request('province')
+            'value' => $request->input('province')
         );
         $form_data[] = array(
             'label' => 'Postal Code',
-            'value' => request('postal')
+            'value' => $request->input('postal')
         );
 
         // save application form data
@@ -255,20 +254,7 @@ class UsersController extends Controller
 
         $user = \App\User::find($id);
 
-        $all_roles = \App\Role::get()->toArray();
-
-        $user_roles = [];
-        if (old()) {
-            foreach (old('user-roles') as $role) {
-                $user_roles[] = $role;
-            }
-        } else {
-            foreach ($user->roles()->get() as $key => $role) {
-                $user_roles[] = $role['id'];
-            }
-        }
-
-        return view('users.edit', compact('user','all_roles','user_roles'));
+        return view('users.edit', compact('user'));
 
     }
 
@@ -284,8 +270,8 @@ class UsersController extends Controller
         
         if (Gate::allows('manage-users')) {
 
-            $this->validate(request(),[
-                'first_name' => 'required',
+            $request->validate([
+               'first_name' => 'required',
                 'last_name' => 'required',
                 'email' => 'required',
                 'password' => 'confirmed',
@@ -298,7 +284,6 @@ class UsersController extends Controller
             $user->last_name = $request->input('last_name');
             $user->email = $request->input('email');
             $user->status = $request->input('status');
-            $user->acl = $request->input('acl');
 
             $user->phone = $request->input('phone');
             $user->address = $request->input('address');
@@ -328,7 +313,7 @@ class UsersController extends Controller
 
             // if password was submitted, change it
             if ($request->input('password') != NULL) {
-                $user->password = Hash::make(request('password'));
+                $user->password = Hash::make($request->input('password'));
             }
 
             $user->save();
@@ -353,8 +338,8 @@ class UsersController extends Controller
 
         if (Gate::allows('manage-users')) {
 
-            $this->validate(request(),[
-                'confirm' => 'required'
+            $request->validate([
+               'confirm' => 'required'
             ]);
 
             if ($id == \Auth::user()->id) {
@@ -397,14 +382,14 @@ class UsersController extends Controller
     // post new key
     public function store_key($user_id) {
         
-        $this->validate(request(),[
-                'rfid' => 'required'
+         $request->validate([
+            'rfid' => 'required'
             ]);
 
         $user = \App\Key::create([
             'user_id' => $user_id,
-            'rfid' => md5(request('rfid')),
-            'description' => request('description'),
+            'rfid' => md5($request->input('rfid')),
+            'description' => $request->input('description'),
             ]);
 
         $message = "Key added successfully.";

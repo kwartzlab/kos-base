@@ -56,36 +56,40 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate(request(),[
+        $request->validate([
             'name' => 'required|unique:roles'
         ]);
 
-        $acl_attributes = [];
-        // combine all ACL elements from form into one big json
-        foreach (request('acl-attributes') as $key => $acl_attribute) {
-            // convert json string to array
-            $acl_attribute = json_decode(str_replace('\'', '"', $acl_attribute), true);
-
-            // determinte attribute object and operation
-            $acl_object = array_keys($acl_attribute)[0];
-            $acl_operation = $acl_attribute[$acl_object];
-
-            // add attribute to permissions array
-            $acl_attributes[] = [
-                'object' => $acl_object,
-                'operation' => $acl_operation
-            ];
-            
-        }
-
         // save User Role
         $acl_role = \App\Role::create([
-            'name' => request('name'),
-            'description' => request('description')
-            ]);
+            'name' => $request->input('name'),
+            'description' => $request->input('description')
+         ]);
 
-        // add role permissions
-        $acl_role->permissions()->createMany($acl_attributes);
+         if ($request->has('acl-attributes')) {
+
+            $acl_attributes = [];
+            // combine all ACL elements from form into one big json
+            foreach ($request->input('acl-attributes') as $key => $acl_attribute) {
+                // convert json string to array
+                $acl_attribute = json_decode(str_replace('\'', '"', $acl_attribute), true);
+    
+                // determinte attribute object and operation
+                $acl_object = array_keys($acl_attribute)[0];
+                $acl_operation = $acl_attribute[$acl_object];
+    
+                // add attribute to permissions array
+                $acl_attributes[] = [
+                    'object' => $acl_object,
+                    'operation' => $acl_operation
+                ];
+                
+            }
+    
+            // add role permissions
+            $acl_role->permissions()->createMany($acl_attributes);
+   
+         }
 
         $message = "User Role added successfully.";
         return redirect('/roles')->with('success', $message);
@@ -156,41 +160,45 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate(request(),[
+         $request->validate([
             'name' => 'required'
-        ]);
+         ]);
 
-    
-        $acl_attributes = [];
-        // combine all ACL elements from form into one big json
-        foreach (request('acl-attributes') as $key => $acl_attribute) {
-            // convert json string to array
-            $acl_attribute = json_decode(str_replace('\'', '"', $acl_attribute), true);
+         // load existing record and update
+         $acl_role = \App\Role::find($id);
 
-            // determinte attribute object and operation
-            $acl_object = array_keys($acl_attribute)[0];
-            $acl_operation = $acl_attribute[$acl_object];
+         $acl_role->name = $request->input('name');
+         $acl_role->description = $request->input('description');
 
-            // add attribute to permissions array
-            $acl_attributes[] = [
-                'object' => $acl_object,
-                'operation' => $acl_operation
-            ];
-            
-        }
+         // save User Role
+         $acl_role->save();
+        
+         // clear existing role permissions
+         $acl_role->permissions()->delete();
 
-        // load existing record and update
-        $acl_role = \App\Role::find($id);
+         if ($request->has('acl-attributes')) {
 
-        $acl_role->name = request('name');
-        $acl_role->description = request('description');
+            $acl_attributes = [];
+            // combine all ACL elements from form into one big json
+            foreach (request('acl-attributes') as $key => $acl_attribute) {
+                  // convert json string to array
+                  $acl_attribute = json_decode(str_replace('\'', '"', $acl_attribute), true);
 
-        // save User Role
-        $acl_role->save();
+                  // determinte attribute object and operation
+                  $acl_object = array_keys($acl_attribute)[0];
+                  $acl_operation = $acl_attribute[$acl_object];
 
-        // clear and re-add role permissions
-        $acl_role->permissions()->delete();
-        $acl_role->permissions()->createMany($acl_attributes);
+                  // add attribute to permissions array
+                  $acl_attributes[] = [
+                     'object' => $acl_object,
+                     'operation' => $acl_operation
+                  ];
+                  
+            }
+
+            $acl_role->permissions()->createMany($acl_attributes);
+
+         }
 
         $message = "User Role updated successfully.";
         return redirect('/roles/' . $acl_role->id . '/edit')->with('success', $message);

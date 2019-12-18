@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
-class UserRole extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+ 
+class UserRole extends Model implements Auditable
 {
+
+    use \OwenIt\Auditing\Auditable;
+
     protected $table = 'user_roles';
     protected $fillable = ['user_id', 'role_id'];
 

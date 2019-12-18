@@ -53,6 +53,11 @@ class User extends Authenticatable implements Auditable
 
     }
 
+    // return user's full name
+    public function get_name() {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     // returns all trainer records for current user
     public function trainer_for() {
 
@@ -65,6 +70,7 @@ class User extends Authenticatable implements Auditable
     
     }
 
+   
     // returns true or false if user is authorized for specified gatekeeper
     public function is_authorized($gatekeeper_id) {
         $result = \App\Authorization::where('user_id',$this->id)->where('gatekeeper_id',$gatekeeper_id)->get();
@@ -88,6 +94,16 @@ class User extends Authenticatable implements Auditable
     }
 
 
+    // returns training requests (past or present)
+    public function training_requests($status = 'all') {
+    	if ($status == 'all') {
+            return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('created_at','desc')->get();
+        } else if ($status == 'history') {
+			return \App\TeamRequest::where('status','!=','new')->where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('updated_at','desc')->get();
+        } else {
+			return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training', 'status' => $status])->orderby('created_at','desc')->get();
+		}
+    }
 
     public function add_authorization($gatekeeper_id) {
 
@@ -124,6 +140,21 @@ class User extends Authenticatable implements Auditable
     public function is_keyadmin() {
         if ($this->acl == 'keyadmin') { return true; } else { return false; }
 
+    }
+
+    // is member a lead of specifed team?
+    public function is_team_lead($team_id) {
+        $result = \App\TeamAssignment::where(['user_id' => $this->id, 'team_id' => $team_id, 'team_role' => 'lead'])->get();
+        if (count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // returns all teams the user is part of
+    public function teams() {
+        return $this->belongsToMany(Team::class, 'team_assignments','user_id');
     }
 
     public function has_role($role_id) {

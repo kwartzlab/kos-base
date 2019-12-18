@@ -8,6 +8,8 @@ class Gatekeeper extends Model implements Auditable
 {
 
 	use \OwenIt\Auditing\Auditable;
+	
+	protected $dates = [ 'last_seen' ];
 
 	public function trainers() {
         return $this->hasMany(Trainers::class);
@@ -19,7 +21,7 @@ class Gatekeeper extends Model implements Auditable
 		if ($auth_key == NULL) { return NULL; }
 
 		$result = \App\Gatekeeper::where('auth_key',$auth_key)->where('status','enabled')->get()->first();
-
+ 
 		if (count($result) > 0) {
 			return $result;
 		} else {
@@ -37,10 +39,39 @@ class Gatekeeper extends Model implements Auditable
 
 	}
 
+	// returns all authorizations for gatekeeper
+	public function authorizations() {
+		return $this->hasMany(Authorization::class, 'gatekeeper_id', 'id');
+
+	}
+
+	// returns team gatekeeper belongs to (if any)
+	public function team() {
+		return $this->hasOne(Team::class, 'id', 'team_id');
+	}
+
+	// has user requested training for this gatekeeper?
+	public function training_requested() {
+
+		// get any non-cancelled records
+		$result = \App\TeamRequest::whereNotIn('status',['cancelled','failed'])->where(['gatekeeper_id' => $this->id, 'user_id' => \Auth::user()->id])->count();
+		if ($result == 0) { return false; } else { return true; }
+
+	}
+
+	// returns requests of a specific type (or all)
+	public function training_requests() {
+		return $this->hasMany(TeamRequest::class, 'gatekeeper_id', 'id');
+	}
+
+	// is user a trainer for this gatekeeper? (via teams)
+	public function is_trainer() {
+		return $team = $this->team()->is_trainer();
+	}
 
     # returns if current user is a trainer for specific gatekeeper
     # defaults to current user vs 
-    public function is_trainer($user_id = NULL) {
+/*    public function is_trainer($user_id = NULL) {
         
         // use current user if parameter left empty
         if ($user_id == NULL) {
@@ -54,5 +85,6 @@ class Gatekeeper extends Model implements Auditable
             return true;
         }
     }
+*/
 
 }

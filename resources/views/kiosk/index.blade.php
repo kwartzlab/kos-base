@@ -10,7 +10,7 @@
 <div style="text-align:center;">
 
 <img src="/img/kiosk/rfid.png" style="width:50%;"><br />
-	      <h1><strong>Scan card to begin</strong></h1>
+	      <h1><strong>Tap key to begin</strong></h1>
 
 <form method="POST" action="/kiosk/authenticate">
 

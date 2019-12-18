@@ -102,14 +102,8 @@ class KioskController extends Controller
                 $rfid = $request->input('rfid');
                 $page_title = 'KeyKiosk';
                 return view('kiosk.confirm_user', compact('page_title','keyuser','rfid'));
-
             }
-
         }
-
-
-    } else {
-        return redirect('/kiosk');            
     }
 
 

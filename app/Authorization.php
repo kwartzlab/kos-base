@@ -16,6 +16,13 @@ class Authorization extends Model implements Auditable
 
     }
 
+    public function gatekeeper() {
+
+        return $this->hasOne(Gatekeeper::class,'id','gatekeeper_id');
+
+    }
+
+
     // returns the name of the gatekeeper this authorization is for
     public function name() {
     	$result = \App\Gatekeeper::where('id',$this->gatekeeper_id)->get();
