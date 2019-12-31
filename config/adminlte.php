@@ -185,7 +185,7 @@ return [
             'icon' => 'fas fa-user fa-fw',
         ],
         [
-            'text' => 'My Teams',
+            'text' => 'Teams',
             'url'  => '/teams',
             'icon' => 'fas fa-user-friends fa-fw',
         ],

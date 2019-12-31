@@ -15,10 +15,10 @@ class CreateTrainingAttendeesTable extends Migration
     {
         Schema::create('training_attendees', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('training_id');
+            $table->integer('session_id');
             $table->integer('user_id');
             $table->string('response',50)->default('new');
-            $table->datetime('acknowledged_at');
+            $table->datetime('acknowledged_at')->nullable();
             $table->timestamps();
         });
     }

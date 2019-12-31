@@ -15,10 +15,11 @@ class ModifyGatekeepersAddTraining extends Migration
     {
         Schema::table('gatekeepers', function (Blueprint $table) {
             $table->integer('auth_expires')->default(0)->after('auth_key');
-            $table->boolean('is_trainable')->default(true)->after('team_id');
-            $table->text('training_desc')->nullable()->after('is_trainable');
-            $table->integer('training_prereq')->default(0)->after('training_desc');
-            $table->string('training_eta', 50)->nullable()->after('training_prereq');
+            $table->string('auth_expiry_type', 50)->default('revoke')->after('auth_expires');
+            $table->text('training_desc')->nullable()->after('team_id');
+            $table->string('training_eta', 80)->nullable()->after('training_desc');
+            $table->integer('training_prereq')->default(0)->after('training_eta');
+
         });
     }
 
@@ -31,10 +32,10 @@ class ModifyGatekeepersAddTraining extends Migration
     {
         Schema::table('gatekeepers', function (Blueprint $table) {
             $table->dropColumn('auth_expires');
-            $table->dropColumn('is_trainable');
+            $table->dropColumn('auth_expiry_type');
             $table->dropColumn('training_desc');
-            $table->dropColumn('training_prereq');
             $table->dropColumn('training_eta');
+            $table->dropColumn('training_prereq');
         });
     }
 }
