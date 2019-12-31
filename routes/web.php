@@ -76,6 +76,8 @@ Route::post('/kiosk/store_key', 'KioskController@store_key')->middleware(['auth'
 
 // Authentication routes
 Auth::routes();
+Auth::routes(['register' => false]);
+
 
 // Image manipulation routes
 Route::middleware(['auth'])->group(function() {

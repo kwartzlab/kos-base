@@ -167,7 +167,7 @@ class User extends Authenticatable implements Auditable
 
     // returns all roles the user holds
     public function roles() {
-        return $this->belongsToMany(Role::class, 'user_roles');
+        return $this->hasMany(UserRole::class, 'user_id');
     }
 
     // check user roles to verify permissions

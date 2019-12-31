@@ -33,6 +33,15 @@ return [
             'name' => 'Helpdesk Form'
         ],
     ],
+    'user_status' => [
+        'active' => 'Active',
+        'applicant' => 'Applicant',
+        'hiatus' => 'On Hiatus',
+        'withdrawn' => 'Withdrawn',
+        'suspended' => 'Suspended',
+        'abandoned' => 'Applicant [Abandoned]',
+        'denied' => 'Applicant [Denied]'
+    ],
     'team_roles' => [
         'lead' => [
             'name' => 'Team Lead',
@@ -75,6 +84,10 @@ return [
         'cancelled' => 'Cancelled',
         'completed' => 'Completed',
         'failed' => 'Did Not Finish',
+    ],
+    'auth_expiry_types' => [
+        'revoke' => 'Revoke Authorization',
+        'retrain' => 'Requires Retraining',
     ],
     
 ];

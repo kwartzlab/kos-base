@@ -19,6 +19,7 @@ class CreateTrainingSessionsTable extends Migration
             $table->integer('trainer_id');
             $table->datetime('starts');
             $table->integer('length');
+            $table->integer('max_attendees');
             $table->timestamps();
         });
     }
