@@ -190,10 +190,15 @@ return [
             'icon' => 'fas fa-user-friends fa-fw',
         ],
         [
+            'text' => 'Tools',
+            'url'  => '/gatekeepers/tools',
+            'icon' => 'fas fa-tools fa-fw',
+        ],
+/*        [
             'text' => 'Request Training',
             'url'  => '/teams/training',
             'icon' => 'fas fa-graduation-cap fa-fw',
-        ],
+        ], */
         [
             'text' => 'Membership Application',
             'url'  => '/users/create',
@@ -209,7 +214,7 @@ return [
         [
             'text' => 'Gatekeepers',
             'url'  => '/gatekeepers',
-            'icon' => 'fas fa-lock fa-fw',
+            'icon' => 'fas fa-door-open fa-fw',
             'can' => 'manage-gatekeepers'
         ],
 /*        [
@@ -222,6 +227,7 @@ return [
             'text' => 'Manage Teams',
             'url'  => '/teams/manage',
             'icon' => 'fas fa-users-cog fa-fw',
+            'can' => 'manage-teams'
         ],
         [
             'text' => 'User Roles',
@@ -233,6 +239,7 @@ return [
             'text' => 'Reports',
             'url'  => '/reports',
             'icon' => 'fas fa-chart-pie fa-fw',
+            'can' => 'manage-reports'
 
         ],
 
@@ -338,7 +345,7 @@ return [
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css',
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/white/pace-theme-minimal.min.css',
                 ],
                 [
                     'type' => 'js',

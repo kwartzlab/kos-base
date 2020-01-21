@@ -65,7 +65,19 @@
     placeholder: 'Select permissions to assign',
     tags: true,
     allowClear: true,
-    multiple: true
+    multiple: true,
+    createTag: function (params) {
+        // Don't offset to create a tag if there is no @ symbol
+        if (params.term.indexOf('@') === -1) {
+        // Return null to disable tag creation
+        return null;
+        }
+
+        return {
+          id: params.term,
+          text: params.term
+        }
+      },
   });
 
 </script>

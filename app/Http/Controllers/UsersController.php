@@ -338,9 +338,10 @@ class UsersController extends Controller
 
         if (Gate::allows('manage-users')) {
 
-            $request->validate([
-               'confirm' => 'required'
+            $this->validate(request(),[
+                'confirm' => 'required'
             ]);
+
 
             if ($id == \Auth::user()->id) {
                 $message = "Cannot delete yourself.";

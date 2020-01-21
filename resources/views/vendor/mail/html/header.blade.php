@@ -1,7 +1,7 @@
 <tr>
     <td class="header">
         <a href="{{ $url }}">
-            {{ $slot }}
+            {{ config('kwartzlabos.org_name')  }}
         </a>
     </td>
 </tr>

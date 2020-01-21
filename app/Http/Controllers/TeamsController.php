@@ -40,8 +40,13 @@ class TeamsController extends Controller
      */
     public function manage()
     {
-        $teams = \App\Team::orderby('name')->get();
-        return view('teams.manage', compact('teams'));
+
+        if (\Auth::user()->can('manage-teams')) {
+            $teams = \App\Team::orderby('name')->get();
+            $team_assignments = \App\TeamAssignment::where('status','new')->orderby('gatekeeper_id')->get();
+            return view('teams.manage', compact('teams','team_assignments'));
+        }
+
     }
 
     /**
@@ -155,8 +160,6 @@ class TeamsController extends Controller
 
     }
 
-
-
     public function requests($team_id, $request_type)
     {
 
@@ -188,13 +191,15 @@ class TeamsController extends Controller
      */
     public function create()
     {
-        // get all users
-        $user_list = array();
-        foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
-            $user_list[$user->id] = $user->first_name . " " . $user->last_name;
-        }
+        if (\Auth::user()->can('manage-teams')) {
+            // get all users
+            $user_list = array();
+            foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
+                $user_list[$user->id] = $user->first_name . " " . $user->last_name;
+            }
 
-        return view('teams.create',['user_list' => $user_list]);
+            return view('teams.create',['user_list' => $user_list]);
+        }
     }
 
     /**
@@ -210,32 +215,41 @@ class TeamsController extends Controller
             'name' => 'required|unique:teams'
         ]);
 
-        // save team
-        $team = \App\Team::create([
-            'name' => $request->input('name'),
-            'description' => $request->input('description')
-        ]);
+        if (\Auth::user()->can('manage-teams')) {
+            // save team
+            $team = \App\Team::create([
+                'name' => $request->input('name'),
+                'description' => $request->input('description')
+            ]);
 
-        $team_assignments = array();
-        // add selected users to team roles
-        foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
-            $team_array = $request->input($team_role);
-            if ($team_array != NULL) {
-                foreach ($team_array as $key => $user_id) {
-                    $team_assignments[] = [
-                        'user_id' => $user_id,
-                        'team_role' => $team_role,
-                        'team_id' => $team->id
-                    ];
+            $team_assignments = array();
+            // add selected users to team roles
+            foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
+                // only allow team leads to be changed by team managers
+                if (($team_data['is_admin']) && (\Auth::user()->can('manage-teams')) || (!$team_data['is_admin'])) {
+                    // prevent trainers and maintainers from being assigned (requires approval and gatekeeper assignment)
+                    if ((!$team_data['is_trainer']) && (!$team_data['is_maintainer'])) {
+                        $team_array = $request->input($team_role);
+                        if ($team_array != NULL) {
+                            foreach ($team_array as $key => $user_id) {
+                                $team_assignments[] = [
+                                    'user_id' => $user_id,
+                                    'team_role' => $team_role,
+                                    'team_id' => $team->id
+                                ];
+                            }
+                        }
+                    }
                 }
+                
             }
+
+            // add team assignments
+            $team->assignments()->createMany($team_assignments);
+
+            $message = "Team created successfully.";
+            return redirect('/teams/' . $team->id . '/edit')->with('success', $message);
         }
-
-        // add team assignments
-        $team->assignments()->createMany($team_assignments);
-
-        $message = "Team created successfully.";
-        return redirect('/teams/' . $team->id . '/edit')->with('success', $message);
     }
 
     /**
@@ -310,26 +324,29 @@ class TeamsController extends Controller
 
         // process team assignment changes
         foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
-            if ($request->has($team_role)) {
-                // go through existing records and add/update based on the form input
-                foreach ($request->input($team_role) as $key => $user_id) {
-                    if (\App\TeamAssignment::where(['user_id' => $user_id, 'team_role' => $team_role, 'team_id' => $team->id])->count() == 0) {
-                        $team->assignments()->create(['user_id' => $user_id, 'team_role' => $team_role, 'team_id' => $team->id]);
-                    }
-                    // find all relevant assignments and delete those which aren't in the form input
-                    $role_members = $team->get_role_members($team_role);
-                    foreach ($role_members as $role_member) {
-                        if (!in_array($role_member['user_id'], $request->input($team_role))) {
-                            $role_member->delete();
+            // prevent trainers and maintainers from being assigned (requires approval and gatekeeper assignment)
+            if ((!$team_data['is_trainer']) && (!$team_data['is_maintainer'])) {
+                if ($request->has($team_role)) {
+                    // go through existing records and add/update based on the form input
+                    foreach ($request->input($team_role) as $key => $user_id) {
+                        if (\App\TeamAssignment::where(['user_id' => $user_id, 'team_role' => $team_role, 'team_id' => $team->id])->count() == 0) {
+                            $team->assignments()->create(['user_id' => $user_id, 'team_role' => $team_role, 'team_id' => $team->id]);
+                        }
+                        // find all relevant assignments and delete those which aren't in the form input
+                        $role_members = $team->get_role_members($team_role);
+                        foreach ($role_members as $role_member) {
+                            if (!in_array($role_member['user_id'], $request->input($team_role))) {
+                                $role_member->delete();
+                            }
                         }
                     }
-                }
-            } else {
-                // if there's no array, remove any remaining assigned members
-                $role_members = $team->get_role_members($team_role);
-                if ($role_members != false) {
-                    foreach ($role_members as $role_member) {
-                        $role_member->delete();
+                } else {
+                    // if there's no array, remove any remaining assigned members
+                    $role_members = $team->get_role_members($team_role);
+                    if ($role_members != false) {
+                        foreach ($role_members as $role_member) {
+                            $role_member->delete();
+                        }
                     }
                 }
             }
@@ -348,6 +365,34 @@ class TeamsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (\Gate::allows('manage-teams')) {
+            $team = \App\Team::find($id);
+
+            // remove team ID from any associated gatekeepers
+            $gatekeepers = $team->gatekeepers()->get();
+            foreach ($gatekeepers as $gatekeeper) {
+                $gatekeeper->team_id = 0;
+                $gatekeeper->save();
+            }
+
+            // only remove the assignments that aren't gatekeeper-specific (eg trainers, maintainers)
+            $assignments = $team->assignments()->get();
+            foreach ($assignments as $assignment) {
+                if ($assignment->gatekeeper_id == 0) {
+                    $assignment->delete();
+                } else {
+                    $assignment->team_id = 0;
+                    $assignment->save();
+                }
+            }
+            
+            $team->delete();
+            session(['message' => 'Team deleted successfully.']);
+            return response()->json(['status' => 'success', 'message' => 'Team Deleted']);
+
+        } else {                        // request already exists
+            return response()->json(['status' => 'error', 'message' => 'Cannot Delete Team']);
+        }
+
     }
 }

@@ -34,7 +34,8 @@
             <label for="status">Type</label>
             <select class="form-control" name="type">
               <option value="doorway" @if (old('type') == 'doorway') selected="selected" @endif>Doorway</option>
-              <option value="lockout" @if (old('type') == 'lockout') selected="selected" @endif>Machine Lockout</option>
+              <option value="lockout" @if (old('type') == 'lockout') selected="selected" @endif>Tool Lockout</option>
+              <option value="training" @if (old('type') == 'training') selected="selected" @endif>Training Module</option>
             </select>
           </div>
           <div class="form-group col-md-3">

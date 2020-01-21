@@ -1,13 +1,10 @@
 <div class="card card-outline card-primary">
 			<div class="card-header">
-				<h3 class="card-title small">{{ $team->name }}</h3>
+				<h3 class="card-title ">{{ $team->name }}</h3>
 				<div class="card-tools">
             @if($team->is_lead())
                <a class="btn btn-primary" href="/teams/{{ $team->id }}/edit" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Team Assignments</a>
             @endif
-<?php /*            @if(($team->is_trainer()) || ($team->is_lead()))
-               <a class="btn btn-primary" href="/teams/{{ $team->id }}/authorizations" role="button"><i class="far fa-check-circle"></i>&nbsp;&nbsp;Manage Authorizations</a>
-            @endif */ ?>
             </div>
 			</div>
 			
@@ -16,7 +13,15 @@
          <div class="row">
             <div class="col-md-6">
                @if ($team->is_member(\Auth::user()->id))
-                  <p>Your Role(s):&nbsp;&nbsp;@foreach($team->assignments()->where('user_id', \Auth::user()->id)->get() as $assignment)<span class="badge badge-primary">{{ $team_roles[$assignment['team_role']]['name'] }}</span>&nbsp;&nbsp;@endforeach</p>
+                  <h5>My Roles</h5>   
+                  <p>@foreach($team->assignments()->where('user_id', \Auth::user()->id)->get() as $assignment)
+                        @if(($assignment->team_role == 'trainer') || ($assignment->team_role == 'maintainer'))
+                              <span class="badge badge-primary">{{ $team_roles[$assignment->team_role]['name'] }} - {{ $assignment->gatekeeper()->first()->name }} </span>&nbsp;
+                        @else
+                              <span class="badge badge-primary">{{ $team_roles[$assignment->team_role]['name'] }}</span>&nbsp;
+                        @endif
+                     @endforeach
+                  </p>
                @endif
                @php($gatekeepers = $team->gatekeepers()->get())
                   @if(!$gatekeepers->isEmpty())
@@ -32,7 +37,7 @@
                                  <td>{{ $gatekeeper->name }}</td>
                                  <td>{{ $gatekeeper->count_authorizations() }}</td>
                                  <td>
-                                    <a class="btn btn-primary btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/dashboard" role="button"><i class="fas fa-lock"></i>&nbsp;&nbsp;Manage</a>
+                                       <a class="btn btn-primary btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/dashboard" role="button"><i class="fas fa-cog"></i>&nbsp;&nbsp;Manage</a>
                                  </td>
                               </tr>
                            @endforeach
@@ -50,7 +55,7 @@
                   <div class="icon">
                      <i class="fas fa-tools"></i>
                   </div>
-                  <a href="/teams/{{ $team->id }}/requests/maintenance" class="small-box-footer">View Requests&nbsp;&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                  <?php /* <a href="/teams/{{ $team->id }}/requests/maintenance" class="small-box-footer">View Requests&nbsp;&nbsp;<i class="fas fa-arrow-circle-right"></i></a> */ ?>
                </div>
             </div>
             <div class="col-md-3">
@@ -64,7 +69,7 @@
                   <div class="icon">
                      <i class="fas fa-graduation-cap"></i>
                   </div>
-                  <a href="/teams/{{ $team->id }}/requests/training" class="small-box-footer">View Requests&nbsp;&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                  <?php /* <a href="/teams/{{ $team->id }}/requests/training" class="small-box-footer">View Requests&nbsp;&nbsp;<i class="fas fa-arrow-circle-right"></i></a> */ ?>
                </div>
             </div>
          </div>

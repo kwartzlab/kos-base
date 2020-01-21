@@ -42,15 +42,23 @@ class User extends Authenticatable implements Auditable
     ];
 
     public function keys() {
-
         return $this->hasMany(Key::class);
-
     }
+    
     public function authorizations() {
-
         return $this->hasMany(Authorization::class);
-        
+    }
 
+    public function socials() {
+        return $this->hasMany(UserSocial::class);
+    }
+
+    public function skills() {
+        return $this->hasMany(UserSkill::class);
+    }
+
+    public function certs() {
+        return $this->hasMany(UserCert::class);
     }
 
     // return user's full name
@@ -60,7 +68,6 @@ class User extends Authenticatable implements Auditable
 
     // returns all trainer records for current user
     public function trainer_for() {
-
         $result = \App\Trainers::where('user_id',$this->id)->get();
         if ($result->count() === 0 ) {
             return NULL;
@@ -84,7 +91,17 @@ class User extends Authenticatable implements Auditable
 
     // returns true or false if user is a trainer for specified gatekeeper
     public function is_trainer($gatekeeper_id) {
-        $result = \App\Trainers::where('user_id',$this->id)->where('gatekeeper_id',$gatekeeper_id)->get();
+        $result = $this->hasOne(TeamAssignment::class)->where(['team_role' => 'trainer', 'gatekeeper_id' => $gatekeeper_id]);
+        if ($result->count() === 0 ) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public function is_maintainer($gatekeeper_id) {
+        $result = $this->hasOne(TeamAssignment::class)->where(['team_role' => 'maintainer', 'gatekeeper_id' => $gatekeeper_id]);
         if ($result->count() === 0 ) {
             return false;
         } else {

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTeamAssignmentsTable extends Migration
+class CreateUserSkillsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateTeamAssignmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('team_assignments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->default(0);
-            $table->integer('team_id')->default(0);
-            $table->string('team_role', 50);
+        Schema::create('user_skills', function (Blueprint $table) {
+            $table->Increments('id');
+            $table->integer('user_id');
+            $table->string('skill');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateTeamAssignmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('team_assignments');
+        Schema::dropIfExists('user_skills');
     }
 }

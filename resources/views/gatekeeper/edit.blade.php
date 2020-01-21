@@ -37,10 +37,12 @@
 
               @if (!old('status')))
                 <option value="doorway" @if ($gatekeeper->type == 'doorway') selected="selected" @endif>Doorway</option>
-                <option value="lockout" @if ($gatekeeper->type == 'lockout') selected="selected" @endif>Machine Lockout</option>
+                <option value="lockout" @if ($gatekeeper->type == 'lockout') selected="selected" @endif>Tool Lockout</option>
+                <option value="training" @if ($gatekeeper->type == 'training') selected="selected" @endif>Training Module</option>
               @else
                 <option value="doorway" @if (old('type') == 'doorway') selected="selected" @endif>Doorway</option>
-                <option value="lockout" @if (old('type') == 'lockout') selected="selected" @endif>Machine Lockout</option>
+                <option value="lockout" @if (old('type') == 'lockout') selected="selected" @endif>Tool Lockout</option>
+                <option value="training" @if (old('type') == 'training') selected="selected" @endif>Training Module</option>
               @endif
 
             </select>
@@ -119,65 +121,6 @@
     </form>
 
 </div>
-
-@if ($gatekeeper->is_default == 0)
-
-<div class="card card-warning card-outline">
-  <div class="card-header">
-    <h3 class="card-title">Manage Trainers</h3>
-  </div>
-
-  <div class="card-body">
-    <form method="POST" action="/gatekeepers/{{ $gatekeeper->id }}/add_trainer">
-
-      {{ csrf_field() }}
-
-      <div class="row">
-
-        <div class="form-group col-md-6">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <div class="input-group-text"><i class="fas fa-user"></i></div>
-            </div>
-            <select class="form-control" name="user_id">
-              @foreach($user_ids as $key => $value)
-              <option value="{{ $key }}">{{$value}}</option>
-              @endforeach
-            </select>
-            <span class="input-group-btn">
-              <button type="submit" class="btn btn-primary">Add Trainer</button>
-            </span>
-          </div>
-        </div>
-      </div>
-    </form>
-
-    <table class="table table-striped">
-      <thead><tr>
-        <th>Trainer Name</th>
-        <th>Added</th>
-        <th>Actions</th>
-      </tr></thead>
-      <tbody>
-        @foreach($gatekeeper->trainers as $trainer)
-          <tr>
-            <td>{{ $trainer->name() }}</td>
-            <td>{{ $trainer->created_at->diffForHumans() }}</td>
-            <td>
-            <a class="btn btn-danger btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/remove_trainer/{{ $trainer->id }}" role="button">Remove</a>
-
-            </td>
-          </tr>
-
-        @endforeach
-      </tbody>
-    </table>
-
-  </div>
-
-</div>
-
-@endif
 
 <div class="card card-danger card-outline">
     <div class="card-header">

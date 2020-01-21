@@ -156,7 +156,6 @@ class GatekeepersController extends Controller
         }
     }
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -173,10 +172,22 @@ class GatekeepersController extends Controller
                 'name' => 'required',
             ]);
 
+
             if ($request->has('is_default')) { $is_default = 1; } else { $is_default = 0; }
 
             $gatekeeper = \App\Gatekeeper::find($id);
 
+            // if team was changed, update gatekeeper-specific team assignments
+            if ($gatekeeper->team_id != $request->input('team_id')) {
+                $assignments = \App\TeamAssignment::where('gatekeeper_id', $gatekeeper->id)->get();
+                if ($assignments != NULL) {
+                    foreach ($assignments as $assignment) {
+                        $assignment->team_id = $request->input('team_id');
+                        $assignment->save();
+                    }
+                }
+            }
+            
             $gatekeeper->name = $request->input('name');
             $gatekeeper->description = $request->input('description');
             $gatekeeper->status = $request->input('status');
@@ -229,6 +240,9 @@ class GatekeepersController extends Controller
             // remove all authentication history
             $result = \App\Authentication::where('gatekeeper_id',$id)->delete();
 
+            // remove any gatekeeper-specific team assignments (eg trainers, maintainers)
+            $result = \App\TeamAssignment::where('gatekeeper_id',$id)->delete();
+
             $message = "Gatekeeper and authentication history deleted successfully.";
             return redirect('/gatekeepers')->with('success', $message);
 
@@ -239,41 +253,153 @@ class GatekeepersController extends Controller
 
     }
 
-    // post new trainer to gatekeeper
-    public function add_trainer($gatekeeper_id) {
+    // approves / rejects gatekeeper-related team assignments
+    public function assignments($request_action, $request_id) {
 
-        // make sure trainer isn't already in there
-        $trainer = \App\Trainers::where(['gatekeeper_id' => $gatekeeper_id,'user_id' => request('user_id')])->get();
+        if (\Gate::allows('manage-teams')) {
 
-        if (count($trainer)>0) {
-            $message = "Trainer already exists for this gatekeeper.";
-        } else {
+            switch ($request_action) {
+                case 'approve':
+                    $assignment = \App\TeamAssignment::find($request_id);
+                    if ($assignment != NULL) {
+                        $assignment->status = 'active';
+                        $assignment->save();
+                        return response()->json(['status' => 'success', 'message' => 'Request Approved']);
+                    }
+                    break;
+                case 'remove':
+                    $assignment = \App\TeamAssignment::find($request_id);
+                    if ($assignment != NULL) {
+                        $assignment->delete();
+                        return response()->json(['status' => 'success', 'message' => 'Request Removed']);
+                    }
+                    break;
+                }
 
-            $trainer = \App\Trainers::create([
-                'user_id' => request('user_id'),
-                'gatekeeper_id' => $gatekeeper_id
-                ]);
-    
-            $message = "Trainer added successfully.";
-    
+        }
+        return response()->json(['status' => 'error', 'message' => 'Error Approving Request']);
+
+    }
+
+
+
+    // assign trainer to gatekeeper
+    public function add_trainer($gatekeeper_id, $user_id) {
+
+        // get gatekeeper ID from request
+        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
+
+        $team = $gatekeeper->team()->first();
+        if ($team == NULL) { 
+            $has_team = false; 
+            $team_id = 0;
+            $trainer_status = 'active';
+        } else { 
+            $has_team = true; 
+            $team_id = $team->id;
         }
 
-        return redirect('/gatekeepers/' . $gatekeeper_id . '/edit')->with('success', $message);
+        if (config('kwartzlabos.team_roles.trainer.approval_required')) {
+            $trainer_status = 'new';
+        } else {
+            $trainer_status = 'active';
+        }
 
+        // ensure user actually has access
+        if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
+            
+            \App\TeamAssignment::create([
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'team_role' => 'trainer',
+                'gatekeeper_id' => $gatekeeper_id,
+                'status' => $trainer_status
+                ]);
 
-    }   
+            return response()->json(['status' => 'success', 'message' => 'Trainer Added Successfully']);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Error Adding Trainer']);
 
+    }
     // delete trainer from gatekeeper
     public function remove_trainer($gatekeeper_id, $trainer_id) {
 
+        // get gatekeeper ID from request
+        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
 
-        $trainer = \App\Trainers::find($trainer_id);
-        $trainer->delete();
+        $team = $gatekeeper->team()->first();
+        if ($team == NULL) { $has_team = false; } else { $has_team = true; }
 
-        $message = "Trainer removed successfully.";
-        return redirect('/gatekeepers/' . $gatekeeper_id . '/edit')->with('success',$message);
+        // ensure user actually has access
+        if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
+            $trainer = \App\TeamAssignment::where(['user_id' => $trainer_id, 'gatekeeper_id' => $gatekeeper_id, 'team_role' => 'trainer'])->first();
+            $trainer->delete();
+
+            return response()->json(['status' => 'success', 'message' => 'Trainer Removed']);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Error Removing Trainer']);
 
     }
+
+    // assign maintainer to gatekeeper
+    public function add_maintainer($gatekeeper_id, $user_id) {
+
+        // get gatekeeper ID from request
+        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
+
+        $team = $gatekeeper->team()->first();
+        if ($team == NULL) { 
+            $has_team = false; 
+            $team_id = 0;
+            $trainer_status = 'active';
+        } else { 
+            $has_team = true; 
+            $team_id = $team->id;
+            if (config('kwartzlabos.team_roles.maintainer.approval_required')) {
+                $trainer_status = 'new';
+            } else {
+                $trainer_status = 'active';
+            }
+        }
+
+        // ensure user actually has access
+        if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
+            
+            \App\TeamAssignment::create([
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'team_role' => 'maintainer',
+                'gatekeeper_id' => $gatekeeper_id,
+                'status' => $trainer_status
+                ]);
+
+            return response()->json(['status' => 'success', 'message' => 'Maintainer Added Successfully']);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Error Adding Maintainer']);
+
+    }
+
+    // delete maintainer from gatekeeper
+    public function remove_maintainer($gatekeeper_id, $maintainer_id) {
+
+        // get gatekeeper ID from request
+        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
+
+        $team = $gatekeeper->team()->first();
+        if ($team == NULL) { $has_team = false; } else { $has_team = true; }
+
+        // ensure user actually has access
+        if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
+            $maintainer = \App\TeamAssignment::where(['user_id' => $maintainer_id, 'gatekeeper_id' => $gatekeeper_id, 'team_role' => 'maintainer'])->first();
+            $maintainer->delete();
+
+            return response()->json(['status' => 'success', 'message' => 'Maintainer Removed']);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Error Removing Maintainer']);
+
+    }
+    
+
 
     /* User dashboard for authorizations, machine locking, etc */
     /* Open to gatekeeper managers and team members the gatekeeper is assigned to */
@@ -286,16 +412,63 @@ class GatekeepersController extends Controller
 
             if ($team == NULL) { $has_team = false; } else { $has_team = true; }
             $authorizations = \App\Authorization::where('gatekeeper_id', $gatekeeper->id)->get();
-    
-            // ensure user can manage gatekeepers or is on the managing team
-            if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_member()))) {
-    
-                return view('gatekeeper.dashboard', compact('gatekeeper','team', 'has_team', 'authorizations'));
-    
-            } else {
-                $message = "You do not have access to that resource.";
-                return redirect('/')->with('error',$message);
+
+            // compile user list array with additional info for dropdowns
+            $all_users = array();
+            foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
+                $all_users[$user->id] = [
+                    'name' => $user->get_name(),
+                    'is_trainer' => $user->is_trainer($gatekeeper->id),
+                    'is_maintainer' => $user->is_maintainer($gatekeeper->id),
+                    'is_authorized' => $user->is_authorized($gatekeeper->id)
+                ];
             }
+
+            // ensure user can manage gatekeepers or is on the managing team
+            return view('gatekeeper.dashboard', compact('gatekeeper','team', 'has_team', 'authorizations', 'all_users'));
+        }
+
+    }
+
+    // shows tool lockouts with usage information (for general users)
+    public function tool_list() {
+
+        $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->get();
+        dd($gatekeepers);
+        return view('gatekeeper.tools', compact('gatekeepers'));
+
+    }
+
+    // authorizes a user for a gatekeeper (bypasses training system)
+    public function grant_auth(Request $request) {
+
+        // get gatekeeper ID from request
+        $gatekeeper = \App\Gatekeeper::find($request->input('gatekeeper_id'));
+
+        $team = $gatekeeper->team()->first();
+        if ($team == NULL) { $has_team = false; } else { $has_team = true; }
+
+        // ensure user actually has access
+        if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_member()))) {
+
+            // make sure authorization isn't already in there
+            $authorization = \App\Authorization::where(['gatekeeper_id' => $gatekeeper->id,'user_id' => request('user_id')])->get();
+
+            if (count($authorization)>0) {
+                $message = "Authorization already exists for this gatekeeper.";
+                $message_type = "info";
+            } else {
+                $authorization = \App\Authorization::create([
+                    'user_id' => request('user_id'),
+                    'gatekeeper_id' => $gatekeeper->id
+                    ]);
+        
+                $message = "Authorization added successfully.";
+                $message_type = "success";
+            }
+
+            return redirect('/gatekeepers/' . $gatekeeper->id . '/dashboard')->with($message_type, $message);
+
         }
 
     }

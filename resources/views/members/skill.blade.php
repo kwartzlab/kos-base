@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Member Directory')
+@section('title', 'Viewing Skills')
 
 @section('content_header')
-    <h1>{{ $page_title }}</h1>
+    <h1>Members Skilled In: {{ $skill->skill }}</h1>
 @stop
 
 @section('content')
@@ -22,7 +22,7 @@
                <th>Profile</th>
             </tr></thead>
             <tbody>
-               @foreach($users as $user)
+               @foreach($skill->users() as $user)
                   <tr>
                      <td>{{ $user->get_name() }}</td>
                      <td nowrap>{{ $user->date_admitted }}</td>
@@ -77,7 +77,7 @@
 				pagingType: "simple_numbers",
 				iDisplayLength: 25,
 				"language": {
-					"emptyTable": "No results???"
+					"emptyTable": "No members with this skill."
 				}				
 			});
         });

@@ -22,32 +22,39 @@
 			<table class="table table-striped" id="data-table">
 				<thead><tr>
 					<th>Name</th>
-					<th>Status/Type</th>
+					<th>Type & Status</th>
 					<th>Last Seen</th>
-					<th>IP Address</th>
-					<th>Description</th>
+					<th>Authorizations</th>
 					<th>Actions</th>
 				</tr></thead>
 				<tbody>
 					@foreach($gatekeepers as $gatekeeper)
 						<tr>
 							<td>{{ $gatekeeper->name }}</td>
-							<td>@if($gatekeeper->status == 'enabled')<span class="badge badge-success">Enabled</span>
+							<td>
+							@if($gatekeeper->type == 'doorway')<span class="badge badge-primary">Doorway</span>
+							@elseif($gatekeeper->type == 'lockout')<span class="badge badge-primary">Tool Lockout</span>
+							@elseif($gatekeeper->type == 'training')<span class="badge badge-primary">Training Module</span>
+							@endif
+							@if($gatekeeper->status == 'enabled')<span class="badge badge-success">Enabled</span>
 							@else
 							<span class="badge badge-danger">Disabled</span> @endif
-							@if($gatekeeper->type == 'doorway')<span class="badge badge-primary">Doorway</span>
-							@elseif($gatekeeper->type == 'lockout')<span class="badge badge-primary">Machine Lockout</span>
-							@endif&nbsp;
+							
 							@if($gatekeeper->is_default == 1)<span class="badge badge-warning">Default</span>@endif
 							
 							</td>
 							<td>@if ($gatekeeper->last_seen != NULL) {{ $gatekeeper->last_seen->diffForHumans() }} @else Never @endif</td>
-							<td>{{ $gatekeeper->ip_address }}</td>
-			
-							<td>{{ $gatekeeper->description }}</td>
 							<td>
-							<a class="btn btn-default btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/edit" role="button">Edit</a>
+								@if($gatekeeper->is_default == 1)
+								All Users
+								@else
+								{{ $gatekeeper->count_authorizations() }}
+								@endif
+							</td>
 			
+							<td>
+							<a class="btn btn-primary btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/dashboard" role="button"><i class="fas fa-cog"></i>&nbsp;&nbsp;Manage</a>&nbsp;&nbsp;
+							<a class="btn btn-primary btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/edit" role="button"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
 							</td>
 						</tr>
 			

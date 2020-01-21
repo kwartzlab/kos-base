@@ -19,6 +19,23 @@
     margin-right:10px;
 }
 
+.circle-icon-64 {
+  background: #17a2b8;
+  color:#FFF;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 48px;
+  vertical-align: middle;
+  padding: 8px;
+  padding-left:9px;
+}
+
+.circle-icon-64:hover {
+  background:#148ea1;
+}
+
 /* AdmiinLTE-related styles */
 
 /* make card title text larger */
@@ -38,15 +55,28 @@
   font-weight:bold;
 }
 
-
 #form-elements .card-header:hover  {
   cursor: move;
 
 }
 
 /* customize badge padding and colours from default */
-.badge { padding:.3em .6em; }
+.badge { padding:.3em .6em;font-size:13px; }
 .badge-warning { color:#fff; }
+.badge-team { color:#000; }
+.badge-large { font-size:16px; }
+
+#profile-form li.select2-selection__choice { 
+    background-color: #3d9970; 
+    border-color: #3d9970; 
+}
+
+/* Modal styles */
+
+.modal-dialog .overlay-change {
+  opacity:1;
+  background-color:#FFF;
+}
 
 /* offset text from sidebar icons */
 .nav-link p {
@@ -132,7 +162,7 @@
 .profile-image { 
    max-height:240px;
    max-width:240px;
-
+   border-radius: 50%;
 }
 
 .hovereffect {
@@ -143,6 +173,7 @@
    position:relative;
    text-align:center;
    cursor:default;
+   border-radius: 50%;
    }
    
    .hovereffect .overlay {
@@ -155,15 +186,17 @@
    opacity:0;
    background-color:rgba(0,0,0,0.5);
    -webkit-transition:all .3s ease-in-out;
-   transition:all .3s ease-in-out
-   border-radius:50%;
+   transition:all .3s ease-in-out;
+   border-radius: 50%;
    }
    
    .hovereffect img {
    display:block;
    position:relative;
-   -webkit-transition:all .4s linear;
-   transition:all .4s linear;
+/*   -webkit-transition:all .4s linear;
+   transition:all .4s linear; */
+   border-radius: 50%;
+
    }
    
  
@@ -175,14 +208,15 @@
    background-color:transparent;
    opacity:0;
    filter:alpha(opacity=0);
-   -webkit-transition:all .1s ease-in-out;
-   transition:all .1s ease-in-out;
+/*   -webkit-transition:all .1s ease-in-out;
+   transition:all .1s ease-in-out; */
    margin:25px 0 0;
    padding:7px 14px;
    }
    
    .hovereffect a.img-upload:hover {
    box-shadow:0 0 5px #fff;
+
    }
    
    .hovereffect:hover img {
@@ -191,6 +225,7 @@
    .hovereffect:hover .overlay {
    opacity:1;
    filter:alpha(opacity=100);
+   
    }
    
    .hovereffect:hover h2,.hovereffect:hover a.img-upload {
@@ -202,8 +237,8 @@
    }
    
    .hovereffect:hover a.img-upload {
-   -webkit-transition-delay:.2s;
-   transition-delay:.2s;
+   -webkit-transition-delay:.1s;
+   transition-delay:.1s;
    }
 
 /* use a custom toggle switch since bootstrap doesn't support resizing the default one */

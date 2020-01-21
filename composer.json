@@ -13,7 +13,8 @@
         "laravel/framework": "^6",
         "laravel/tinker": "^1.0",
         "owen-it/laravel-auditing": "^9.0",
-        "robinherbots/jquery.inputmask": "^4.0"
+        "robinherbots/jquery.inputmask": "^4.0",
+        "spatie/laravel-google-calendar": "^2.3"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

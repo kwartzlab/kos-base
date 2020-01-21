@@ -10,6 +10,8 @@
 */
 
 return [
+    'org_name' => 'Kwartzlab Makerspace',
+    'org_name_short' => 'Kwartzlab',
 
     'membership_app' => [                       // membership app email configuration for admin and members mailings
         'admin' => [
@@ -45,27 +47,59 @@ return [
     'team_roles' => [
         'lead' => [
             'name' => 'Team Lead',
+            'plural_name' => 'Team Leads',
             'is_admin' => true,
-            'is_trainer' => true,
-            'is_maintainer' => true
+            'is_trainer' => false,
+            'is_maintainer' => false,
+            'approval_required' => false
         ],
         'trainer' => [
             'name' => 'Trainer',
+            'plural_name' => 'Trainers',
             'is_admin' => false,
             'is_trainer' => true,
-            'is_maintainer' => false
+            'is_maintainer' => false,
+            'approval_required' => true
         ],
         'maintainer' => [
             'name' => 'Maintainer',
+            'plural_name' => 'Maintainers',
             'is_admin' => false,
             'is_trainer' => false,
-            'is_maintainer' => true
+            'is_maintainer' => true,
+            'approval_required' => false
+        ],
+        'consumables' => [
+            'name' => 'Consumables',
+            'plural_name' => 'Consumables',
+            'is_admin' => false,
+            'is_trainer' => false,
+            'is_maintainer' => false,
+            'approval_required' => false
         ],
         'sme' => [
-            'name' => 'Subject Expert',
+            'name' => 'Subject Matter Expert',
+            'plural_name' => 'Subject Matter Experts',
             'is_admin' => false,
             'is_trainer' => false,
-            'is_maintainer' => false
+            'is_maintainer' => false,
+            'approval_required' => false
+        ],
+        'documentation' => [
+            'name' => 'Documentation',
+            'plural_name' => 'Documentation',
+            'is_admin' => false,
+            'is_trainer' => false,
+            'is_maintainer' => false,
+            'approval_required' => false
+        ],
+        'communications' => [
+            'name' => 'Communications',
+            'plural_name' => 'Communications',
+            'is_admin' => false,
+            'is_trainer' => false,
+            'is_maintainer' => false,
+            'approval_required' => false
         ],
 
     ],
@@ -88,6 +122,20 @@ return [
     'auth_expiry_types' => [
         'revoke' => 'Revoke Authorization',
         'retrain' => 'Requires Retraining',
+    ],
+    'socials' => [
+        'twitter' => 'Twitter',
+        'instagram' => 'Instagram',
+        'facebook' => 'Facebook',
+        'snapchat' => 'Snapchat',
+        'linkedin' => 'LinkedIn',
+    ],
+    'certifications' => [
+        'firstaid' => 'First Aid',
+        'healthsafety' => 'Health & Safety',
+        'professional' => 'Professional',
+        'technical' => 'Technical',
+        'other' => 'Other',
     ],
     
 ];

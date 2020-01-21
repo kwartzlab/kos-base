@@ -3,113 +3,89 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Image;
 
 class ImageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    /* Displays image upload and crop interface */
+    public function imageCrop($photo_type = NULL, $user_id = NULL)
     {
-         return view('shared.image');
+        if ($photo_type != 'users') {
+            $photo_type = NULL;
+            $user_id = NULL;
+        }
+        return view('shared.imagecrop',compact('photo_type','user_id'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    /* Process cropped image for use by kOS */
+    public function imageCropPost(Request $request)
     {
-        //
+
+        // parse input from croppie
+        $data = $request->image;
+
+        list($type, $data) = explode(';', $data);
+        list(, $data)      = explode(',', $data);
+
+        $data = base64_decode($data);
+
+        // create random filename and set path
+        $image_name= md5(Str::uuid() . microtime());
+
+        if ($request->filled('photo_type')) {
+            $path = public_path() . "/storage/images/" . $request->input('photo_type') . '/';
+            // if user photo, update their db record as well (currently logged in user)
+            if ($request->input('photo_type') == 'users') {
+                if ($request->filled('user_id')) {
+                    // make sure user has permission to modify the user photo
+                    if ((\Gate::allows('manage-users')) || ($request->input('user_id') == \Auth::user()->id)) {
+                        $set_user_photo = TRUE;
+                        $user_id = $request->input('user_id');
+                    } else { 
+                        $set_user_photo = FALSE;
+                    }
+                } else {
+                    $set_user_photo = FALSE;
+                }
+            }
+        } else {
+            $path = public_path() . "/storage/images/";
+        }
+       
+        $path_filename = $path . $image_name . '.png';
+
+        // save file
+        file_put_contents($path_filename, $data);
+
+        // save jpg version of original and generate additional thumbnail sizes
+        $img = Image::make($path_filename);
+        $img->save($path . $image_name . '.jpeg');
+        $img->resize(512, 512);
+        $img->save($path . $image_name . '-512px.jpeg');
+        $img->resize(256, 256);
+        $img->save($path . $image_name . '-256px.jpeg');
+        $img->resize(128, 128);
+        $img->save($path . $image_name . '-128px.jpeg');
+
+        // if user photo was uploaded, set new filename in the user's profile
+        if ($set_user_photo) {
+            $user = \App\User::find($user_id);
+            
+            // delete previous image files to keep things tidy
+            if ($user->photo != NULL) {
+                foreach(glob($path . $user->photo . "*") as $f) {
+                    unlink($f);
+                }
+            }
+            
+            $user->photo = $image_name;
+            $user->save();
+        }
+
+        // send success response
+        return response()->json(['success'=>'done', 'filename' => $image_name]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-         if($request->hasFile('profile_image')) {
-
-            dd($request->input());
-
-            // get hashed filename for saving
-            $hashed_filename = $request->file('profile_image')->hashName();
-
-            // break up filename
-            $filename_temp = explode('.', $hashed_filename);
-            $photo_filename = $filename_temp[0];
-            $photo_fileext = end($filename_temp);
-
-            $image_path = 'public/profile_images/';
-            $public_path = 'storage/profile_images/';
-
-            // save original file
-            $request->file('profile_image')->storeAs($image_path, $hashed_filename);
-
-            // crop image at full resolution and save as new original
-            $img = Image::make(public_path($public_path . $hashed_filename));
-
-            $img->crop($request->input('w'), $request->input('h'), $request->input('x1'), $request->input('y1'));
-            $img->save($public_path . $photo_filename . '-cropped.' . $photo_fileext);
-
-            // resize images into various resolutions for kOS use - 256, 512
-            return redirect('image')->with(['success' => "Image cropped successfully."]);
-         }
-
-
-        dd(request());
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

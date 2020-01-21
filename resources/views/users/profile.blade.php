@@ -15,43 +15,89 @@
                <h5>Applied {{ $user->date_applied }}</h5>
             @endif    
 
-            <p>@if($user->status == 'active')<span class="badge badge-success">Active</span>
+            <p style="margin:15px 0px 10px;">@if($user->status == 'active')<span class="badge badge-success">Active</span>
             @elseif($user->status == 'hiatus')<span class="badge badge-warning">On Hiatus</span>
             @elseif($user->status == 'applicant')<span class="badge badge-warning">Applicant</span>
             @else
             <span class="badge badge-danger">Withdrawn</span>@endif
-            @if($user->is_admin()) <span class="badge badge-primary">Admin</span>@endif
-            @if($user->is_keyadmin()) <span class="badge badge-primary">Key Admin</span>@endif
-            </p>
-
-            <h5 style="margin-top:25px;"><i class="far fa-envelope"></i> <a href="mailto:{{ $user->email }}">{{ $user->email }}</a></h5>
-
-            <?php $trainer_tools = $user->trainer_for(); ?>
-            @if ($trainer_tools != NULL)
-               <p style="margin-top:25px;">Trainer For: 
-               @foreach($trainer_tools as $tool)
-                  <span class="badge badge-warning" style="margin-left:8px;"> {{ \App\Gatekeeper::where('id',$tool->gatekeeper_id)->value('name') }}</span>
+            @php ($roles = $user->roles()->get())
+            @if(count($roles) > 0)
+               @foreach($roles as $role)
+                  @php($role_name = $role->role()->first())
+                  <span class="badge badge-primary">{{ $role_name->name }}</span>&nbsp;
                @endforeach
-               </p>
             @endif
+            </p>
+            @php ($teams = $user->teams()->get())
+            @if(count($teams) > 0)
+               <p>
+               @foreach($teams->unique() as $team)
+                  <span class="badge badge-warning badge-team">{{ $team->name }}</span>&nbsp;
+               @endforeach
+            @endif
+
+            <h5 style="margin-top:25px;">
+            <a href="mailto:{{ $user->email }}" title="Email"><i class="far fa-envelope fa-2x circle-icon-64"></i></a>
+
+            @php($socials = $user->socials()->get())
+            @if(count($socials)>0)
+               @foreach($socials as $social)
+                  @switch($social->service)
+                     @case('twitter')
+                        &nbsp;&nbsp;<a href="https://twitter.com/{{ $social->profile }}" title="Twitter"><i class="fab fa-twitter fa-2x circle-icon-64"></i></a>
+                        @break
+                     @case('instagram')
+                        &nbsp;&nbsp;<a href="https://instagram.com/{{ $social->profile }}" title="Instagram"><i class="fab fa-instagram fa-2x circle-icon-64"></i></a>
+                        @break
+                     @case('facebook')
+                        &nbsp;&nbsp;<a href="{{ $social->profile }}" title="Facebook"><i class="fab fa-facebook fa-2x circle-icon-64"></i></a>
+                        @break
+                     @case('snapchat')
+                        &nbsp;&nbsp;<a href="https://snapchat.com/add/{{ $social->profile }}" title="Snapchat"><i class="fab fa-snapchat fa-2x circle-icon-64"></i></a>
+                        @break
+                     @case('linkedin')
+                        &nbsp;&nbsp;<a href="https://www.linkedin.com/in/{{ $social->profile }}" title="LinkedIn"><i class="fab fa-linkedin fa-2x circle-icon-64"></i></a>
+                        @break
+                  @endswitch
+               @endforeach
+            @endif
+            </h5>
          </div>
 
          <div class="col-md-2.5">
 
-         @if ($user->photo != NULL)
-
-               <div class="hovereffect">
-                  <img class="profile-image img-responsive" style="" src="<?php echo '/storage/photos/' . $user->photo ?>" alt="">
-                  <div class="overlay">
-                     <a class="img-upload" href="#"><i class="fas fa-file-upload fa-3x"></i></a>
-                  </div>
+         @if (($user->id == \Auth::user()->id) || (Auth::user()->can('manage-users')))
+            <div class="hovereffect">
+               @if ($user->photo != NULL)
+                  <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg" alt="">   
+               @else
+                  <img src="/storage/images/users/no_profile_photo.png" style="float:right; max-height:240px;" class="img-circle"/>   
+               @endif
+               <div class="overlay">
+                  <a class="img-upload" href="#" target="popup" onclick="window.open('/image-crop/users/{{ $user->id }}','popup','width=640,height=790'); return false;"><i class="fas fa-file-upload fa-3x"></i></a>
                </div>
-
+            </div>
          @else
-               <img src="/img/0.png" style="float:right; max-height:240px;" class="img-circle"/>
+            @if ($user->photo != NULL)
+               <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg">
+            @else
+               <img src="/storage/images/users/no_profile_photo.png" style="float:right; max-height:240px;" class="img-circle"/> 
+            @endif
          @endif
 
          </div>
       </div>
+      <div class="row">
+         <p style="margin:25px 5px 0px;">
+            @php ($skills = $user->skills()->get())
+            @if(count($skills) > 0)
+               @foreach($skills as $skill)
+                  <a href="/members/skill/{{ $skill->id }}" title="{{ $skill->skill }}"><span class="badge bg-olive badge-large">{{ $skill->skill }}</span></a>&nbsp;
+               @endforeach
+            @endif
+            </p>
+
+      </div>
+
    </div>
 </div>

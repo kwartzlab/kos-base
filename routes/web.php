@@ -20,26 +20,36 @@ Route::middleware('auth')->group(function() {
 
 // Gatekeeper Management
 Route::middleware('auth')->group(function() {
+    Route::get('/gatekeepers/tools', 'GatekeepersController@tool_list');
     Route::resource('gatekeepers', 'GatekeepersController');
-    Route::get('/gatekeepers/{id}/remove_trainer/{key}', 'GatekeepersController@remove_trainer');
+    Route::post('/gatekeepers/{id}/add_trainer/{user_id}', 'GatekeepersController@add_trainer');
+    Route::post('/gatekeepers/{id}/add_maintainer/{user_id}', 'GatekeepersController@add_maintainer');
+    Route::post('/gatekeepers/{id}/remove_trainer/{user_id}', 'GatekeepersController@remove_trainer');
+    Route::post('/gatekeepers/{id}/remove_maintainer/{user_id}', 'GatekeepersController@remove_maintainer');
+    Route::post('/gatekeepers/assignments/{request_action}/{request_id?}', 'GatekeepersController@assignments');
     Route::post('/gatekeepers/{id}/add_trainer', 'GatekeepersController@add_trainer');
     Route::get('/gatekeepers/{id}/dashboard', 'GatekeepersController@dashboard');
-    Route::get('/gatekeepers/revoke/{auth_id}', 'GatekeepersController@revoke_auth');
+    Route::post('/gatekeepers/revoke/{auth_id}', 'GatekeepersController@revoke_auth');
+    Route::post('/gatekeepers/authorize', 'GatekeepersController@grant_auth');
 });
 
-// Membership Register
-Route::middleware(['auth','can:manage-users-keys'])->group(function() {
-    Route::resource('users', 'UsersController');
-    Route::get('/users/index/{filter?}', 'UsersController@index');
-    Route::get('/users/{user}/destroy_key/{key}', 'UsersController@destroy_key');
-    Route::post('/users/{user}/store_key', 'UsersController@store_key');
+// Users & Membership Register
+Route::middleware('auth')->group(function() {
+    Route::resource('users', 'UsersController')->middleware(['auth','can:manage-users']);
+    // override default resource routes so all users can access
+    Route::get('/users/create', 'UsersController@create');
+    Route::post('/users', 'UsersController@store');
+    Route::get('/users/index/{filter?}', 'UsersController@index')->middleware(['auth','can:manage-users']);
+    Route::get('/users/{user}/destroy_key/{key}', 'UsersController@destroy_key')->middleware(['auth','can:manage-keys']);
+    Route::post('/users/{user}/store_key', 'UsersController@store_key')->middleware(['auth','can:manage-keys']);
 });
 
 // Member Directory
 Route::middleware('auth')->group(function() {
-    Route::get('members', 'MembersController@index');
+    Route::resource('members', 'MembersController');
     Route::get('members/index/{filter?}', 'MembersController@index');
-    Route::get('members/{user}/profile', 'MembersController@profile');
+    Route::get('members/{user}/profile', 'MembersController@edit');
+    Route::get('members/skill/{skill_id}', 'MembersController@skill');
 });
 
 // Training
@@ -81,7 +91,8 @@ Auth::routes(['register' => false]);
 
 // Image manipulation routes
 Route::middleware(['auth'])->group(function() {
-   Route::resource('image', 'ImageController');
+   Route::get('/image-crop/{photo_type?}/{user_id?}', 'ImageController@imageCrop');
+   Route::post('/image-crop/{photo_type?}/{user_id?}', 'ImageController@imageCropPost');
 });
 
 // Teams routes
