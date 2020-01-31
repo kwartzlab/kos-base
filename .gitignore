@@ -20,6 +20,10 @@ Homestead.yaml
 Homestead.json
 backups
 
+# Include published vendor assets
+!public/vendor
+!resources/views/vendor
+!resources/lang/vendor
+
 # VS Code
 .vscode
-
