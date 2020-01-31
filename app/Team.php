@@ -24,6 +24,10 @@ class Team extends Model implements Auditable
         return $this->hasMany(TeamRequest::class, 'team_id', 'id');
     }    
 
+    public function leads() {
+        return $this->belongsToMany(User::class, 'team_assignments')->where('team_role','lead');
+    }
+
     public function training_requests($status = 'new') {
         if ($status == 'all') {
             return \App\TeamRequest::where(['request_type' => 'training'])->orderby('created_at','desc')->get();
@@ -78,7 +82,6 @@ class Team extends Model implements Auditable
             return true;
         }
     }
-
 
     public function get_role_members($team_role) {
         $results = \App\TeamAssignment::where(['team_role' => $team_role, 'team_id' => $this->id])->get();

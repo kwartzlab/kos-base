@@ -1,56 +1,70 @@
-<div class="card card-outline card-primary">
-			<div class="card-header">
-				<h3 class="card-title">{{ $gatekeeper->name }} </h3>
-				<div class="card-tools">
-               @if ($has_team)<span class="badge badge-warning badge-team badge-large">{{ $team->name }}</span>&nbsp;&nbsp;&nbsp;@endif
-               <span class="badge badge-primary badge-large">@switch($gatekeeper->type) @case('doorway')Doorway @break @case('lockout')Tool Lockout @break @case('training')Training Module @break @endswitch</span>
-               &nbsp;&nbsp;&nbsp;@switch($gatekeeper->status) @case('enabled')<span class="badge badge-success badge-large">Enabled</span> @break @case('disabled')<span class="badge badge-danger badge-large">Disabled</span> @break @endswitch</span>
-               @if ($gatekeeper->is_default == 1) &nbsp;&nbsp;&nbsp;<span class="badge badge-warning badge-large">Default</span>@endif
-            </div>
-			</div>
-			
-			<div class="card-body">
+@php
+   $teams = config('kwartzlabos.team_roles');
+   $team = $gatekeeper->team()->first();
+   if ($team == NULL) { $has_team = false; } else { $has_team = true; }
+@endphp
 
-         <div class="row">
-            <div class="col-md-6">
-
-            @if ($gatekeeper->type == 'lockout')
-            <h4>Actions</h4>
-               @if ((Auth::user()->can('manage-gatekeepers')) || ($gatekeeper->is_maintainer()) || (($has_team) && ($team->is_lead())))
-                  <?php /* <a class="btn btn-primary" href="/gatekeepers/{{ $gatekeeper->id }}/lockout" role="button"><i class="fas fa-lock"></i>&nbsp;&nbsp;Lockout Tool</a> */ ?>
+<div class="card card-outline card-info" style="margin-bottom:40px;">
+         <div class="card-header">
+            <h3 class="card-title">{{ $gatekeeper->name }} 
+               @if ($gatekeeper->is_authorized())
+                  &nbsp;<i class="fas fa-check-circle text-success" title="You are authorized to use this tool"></i>
+               @else
+                  &nbsp;<i class="fas fa-ban text-danger" title="You are not authorized to use this tool"></i>
                @endif
-            @elseif ($gatekeeper->type == 'doorway')
-               <h4>Actions</h4>
-               <?php /*
-               <a class="btn btn-primary" href="/gatekeepers/{{ $gatekeeper->id }}/lockout" role="button"><i class="fas fa-lock-open"></i>&nbsp;&nbsp;5 Minutes</a>&nbsp;&nbsp;
-               <a class="btn btn-primary" href="/gatekeepers/{{ $gatekeeper->id }}/lockout" role="button"><i class="fas fa-lock-open"></i>&nbsp;&nbsp;10 Minutes</a>&nbsp;&nbsp;
-               <a class="btn btn-primary" href="/gatekeepers/{{ $gatekeeper->id }}/lockout" role="button"><i class="fas fa-lock-open"></i>&nbsp;&nbsp;15 Minutes</a> */ ?>
-            @endif
-            </div>         
-            @if (($gatekeeper->type == 'doorway') || ($gatekeeper->type == 'lockout'))
-            <div class="col-md-3">
-               <div class="info-box bg-success">
-                  <span class="info-box-icon"><i class="fas fa-heartbeat"></i></span>
-                  <div class="info-box-content">
-                     <span class="info-box-text">Last Seen</span>
-                     <span class="info-box-number">@if ($gatekeeper->last_seen != NULL) {{ $gatekeeper->last_seen->diffForHumans() }} @else Never @endif</span>
-                  </div>
-               </div>            
-            
-            </div>
-            <div class="col-md-3">
-            <div class="info-box bg-warning">
-                  <span class="info-box-icon"><i class="fas fa-network-wired"></i></span>
-                  <div class="info-box-content">
-                     <span class="info-box-text">IP Address</span>
-                     <span class="info-box-number">{{ $gatekeeper->ip_address }}</span>
-                  </div>
-               </div>            
-            </div>
-            @endif
+            </h3>
+            <div class="card-tools">
+               @if($has_team)
+                  <span class="text-lg">Managed by</span> &nbsp;<a href="/teams/{{ $team->id }}" title="View Team"><span class="badge badge-warning badge-team badge-large">{{ $team->name  }}</span></a>
+               @endif
 
+               @if ((Auth::user()->can('manage-gatekeepers')) || ($gatekeeper->is_trainer()) || ($gatekeeper->is_maintainer()) || (($has_team) && ($team->is_lead())))
+                  &nbsp;&nbsp;&nbsp;<a class="btn btn-primary" href="/gatekeepers/{{ $gatekeeper->id }}/dashboard" role="button"><i class="fas fa-cog"></i>&nbsp;&nbsp;View Dashboard</a>
+               @endif
+            </div>
          </div>
+         
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-8">
+                  <div class="row">
+                     <div class="col-md-8">
+                        @php($status = $gatekeeper->current_status()->get()->first())
+                        @include('gatekeeper.status')
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col">
+                        @php ($trainers = $gatekeeper->trainers()->get())
+                        @if (count($trainers)>0)
+                           <h5 style="margin-bottom:0px;">Trainers</h5>   
+                           @foreach($trainers as $trainer)
+                              <a href="/members/{{ $trainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $trainer->user()->first()->get_name() }}</span></a>&nbsp;
+                           @endforeach
+                        @endif
+                        @php ($maintainers = $gatekeeper->maintainers()->get())
+                           @if (count($maintainers)>0)
+                           <h5 style="margin-top:15px;margin-bottom:0px;">Maintainers</h5>   
+                           @foreach($maintainers as $maintainer)
+                              <a href="/members/{{ $maintainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $maintainer->user()->first()->get_name() }}</span></a>&nbsp;
+                           @endforeach
+                        @endif
 
-			</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col">
+                  &nbsp;
+               </div>
 
-		</div>
+               <div class="col-md-2.5">
+                  @if ($gatekeeper->photo != NULL)
+                     <img class="profile-image img-responsive" src="<?php echo '/storage/images/gatekeepers/' . $gatekeeper->photo ?>-512px.jpeg">
+                  @else
+                     <img src="/img/no-gatekeeper-photo.png" class="profile-image img-responsive" class="img-square"/>
+                  @endif
+               </div>
+            </div>
+
+      </div>
+</div>

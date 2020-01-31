@@ -19,6 +19,10 @@ class Gatekeeper extends Model implements Auditable
       return $this->hasMany(TeamAssignment::class)->where('team_role','maintainer');
    }
 
+   public function current_status() {
+      return $this->hasOne(GatekeeperStatus::class);
+  }
+
    // determines if current user is a trainer for this gatekeeper
    public function is_trainer() {
       $result = $this->hasOne(TeamAssignment::class)->where(['team_role' => 'trainer', 'user_id' => \Auth::user()->id]);
@@ -32,6 +36,22 @@ class Gatekeeper extends Model implements Auditable
    // determines if current user is a maintainer for this gatekeeper
    public function is_maintainer() {
       $result = $this->hasOne(TeamAssignment::class)->where(['team_role' => 'maintainer', 'user_id' => \Auth::user()->id]);
+      if ($result->count()>0) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+
+   // returns true or false if user is authorized
+   public function is_authorized($user_id = 0) {
+      if ($user_id == 0) { $user_id = \Auth::user()->id; }
+      if ($this->shared_auth > 0) {
+         $result = \App\Authorization::where(['user_id' => $user_id, 'gatekeeper_id' => $this->shared_auth])->first();
+      } else {
+         $result = $this->hasOne(Authorization::class)->where(['user_id' => $user_id]);
+      }
+
       if ($result->count()>0) {
          return true;
       } else {
@@ -57,7 +77,11 @@ class Gatekeeper extends Model implements Auditable
    // returns the number of authorizations for the gatekeeper
    public function count_authorizations() {
 
-      $result = \App\Authorization::where('gatekeeper_id',$this->id)->count();
+      if ($this->shared_auth != 0) {
+         $result = \App\Authorization::where('gatekeeper_id',$this->shared_auth)->count();
+      } else {
+         $result = \App\Authorization::where('gatekeeper_id',$this->id)->count();
+      }
             
       return $result;
 
@@ -65,7 +89,11 @@ class Gatekeeper extends Model implements Auditable
 
    // returns all authorizations for gatekeeper
    public function authorizations() {
-      return $this->hasMany(Authorization::class, 'gatekeeper_id', 'id');
+      if ($this->shared_auth == 0) {
+         return $this->hasMany(Authorization::class, 'gatekeeper_id', 'id');
+      } else {
+         return $this->hasMany(Authorization::class, 'gatekeeper_id', 'id')->where('id', $this->shared_auth);
+      }
 
    }
 

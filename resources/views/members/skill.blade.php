@@ -25,7 +25,7 @@
                @foreach($skill->users() as $user)
                   <tr>
                      <td>{{ $user->get_name() }}</td>
-                     <td nowrap>{{ $user->date_admitted }}</td>
+                     <td nowrap>{{ $user->date_admitted->format('Y-m-d') }}</td>
                      <td>@if($user->status == 'active')<span class="badge badge-success">Active</span>
                      @elseif($user->status == 'hiatus')<span class="badge badge-warning">On Hiatus</span>
                      @elseif($user->status == 'applicant')<span class="badge badge-warning">Applicant</span>
@@ -43,7 +43,7 @@
                      @php ($teams = $user->teams()->get())
                      @if(count($teams) > 0)
                         @foreach($teams->unique() as $team)
-                           &nbsp;<span class="badge badge-warning badge-team">{{ $team->name }}</span>
+                           &nbsp;<a href="/teams/{{ $team->id }}" title="View Team Profile"><span class="badge badge-warning badge-team">{{ $team->name }}</span></a>
                         @endforeach
                      @endif
         

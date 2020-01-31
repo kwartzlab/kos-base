@@ -39,8 +39,8 @@
 								@endif
 
 							</td>
-							<td>
-								<a class="btn btn-default btn-sm" href="/roles/{{ $role->id }}/edit" role="button">Manage</a>
+							<td style="min-width:95px;">
+								<a class="btn btn-primary btn-sm" href="/roles/{{ $role->id }}/edit" role="button"><i class="fas fa-user-tag"></i>&nbsp;&nbsp;Manage</a>&nbsp;
 							</td>
 						</tr>
 			

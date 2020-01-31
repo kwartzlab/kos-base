@@ -10,13 +10,19 @@ class ImageController extends Controller
 {
 
     /* Displays image upload and crop interface */
-    public function imageCrop($photo_type = NULL, $user_id = NULL)
+    public function imageCrop($photo_type = NULL, $id = NULL)
     {
-        if ($photo_type != 'users') {
+        if (!in_array($photo_type,['users','teams','gatekeepers'])) {
             $photo_type = NULL;
-            $user_id = NULL;
+            $id = NULL;
         }
-        return view('shared.imagecrop',compact('photo_type','user_id'));
+        return view('shared.imagecrop',compact('photo_type','id'));
+    }
+
+    /* returns the last image uploaded by user */
+
+    public function getLastImage() {
+        return response()->json(['success'=>'done', 'filename' => session('last_image_upload')]);
     }
 
     /* Process cropped image for use by kOS */
@@ -34,22 +40,47 @@ class ImageController extends Controller
         // create random filename and set path
         $image_name= md5(Str::uuid() . microtime());
 
+        $rec = NULL;
         if ($request->filled('photo_type')) {
-            $path = public_path() . "/storage/images/" . $request->input('photo_type') . '/';
-            // if user photo, update their db record as well (currently logged in user)
-            if ($request->input('photo_type') == 'users') {
-                if ($request->filled('user_id')) {
-                    // make sure user has permission to modify the user photo
-                    if ((\Gate::allows('manage-users')) || ($request->input('user_id') == \Auth::user()->id)) {
-                        $set_user_photo = TRUE;
-                        $user_id = $request->input('user_id');
-                    } else { 
-                        $set_user_photo = FALSE;
-                    }
-                } else {
-                    $set_user_photo = FALSE;
-                }
+            $photo_type = $request->input('photo_type');
+            $path = public_path() . "/storage/images/" . $photo_type . '/';
+
+            if ($request->filled('id')) {
+                // Update db records as needed
+                switch($photo_type) {
+                    case 'users':
+
+                        // If image is uploaded as part of the application, don't update the record
+                        if ($request->input('id') != 'new') {
+                            // make sure user has permission to modify the user photo
+                            if ((\Gate::allows('manage-users')) || ($request->input('id') == \Auth::user()->id)) {
+                                $rec = \App\User::find($request->input('id'));
+                            }
+                        }
+                        break;
+                    case 'teams':
+                        // make sure user has permission to modify the team photo
+                        $team = \App\Team::find($request->input('id'));
+                        if ($team != NULL) {
+                            if ((\Gate::allows('manage-teams')) || ($team->is_lead())) {
+                                $rec = $team;
+                            }
+                        }
+                        break;
+                    case 'gatekeepers':
+                        // make sure user has permission to modify the gatekeeper photo
+                        $gatekeeper = \App\Gatekeeper::find($request->input('id'));
+                        if ($gatekeeper != NULL) {
+                            $team = \App\Team::find($gatekeeper->team_id);
+                            if ($team != NULL) { $has_team = TRUE; } else { $has_team = FALSE; }
+                            if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
+                                $rec = $gatekeeper;
+                            }
+                        }
+                        break;
+                } 
             }
+
         } else {
             $path = public_path() . "/storage/images/";
         }
@@ -69,20 +100,20 @@ class ImageController extends Controller
         $img->resize(128, 128);
         $img->save($path . $image_name . '-128px.jpeg');
 
-        // if user photo was uploaded, set new filename in the user's profile
-        if ($set_user_photo) {
-            $user = \App\User::find($user_id);
-            
+        // update database with photo filename as needed
+        if ($rec != NULL) {
             // delete previous image files to keep things tidy
-            if ($user->photo != NULL) {
-                foreach(glob($path . $user->photo . "*") as $f) {
+            if ($rec->photo != NULL) {
+                foreach(glob($path . $rec->photo . "*") as $f) {
                     unlink($f);
                 }
             }
-            
-            $user->photo = $image_name;
-            $user->save();
+            $rec->photo = $image_name;
+            $rec->save();
         }
+
+        // set session variable with filename (used in new user form to retrieve filename)
+        session(['last_image_upload' => $image_name]);
 
         // send success response
         return response()->json(['success'=>'done', 'filename' => $image_name]);

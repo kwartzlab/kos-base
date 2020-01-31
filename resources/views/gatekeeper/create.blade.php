@@ -23,13 +23,6 @@
         </div>
 
         <div class="row">
-          <div class="form-group col-md-6">
-            <label for="description">Description</label>
-            <input type="text" class="form-control" name="description" id="description" value="{{ old('description') }}">
-          </div>
-        </div>
-
-        <div class="row">
           <div class="form-group col-md-3">
             <label for="status">Type</label>
             <select class="form-control" name="type">
@@ -49,7 +42,7 @@
 
         <div class="row">
           <div class="form-group col-md-3">
-            <label for="team_id">Authorizations managed by team</label>
+            <label for="team_id">Managed by team</label>
             <select class="form-control" name="team_id">
               <option value="0" @if ($selected_team == 0) selected="selected" @endif>None</option>
               @foreach($teams as $team)
@@ -71,18 +64,21 @@
           </div>
         </div>
 
-        <div class="form-group col-md-3">
-        <label for="ip_address">IP Address (for remote functions)</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <div class="input-group-text"><i class="fas fa-laptop"></i></div>
-            </div>
-            <input type="text" class="form-control @if($errors->has('ip_address')) is-invalid @endif" name="ip_address" id="ip_address" value="{{ old('ip_address') }}" disabled>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="shared_auth">Use authorizations from another gatekeeper?</label>
+            <select class="form-control" name="shared_auth">
+              <option value="0" @if ($shared_auth == 0) selected="selected" @endif>No</option>
+              @foreach($gatekeepers as $gk)
+                <option value="{{ $gk->id }}" @if ($shared_auth == $gk->id) selected="selected" @endif>{{ $gk->name }}</option>
+              @endforeach
+            </select>
           </div>
-        </div>
+          </div>
+
 
         <div class="form-group col-md-5">
-        <label for="auth_key">Authentication Key (if changed, must be updated on gatekeeper)</label>
+        <label for="auth_key">Authentication Key (must match gatekeeper config)</label>
           <div class="input-group">
             <div class="input-group-prepend">
               <div class="input-group-text"><i class="fas fa-key"></i></div>

@@ -92,11 +92,9 @@
             $.ajax({
                url: "@if($photo_type != NULL)/image-crop/{{ $photo_type }} @else /image-crop @endif ",
                type: "POST",
-               data: {"image":resp @if($photo_type != NULL),"photo_type":"{{ $photo_type }}"@endif @if($user_id != NULL),"user_id":"{{ $user_id }}"@endif },
+               data: {"image":resp @if($photo_type != NULL),"photo_type":"{{ $photo_type }}"@endif @if($id != NULL),"id":"{{ $id }}"@endif },
                success: function (data, textStatus, oHTTP) {
                   //alert(data.filename)
-                  //html = '<img src="' + resp + '" />';
-                  //$("#upload-image-i").html(html);
                   $('#upload-form').fadeOut('slow', function(here){ 
                      $('#upload-form').replaceWith('<div style="top:50%;"><i class="fas fa-check-circle fa-10x" style="color:green"></i></div>');
                      setTimeout(function(){ window.close(); }, 1000);

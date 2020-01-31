@@ -60,7 +60,7 @@
    
    <div class="card-body">
       <div class="table-responsive">
-         <table class="table table-striped" id="data-table">
+         <table class="table table-striped table-responsive" id="data-table">
             <thead><tr>
                <th>Name</th>
                @foreach(config('kwartzlabos.team_roles') as $team_role => $team_data)
@@ -79,8 +79,9 @@
                            <td>@php($role_members = $team->get_role_members($team_role))@if ($role_members != false) @foreach ($role_members as $role_member)<span class="badge badge-primary">{{ $role_member->user->get_name() }}</span> @endforeach @endif &nbsp;</td>
                         @endif
                      @endforeach
-                     <td>
-                        <a class="btn btn-default btn-sm" href="/teams/{{ $team->id }}/edit" role="button">Manage</a>
+                     <td style="min-width:220px;">
+                        <a class="btn btn-primary btn-sm" href="/teams/{{ $team->id }}/dashboard" role="button"><i class="fas fa-cog"></i>&nbsp;&nbsp;Manage</a>&nbsp;
+                        <a class="btn btn-primary btn-sm" href="/teams/{{ $team->id }}/edit" role="button"><i class="fas fa-user-check"></i>&nbsp;&nbsp;Assignments</a>
                      </td>
                   </tr>
          
@@ -108,7 +109,6 @@
     </div>
   </div>
 </div>
-
 
 
 @stop

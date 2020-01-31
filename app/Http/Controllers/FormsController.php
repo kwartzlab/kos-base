@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class FormsController extends Controller
 {
@@ -13,8 +14,13 @@ class FormsController extends Controller
      */
     public function index()
     {
-        $forms = \App\Forms::orderby('name')->get();
-        return view('forms.index', compact('forms'));
+        if (\Gate::allows('manage-forms')) {
+            $forms = \App\Form::orderby('name')->get();
+            return view('forms.index', compact('forms'));
+        } else {
+            $message = "You do not have access to that resource.";
+            return redirect('/')->with('error',$message);
+        }    
 
     }
 
@@ -26,14 +32,22 @@ class FormsController extends Controller
     public function create()
     {
 
-        // set up special forms default
-        if (old('special_form')) {
-            $selected_assignment = old('selected_assignment');
-        } else {
-            $selected_assignment = '0';
-        }
+        if (\Gate::allows('manage-forms')) {
 
-        return view('forms.create',compact('selected_assignment'));
+            // set up special forms default
+            if (old('special_form')) {
+                $selected_assignment = old('selected_assignment');
+            } else {
+                $selected_assignment = '0';
+            }
+
+            return view('forms.create',compact('selected_assignment'));
+
+        } else {
+            $message = "You do not have access to that resource.";
+            return redirect('/')->with('error',$message);
+        }        
+
     }
 
     /**
@@ -44,128 +58,129 @@ class FormsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        //dd($request->all());
 
-        // build our field array and convert to json
-        if ($request->input('element')) {
-            $field_array = array();
-            foreach ($request->input('element') as $field_uuid => $field) {
+        if (\Gate::allows('manage-forms')) {
+            // build our field array and convert to json
+            if ($request->input('element')) {
+                $field_array = array();
+                foreach ($request->input('element') as $field_uuid => $field) {
 
-                if (array_key_exists('required',$field)) {
-                    $field_required = 1;
-                } else {
-                    $field_required = 0;
-                }
+                    if (array_key_exists('required',$field)) {
+                        $field_required = 1;
+                    } else {
+                        $field_required = 0;
+                    }
 
-                $options_array = array();
-                if (array_key_exists('options',$field)) {
-                    foreach ($field['options'] as $option_uuid => $option) {
-                        // only add option if name is filled in
-                        if ($option['name'] != NULL) {
-                            $options_array[$option_uuid] = [
-                                'name' => $option['name'],
-                                'value' => $option['value']
+                    $options_array = array();
+                    if (array_key_exists('options',$field)) {
+                        foreach ($field['options'] as $option_uuid => $option) {
+                            // only add option if name is filled in
+                            if ($option['name'] != NULL) {
+                                $options_array[$option_uuid] = [
+                                    'name' => $option['name'],
+                                    'value' => $option['value']
+                                ];
+                            }
+                        }
+                    }
+
+                    switch($field['type']) {
+                        case 'input':
+                            $field_array[$field_uuid] = [
+                                'type' => $field['type'],
+                                'label' => $field['label'],
+                                'name' => $field['name'],
+                                'length' => $field['length'],
+                                'mask' => $field['mask'],
+                                'required' => $field_required,
                             ];
+                            break;
+                        case 'textarea':
+                            if (array_key_exists('usehtml',$field)) {
+                                $field_usehtml = 1;
+                            } else {
+                                $field_usehtml = 0;
+                            }
+                            $field_array[$field_uuid] = [
+                                'type' => $field['type'],
+                                'label' => $field['label'],
+                                'name' => $field['name'],
+                                'length' => $field['length'],
+                                'usehtml' => $field_usehtml,
+                                'required' => $field_required,
+                            ];
+                            break;
+                        case 'switch':
+                            $field_array[$field_uuid] = [
+                                'type' => $field['type'],
+                                'label' => $field['label'],
+                                'name' => $field['name'],
+                                'on' => $field['on'],
+                                'off' => $field['off'],
+                                'required' => $field_required,
+                            ];
+                            break;
+                        case 'dropdown':
+                            $field_array[$field_uuid] = [
+                                'type' => $field['type'],
+                                'label' => $field['label'],
+                                'name' => $field['name'],
+                                'options' => $options_array,
+                                'required' => $field_required,
+                            ];
+                            break;
+                        case 'radio':
+                            $field_array[$field_uuid] = [
+                                'type' => $field['type'],
+                                'label' => $field['label'],
+                                'name' => $field['name'],
+                                'options' => $options_array,
+                                'required' => $field_required,
+                            ];
+                            break;
+                        case 'checkbox':
+                            $field_array[$field_uuid] = [
+                                'type' => $field['type'],
+                                'label' => $field['label'],
+                                'name' => $field['name'],
+                                'options' => $options_array,
+                                'required' => $field_required,
+                            ];
+                            break;
+                        case 'upload':
+                            if (array_key_exists('multiupload',$field)) {
+                                $field_multiupload = 1;
+                            } else {
+                                $field_multiupload = 0;
+                            }
+                            $field_array[$field_uuid] = [
+                                'type' => $field['type'],
+                                'label' => $field['label'],
+                                'name' => $field['name'],
+                                'multiupload' => $field_multiupload,
+                                'required' => $field_required,
+                            ];
+                            break;
                         }
-                    }
                 }
 
-                switch($field['type']) {
-                    case 'input':
-                        $field_array[$field_uuid] = [
-                            'type' => $field['type'],
-                            'label' => $field['label'],
-                            'name' => $field['name'],
-                            'length' => $field['length'],
-                            'mask' => $field['mask'],
-                            'required' => $field_required,
-                        ];
-                        break;
-                    case 'textarea':
-                        if (array_key_exists('usehtml',$field)) {
-                            $field_usehtml = 1;
-                        } else {
-                            $field_usehtml = 0;
-                        }
-                        $field_array[$field_uuid] = [
-                            'type' => $field['type'],
-                            'label' => $field['label'],
-                            'name' => $field['name'],
-                            'length' => $field['length'],
-                            'usehtml' => $field_usehtml,
-                            'required' => $field_required,
-                        ];
-                        break;
-                    case 'switch':
-                        $field_array[$field_uuid] = [
-                            'type' => $field['type'],
-                            'label' => $field['label'],
-                            'name' => $field['name'],
-                            'on' => $field['on'],
-                            'off' => $field['off'],
-                            'required' => $field_required,
-                        ];
-                        break;
-                    case 'dropdown':
-                        $field_array[$field_uuid] = [
-                            'type' => $field['type'],
-                            'label' => $field['label'],
-                            'name' => $field['name'],
-                            'options' => $options_array,
-                            'required' => $field_required,
-                        ];
-                        break;
-                    case 'radio':
-                        $field_array[$field_uuid] = [
-                            'type' => $field['type'],
-                            'label' => $field['label'],
-                            'name' => $field['name'],
-                            'options' => $options_array,
-                            'required' => $field_required,
-                        ];
-                        break;
-                    case 'checkbox':
-                        $field_array[$field_uuid] = [
-                            'type' => $field['type'],
-                            'label' => $field['label'],
-                            'name' => $field['name'],
-                            'options' => $options_array,
-                            'required' => $field_required,
-                        ];
-                        break;
-                    case 'upload':
-                        if (array_key_exists('multiupload',$field)) {
-                            $field_multiupload = 1;
-                        } else {
-                            $field_multiupload = 0;
-                        }
-                        $field_array[$field_uuid] = [
-                            'type' => $field['type'],
-                            'label' => $field['label'],
-                            'name' => $field['name'],
-                            'multiupload' => $field_multiupload,
-                            'required' => $field_required,
-                        ];
-                        break;
-                    }
             }
 
-        }
+            $form = \App\Form::create([
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'status' => $request->input('status'),
+                'special_form' => $request->input('special_form'),
+                'fields' => json_encode($field_array)
+                ]);
 
-        $form = \App\Forms::create([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'status' => $request->input('status'),
-            'special_form' => $request->input('special_form'),
-            'fields' => json_encode($field_array)
-            ]);
+            $message = "Form created successfully.";
+            return redirect('/forms/' . $form->id . '/edit')->with('success', $message);
 
-        $message = "Form created successfully.";
-        return redirect('/forms/' . $form->id . '/edit')->with('success', $message);
-
-
-
+        } else {
+            $message = "You do not have access to that resource.";
+            return redirect('/')->with('error',$message);
+        }        
 
     }
 
@@ -177,7 +192,213 @@ class FormsController extends Controller
      */
     public function show($id)
     {
-        //
+        $form = \App\Form::find($id);
+        \Session::flash('skip_individual_errors', 1);
+
+        if ($form != NULL) {
+            $form_fields = json_decode($form->fields);
+            return view('forms.show', compact('form','form_fields'));
+        }
+    }
+
+    private function generate_random_password() {
+
+        $characters = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=';
+
+        $string = '';
+        $max = strlen($characters) - 1;
+        for ($i = 0; $i < 12; $i++) {
+             $string .= $characters[mt_rand(0, 16)];
+        }
+
+        return $string;    
+   }
+
+    
+    // saves a form submission
+    public function save(Request $request) {
+
+        // clean up last photo upload filename (dont need it at this point)
+        session(['last_image_upload' => NULL]);
+
+        $form = \App\Form::find($request->input('form_id'));
+
+        if ($form != NULL) {
+            $form_fields = json_decode($form->fields);
+
+            // build our validation array
+            $validation_list = array();
+            foreach ($form_fields as $field_uuid => $form_field) {
+                if ($form_field->required) {
+                    if ($form_field->name == NULL) {
+                        $element_name = 'element-' . $field_uuid;
+                    } else {
+                        $element_name = 'element-' . $form_field->name;
+                    }
+                    $validation_list = array_merge($validation_list, [$element_name => 'required']);
+                }
+            }
+
+            // if we're a special form, add the extra fields for validation
+            switch($form->special_form) {
+                case 'new_user_app':
+                    $validation_list = array_merge($validation_list, [
+                        'first_name' => 'required',
+                        'last_name' => 'required',
+                        'email' => 'required|unique:users',
+                        'address' => 'required',
+                        'city' => 'required',
+                        'province' => 'required',
+                        'postal' => 'required',
+                        'photo' => 'required'
+                        ]);
+                    break;
+            }
+
+            if (count($validation_list)>0) {
+                $request->validate($validation_list);
+            }
+
+            // build our responses array
+            $responses = array();
+
+            foreach($form_fields as $field_uuid => $form_field) {
+
+                if ($form_field->name == NULL) {
+                    $element_name = 'element-' . $field_uuid;
+                } else {
+                    $element_name = 'element-' . $form_field->name;
+                }
+
+                $field_value = NULL;
+                switch ($form_field->type) {
+                    case 'switch':
+                        if ($request->has($element_name)) {
+                            $field_value = $form_field->on;
+                        } else {
+                            $field_value = $form_field->off;
+                        }
+                        break;
+                    case 'checkbox':
+                        if ($request->has($element_name)) {
+                            $field_value = array();
+                            foreach ($request->input($element_name) as $key => $choice) {
+                                $field_value[] = $choice;
+                            }
+                        } else {
+                            $field_value[] = 'None selected';
+                        }
+                        break;
+                    case 'upload':
+
+                        break;
+
+                    default:
+                        $field_value = $request->input($element_name);
+                }
+
+                $responses[] = [
+                    'label' => $form_field->label,
+                    'value' => $field_value,
+                    'type' => $form_field->type
+                ];
+
+            }
+
+            // do anything that special forms require
+            switch($form->special_form) {
+                case 'new_user_app':
+
+                    // add hard-coded responses from new user form
+                    $responses['first_name'] = ['label' => 'First Name', 'value' => $request->input('first_name'), 'type' => 'input'];
+                    $responses['last_name'] = ['label' => 'Last Name', 'value' => $request->input('last_name'), 'type' => 'input'];
+                    $responses['email'] = ['label' => 'Email Address', 'value' => $request->input('email'), 'type' => 'input'];
+                    $responses['phone'] = ['label' => 'Phone Number', 'value' => $request->input('phone'), 'type' => 'input'];
+                    $responses['address'] = ['label' => 'Street Address', 'value' => $request->input('address'), 'type' => 'input'];
+                    $responses['city'] = ['label' => 'City', 'value' => $request->input('city'), 'type' => 'input'];
+                    $responses['province'] = ['label' => 'Province', 'value' => $request->input('province'), 'type' => 'input'];
+                    $responses['postal'] = ['label' => 'Postal Code', 'value' => $request->input('postal'), 'type' => 'input'];
+                    $responses['photo'] = ['label' => 'Photo', 'value' => $request->input('photo'), 'type' => 'input'];
+
+                    // create the applicant user
+                    $user = \App\User::create([
+                        'first_name' => $request->input('first_name'),
+                        'last_name' => $request->input('last_name'),
+                        'email' => $request->input('email'),
+                        'status' => 'applicant',
+                        'date_applied' => date("Y-m-d"),
+                        'phone' => $request->input('phone'),
+                        'address' => $request->input('address'),
+                        'city' => $request->input('city'),
+                        'province' => $request->input('province'),
+                        'postal' => $request->input('postal'),
+                        'password' => Hash::make($this->generate_random_password()),
+                        'member_id' => rand(1000,9999),
+                        'photo' => $request->input('photo')
+                        ]);
+
+                      // build array for email use
+                    $email_data = array(
+                        'name' => $user->get_name(),
+                        'photo' => \URL::to('/storage/images/users/' . $user->photo . '.jpeg'),
+                        'skip_fields' => ['first_name','last_name','email','phone','address','city','province','postal','photo'],
+                        'form_data' => $responses
+                    );
+
+                    // send email to members (limited contact info)
+                    \Mail::send(new \App\Mail\MemberApp($email_data,'members'));
+
+                    // send email to admins (full contact info)
+                    \Mail::send(new \App\Mail\MemberApp($email_data,'admin'));
+            
+                    $user_id = $user->id;
+                    $message = "Application created & sent successfully.";
+                    $form_name = $form->name . ' - ' . $user->get_name();
+                break;
+
+                default:
+                    $user_id = 0;
+                    $message = "Form sent successfully.";
+                    $form_name = $form->name;
+            }
+
+            // save the form submission
+            $form_submission = \App\FormSubmission::create([
+                'form_id' => $form->id,
+                'form_name' => $form_name,
+                'special_form' => $form->special_form,
+                'submitted_by' => \Auth::user()->id,
+                'submitter_ip' => \Request::ip(),
+                'submitter_agent' => substr($request->header('User-Agent'),0,250),
+                'user_id' => $user_id,
+                'data' => json_encode($responses)
+            ]);
+
+            return redirect('/forms/' . $form->id)->with('success', $message);
+
+        }
+        
+    }
+
+    // displays a form submission
+    public function submission($id)
+    {
+
+        $submission = \App\FormSubmission::find($id);
+        if ($submission != NULL) {
+            if ($submission->canview()) {
+
+                $skip_fields = array();
+                // if we should skip any fields for display, set them
+                switch ($submission->special_form) {
+                    case 'new_user_app':
+                        $skip_fields = ['first_name','last_name','email','phone','address','city','province','postal','photo'];
+                        break;
+                }
+
+                return view('forms.submission_full',compact('submission','skip_fields'));
+            }
+        }
     }
 
     /**

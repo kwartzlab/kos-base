@@ -201,7 +201,7 @@ return [
         ], */
         [
             'text' => 'Membership Application',
-            'url'  => '/users/create',
+            'url'  => '/forms/3',
             'icon' => 'fas fa-edit fa-fw',
         ],
         ['header' => 'ADMINISTRATION'],
@@ -235,13 +235,13 @@ return [
             'icon' => 'fas fa-user-tag fa-fw',
             'can' => 'manage-roles'
         ],
-        [
+/*        [
             'text' => 'Reports',
             'url'  => '/reports',
             'icon' => 'fas fa-chart-pie fa-fw',
             'can' => 'manage-reports'
 
-        ],
+        ], */
 
     ],
 

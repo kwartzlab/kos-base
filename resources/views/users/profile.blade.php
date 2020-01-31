@@ -6,13 +6,13 @@
             <h2>{{ $user->first_name }} {{ $user->last_name }}</h2>
 
             @if($user->status == 'active')
-               <h5>Member Since {{ $user->date_admitted }}</h5>
+               <h5>Member Since {{ $user->date_admitted->toDateString() }}</h5>
             @elseif($user->status == 'inactive')
-               <h5>Withdrawn {{ $user->date_withdrawn }}</h5>
+               <h5>Withdrawn {{ $user->date_withdrawn->toDateString() }}</h5>
             @elseif($user->status == 'hiatus')
-               <h5>On Hiatus until {{ $user->date_hiatus_end }}</h5>
+               <h5>On Hiatus until {{ $user->date_hiatus_end->toDateString() }}</h5>
             @elseif($user->status == 'applicant')
-               <h5>Applied {{ $user->date_applied }}</h5>
+               <h5>Applied {{ $user->date_applied->toDateString() }}</h5>
             @endif    
 
             <p style="margin:15px 0px 10px;">@if($user->status == 'active')<span class="badge badge-success">Active</span>
@@ -32,7 +32,7 @@
             @if(count($teams) > 0)
                <p>
                @foreach($teams->unique() as $team)
-                  <span class="badge badge-warning badge-team">{{ $team->name }}</span>&nbsp;
+               <a href="/teams/{{ $team->id }}" title="View Team Profile"><span class="badge badge-warning badge-team">{{ $team->name }}</span></a>&nbsp;
                @endforeach
             @endif
 
@@ -69,9 +69,9 @@
          @if (($user->id == \Auth::user()->id) || (Auth::user()->can('manage-users')))
             <div class="hovereffect">
                @if ($user->photo != NULL)
-                  <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg" alt="">   
+                  <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
                @else
-                  <img src="/storage/images/users/no_profile_photo.png" style="float:right; max-height:240px;" class="img-circle"/>   
+                  <img src="/img/no-user-photo.png" style="float:right; max-height:240px;" class="img-circle"/>   
                @endif
                <div class="overlay">
                   <a class="img-upload" href="#" target="popup" onclick="window.open('/image-crop/users/{{ $user->id }}','popup','width=640,height=790'); return false;"><i class="fas fa-file-upload fa-3x"></i></a>
@@ -79,12 +79,11 @@
             </div>
          @else
             @if ($user->photo != NULL)
-               <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg">
+               <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg"  onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
             @else
-               <img src="/storage/images/users/no_profile_photo.png" style="float:right; max-height:240px;" class="img-circle"/> 
+               <img src="/img/no-user-photo.png" style="float:right; max-height:240px;" class="img-circle"/> 
             @endif
          @endif
-
          </div>
       </div>
       <div class="row">
@@ -96,8 +95,6 @@
                @endforeach
             @endif
             </p>
-
       </div>
-
    </div>
 </div>

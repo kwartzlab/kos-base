@@ -9,6 +9,7 @@
 @section('content')
 @include('shared.alerts')
 
+<?php /*
 <div class="card card-primary">
 
   <div class="card-body" style="font-size:1.2em;">
@@ -203,6 +204,8 @@
    </form>
   </div>
 </div>
+*/ ?>
+
 
 @stop
 

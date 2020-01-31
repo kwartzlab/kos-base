@@ -12,18 +12,24 @@
 return [
     'org_name' => 'Kwartzlab Makerspace',
     'org_name_short' => 'Kwartzlab',
+    'org_logo' => '/storage/images/kwartzlab.png',
+    'org_logo_email' => '/storage/images/kwartzlab-logo-email.png',
+
+    'entrance_gatekeepers' => [11],             // which gatekeepers are building entrances (used for metrics)
 
     'membership_app' => [                       // membership app email configuration for admin and members mailings
         'admin' => [
             'to' => 'membership@kwartzlab.ca',
             'cc' => 'bod@kwartzlab.ca',
-            'replyto' => NULL
+            'replyto' => NULL,
+            'subject' => 'New Member App [BoD Version]'
         ],
 
         'members' => [
             'to' => 'members@kwartzlab.ca',
             'cc' => NULL,
-            'replyto' => 'members@kwartzlab.ca'
+            'replyto' => 'members@kwartzlab.ca',
+            'subject' => 'New Member Application'
         ],
 
     ],

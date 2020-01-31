@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class GatekeepersController extends Controller
 {
@@ -61,8 +62,16 @@ class GatekeepersController extends Controller
                 $selected_team = 0;
             }
 
+            // grab list of gatekeepers (for shared auth field)
+            $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'is_default' => '0'])->where('type','!=','training')->orderby('name')->get();
+            if (old('shared_auth')) {
+                $shared_auth = old('shared_auth');
+            } else {
+                $shared_auth = 0;
+            }
+
             $page_title = 'Add Gatekeeper';
-            return view('gatekeeper.create', compact('page_title','auth_key', 'teams', 'selected_team'));
+            return view('gatekeeper.create', compact('page_title','auth_key', 'teams', 'selected_team','shared_auth','gatekeepers'));
         } else {
             $message = "You do not have access to that resource.";
             return redirect('/')->with('error',$message);
@@ -89,12 +98,11 @@ class GatekeepersController extends Controller
 
             \App\Gatekeeper::create([
                 'name' => $request->input('name'),
-                'description' => $request->input('description'),
                 'status' => $request->input('status'),
                 'type' => $request->input('type'),
                 'is_default' => $is_default,
-                'ip_address' => $request->input('ip_address'),
                 'auth_key' => $request->input('auth_key'),
+                'shared_auth' => $request->input('shared_auth'),
                 'team_id' => $request->input('team_id')
                 ]);
 
@@ -116,7 +124,11 @@ class GatekeepersController extends Controller
      */
     public function show($id)
     {
-        //
+        $gatekeeper = \App\Gatekeeper::find($id);
+
+        if ($gatekeeper != NULL) {
+            return view('gatekeeper.show', compact('gatekeeper'));
+        }
     }
 
     /**
@@ -148,7 +160,15 @@ class GatekeepersController extends Controller
                 $selected_team = $gatekeeper->team_id;
             }
 
-            return view('gatekeeper.edit', compact('gatekeeper','user_ids', 'teams', 'selected_team'));
+            // grab list of gatekeepers (for shared auth field)
+            $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'is_default' => '0'])->where('type','!=','training')->where('id', '!=', $gatekeeper->id)->orderby('name')->get();
+            if (old('shared_auth')) {
+                $shared_auth = old('shared_auth');
+            } else {
+                $shared_auth = $gatekeeper->shared_auth;
+            }
+
+            return view('gatekeeper.edit', compact('gatekeeper','user_ids', 'teams', 'selected_team', 'shared_auth', 'gatekeepers'));
 
         } else {
             $message = "You do not have access to that resource.";
@@ -172,7 +192,6 @@ class GatekeepersController extends Controller
                 'name' => 'required',
             ]);
 
-
             if ($request->has('is_default')) { $is_default = 1; } else { $is_default = 0; }
 
             $gatekeeper = \App\Gatekeeper::find($id);
@@ -189,13 +208,12 @@ class GatekeepersController extends Controller
             }
             
             $gatekeeper->name = $request->input('name');
-            $gatekeeper->description = $request->input('description');
             $gatekeeper->status = $request->input('status');
             $gatekeeper->type = $request->input('type');
             $gatekeeper->is_default = $is_default;
-            $gatekeeper->ip_address = $request->input('ip_address');
             $gatekeeper->team_id = $request->input('team_id');
-
+            $gatekeeper->shared_auth = $request->input('shared_auth');
+            
             if (request('auth_key') == NULL) {
                 $gatekeeper->auth_key = $this->generate_auth_key();
             } else {
@@ -242,6 +260,9 @@ class GatekeepersController extends Controller
 
             // remove any gatekeeper-specific team assignments (eg trainers, maintainers)
             $result = \App\TeamAssignment::where('gatekeeper_id',$id)->delete();
+
+            // remove current status info
+            $result = \App\GatekeeperStatus::where('gatekeeper_id',$id)->delete();
 
             $message = "Gatekeeper and authentication history deleted successfully.";
             return redirect('/gatekeepers')->with('success', $message);
@@ -399,8 +420,6 @@ class GatekeepersController extends Controller
 
     }
     
-
-
     /* User dashboard for authorizations, machine locking, etc */
     /* Open to gatekeeper managers and team members the gatekeeper is assigned to */
     public function dashboard($id) {
@@ -411,21 +430,38 @@ class GatekeepersController extends Controller
             $team = $gatekeeper->team()->first();
 
             if ($team == NULL) { $has_team = false; } else { $has_team = true; }
-            $authorizations = \App\Authorization::where('gatekeeper_id', $gatekeeper->id)->get();
 
-            // compile user list array with additional info for dropdowns
-            $all_users = array();
-            foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
-                $all_users[$user->id] = [
-                    'name' => $user->get_name(),
-                    'is_trainer' => $user->is_trainer($gatekeeper->id),
-                    'is_maintainer' => $user->is_maintainer($gatekeeper->id),
-                    'is_authorized' => $user->is_authorized($gatekeeper->id)
-                ];
+            if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_member()))) {
+ 
+                $authorizations = \App\Authorization::where('gatekeeper_id', $gatekeeper->id)->get();
+
+                // compile user list array with additional info for dropdowns
+                $all_users = array();
+                foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
+                    $all_users[$user->id] = [
+                        'name' => $user->get_name(),
+                        'is_trainer' => $user->is_trainer($gatekeeper->id),
+                        'is_maintainer' => $user->is_maintainer($gatekeeper->id),
+                        'is_authorized' => $user->is_authorized($gatekeeper->id)
+                    ];
+                }
+    
+                // get heartbeat status (for display purposes)
+                if ($gatekeeper->last_seen != NULL) {
+                    $current_time = Carbon::now();
+                    $last_seen = new Carbon($gatekeeper->last_seen);
+                    $time_diff = $current_time->diffInMinutes($last_seen);
+                    if ($time_diff > 20) { 
+                        $heartbeat_status = 'danger';
+                    } else {
+                        $heartbeat_status = 'success';
+                    }
+                } else {
+                    $heartbeat_status = 'warning';
+                }
+
+                return view('gatekeeper.dashboard', compact('gatekeeper','team', 'has_team', 'authorizations', 'all_users','heartbeat_status'));
             }
-
-            // ensure user can manage gatekeepers or is on the managing team
-            return view('gatekeeper.dashboard', compact('gatekeeper','team', 'has_team', 'authorizations', 'all_users'));
         }
 
     }
@@ -434,7 +470,7 @@ class GatekeepersController extends Controller
     public function tool_list() {
 
         $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->get();
-        dd($gatekeepers);
+
         return view('gatekeeper.tools', compact('gatekeepers'));
 
     }

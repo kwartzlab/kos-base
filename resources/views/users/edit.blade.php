@@ -288,7 +288,6 @@
 @section('plugins.Sweetalert2', true)
 
 @section('js')
-   <script type="text/javascript" src="/js/jquery.imgareaselect.pack.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
   <script src="/js/jquery.inputmask.bundle.min.js"></script>

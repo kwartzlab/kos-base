@@ -29,7 +29,12 @@ class User extends Authenticatable implements Auditable
      */
     protected $dates = [
         'created_at',
-        'updated_at'
+        'updated_at',
+        'date_admitted',
+        'date_applied',
+        'date_hiatus_start',
+        'date_hiatus_end',
+        'date_withdrawn'
     ];
 
     /**
@@ -61,6 +66,19 @@ class User extends Authenticatable implements Auditable
         return $this->hasMany(UserCert::class);
     }
 
+    public function team_assignments($team_id = 'all') {
+        if ($team_id == 'all') {
+            return $this->hasMany(TeamAssignment::class);
+        } else {
+            return $this->hasMany(TeamAssignment::class)->where('team_id',$team_id);
+        }
+    }
+
+    // returns user's membership application (if exists)
+    public function memberapp() {
+        return $this->hasMany(FormSubmission::class,'user_id', 'id')->where('special_form','new_user_app');
+    }
+
     // return user's full name
     public function get_name() {
         return $this->first_name . ' ' . $this->last_name;
@@ -77,7 +95,6 @@ class User extends Authenticatable implements Auditable
     
     }
 
-   
     // returns true or false if user is authorized for specified gatekeeper
     public function is_authorized($gatekeeper_id) {
         $result = \App\Authorization::where('user_id',$this->id)->where('gatekeeper_id',$gatekeeper_id)->get();

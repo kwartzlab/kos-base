@@ -52,8 +52,14 @@ class UsersController extends Controller
     public function create()
     {
 
-        $page_title = 'Membership Application';
-        return view('users.create', compact('page_title'));
+        // See if we have an form designated as a new user application and redirect if needed
+        $form = \App\Form::where('special_form','new_user_app')->first();
+        if ($form != NULL) {
+            return redirect('/forms/' . $form->id);
+        } else {
+            $page_title = 'Membership Application';
+            return view('users.create', compact('page_title'));
+        }
 
     }
 
@@ -66,6 +72,8 @@ class UsersController extends Controller
     public function store(Request $request)
     {
     
+        /*
+
          $request->validate([
                'first_name' => 'required',
                 'last_name' => 'required',
@@ -190,7 +198,7 @@ class UsersController extends Controller
 
         // save application form data
 
-        $application_form = \App\Form_submissions::create([
+        $application_form = \App\FormSubmissions::create([
             'form_id' => '1',
             'form_name' => 'Membership Application',
             'submitted_by' => \Auth::user()->id,
@@ -229,7 +237,7 @@ class UsersController extends Controller
 
         $message = "Application created & sent successfully.";
         return redirect('/users/create')->withMessage($message);
-
+        */
     }
 
     /**

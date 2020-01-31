@@ -3,7 +3,12 @@
 @section('title', $page_title)
 
 @section('content_header')
-    <h1>{{ $page_title }} </h1>
+    <h1>
+        {{ $page_title }}
+        @if(\Gate::allows('manage-users'))
+            &nbsp;&nbsp;<a class="btn btn-primary" style="float:right" href="/users/{{ $user->id }}/edit" role="button"><i class="fas fa-users"></i>&nbsp;&nbsp;View on Membership Register</a>
+        @endif
+    </h1> 
 @stop
 
 @section('content')
@@ -158,7 +163,6 @@
             </div>
         </div>
 
-
         <h3 class="form-heading">Change Password</h3>
 
         <div class="row">
@@ -192,8 +196,16 @@
   </form>
 </div>
 
-
 @endif
+
+@if($user->status == 'applicant')
+    @forelse($user->memberapp()->latest()->get() as $submission)
+        <?php $skip_fields = ['first_name','last_name','email','phone','address','city','province','postal','photo']; ?>
+        @include('forms.submission')
+    @empty
+    @endforelse
+@endif
+
 
 @stop
 

@@ -16,20 +16,14 @@ class TeamsController extends Controller
  
         // get teams user belongs to
         $my_teams = \Auth::user()->teams()->get();
+        $my_teams = $my_teams->unique();
 
-        // filter out duplicate teams (when user has multiple roles)
-        $my_teams = collect($my_teams)->unique();
+        $teams = \App\Team::all();
 
-        // if user is an admin, show the full teams table
-        if ((\Auth::user()->is_allowed('teams', 'manage')) || (\Auth::user()->is_superuser())) {
-            $all_teams = \App\Team::orderby('name')->get();
-        } else {
-            $all_teams = NULL;
-        }
-
+        $other_teams = array();
         $team_roles = config('kwartzlabos.team_roles');
 
-        return view('teams.index', compact('my_teams','all_teams','team_roles'));
+        return view('teams.index', compact('my_teams','teams','team_roles'));
     }
 
 
@@ -48,6 +42,26 @@ class TeamsController extends Controller
         }
 
     }
+
+    // Team dashboard
+    public function dashboard($team_id)
+    {
+        
+        $team = \App\Team::find($team_id);
+
+        // ensure user is a member of team or a teams manager
+        if (($team != NULL) && (($team->is_member()) || (\Auth::user()->can('manage-teams')))) {
+
+            $team_roles = config('kwartzlabos.team_roles');
+
+            $team_members = $team->members()->get();
+            $team_members = $team_members->unique('id')->sortBy('first_name');
+
+            return view('teams.dashboard', compact('team', 'team_roles','team_members'));
+        }
+
+    }
+
 
     /**
      * Send training requests & view past requests
@@ -260,7 +274,12 @@ class TeamsController extends Controller
      */
     public function show($id)
     {
-        //
+        $team = \App\Team::find($id);
+
+        if ($team != NULL) {
+            $team_roles = config('kwartzlabos.team_roles');
+            return view('teams.show', compact('team', 'team_roles'));
+        }
     }
 
     /**

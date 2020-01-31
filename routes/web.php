@@ -59,7 +59,11 @@ Route::middleware('auth')->group(function() {
 });
 
 // Web Forms
-Route::resource('forms', 'FormsController')->middleware(['auth','can:manage-forms']);
+Route::middleware('auth')->group(function() {
+    Route::resource('forms', 'FormsController');
+    Route::post('/forms/{id}/save', 'FormsController@save');
+    Route::get('/forms/submission/{id}', 'FormsController@submission');
+});
 
 // Reports
 Route::get('/reports', 'ReportsController@index')->middleware('auth');
@@ -91,8 +95,9 @@ Auth::routes(['register' => false]);
 
 // Image manipulation routes
 Route::middleware(['auth'])->group(function() {
-   Route::get('/image-crop/{photo_type?}/{user_id?}', 'ImageController@imageCrop');
-   Route::post('/image-crop/{photo_type?}/{user_id?}', 'ImageController@imageCropPost');
+    Route::get('/image/lastupload', 'ImageController@getLastImage');
+    Route::get('/image-crop/{photo_type?}/{id?}', 'ImageController@imageCrop');
+   Route::post('/image-crop/{photo_type?}/{id?}', 'ImageController@imageCropPost');
 });
 
 // Teams routes
@@ -104,6 +109,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/teams/training_pass/{request_id}', 'TeamsController@training_pass');
     Route::get('/teams/training_fail/{request_id}', 'TeamsController@training_fail');
     Route::get('/teams/{team_id}/requests/{request_type}', 'TeamsController@requests');
+    Route::get('/teams/{team_id}/dashboard', 'TeamsController@dashboard');
     Route::resource('teams', 'TeamsController');
 });
 

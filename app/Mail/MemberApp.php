@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MemberApp extends Mailable
+class MemberApp extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -15,6 +15,7 @@ class MemberApp extends Mailable
     public $name;
     public $photo;
     public $destination;
+    public $skip_fields;
 
     /**
      * Create a new message instance.
@@ -28,7 +29,7 @@ class MemberApp extends Mailable
         $this->name = $email_data['name'];
         $this->photo = $email_data['photo'];
         $this->destination = $destination;
-        $this->mail_attributes = $email_data['mail_attributes'];
+        $this->skip_fields = $email_data['skip_fields'];
     }
 
     /**
@@ -39,13 +40,34 @@ class MemberApp extends Mailable
     public function build()
     {
 
-        $this->to($this->mail_attributes['to']);
-        $this->subject($this->mail_attributes['subject']);
+        switch ($this->destination) {
+            case 'admin':
+                $this->to(config('kwartzlabos.membership_app.admin.to'));
+                $this->subject(config('kwartzlabos.membership_app.admin.subject') . ' - ' . $this->name);
+                if (config('kwartzlabos.membership_app.admin.cc') != NULL) {
+                    $this->cc(config('kwartzlabos.membership_app.admin.cc'));
+                }
+                if (config('kwartzlabos.membership_app.admin.replyto') != NULL) {
+                    $this->replyto(config('kwartzlabos.membership_app.admin.replyto'));
+                }
+            break;
+            case 'members':
+                $this->to(config('kwartzlabos.membership_app.members.to'));
+                $this->subject(config('kwartzlabos.membership_app.members.subject') . ' - ' . $this->name);
+                if (config('kwartzlabos.membership_app.members.cc') != NULL) {
+                    $this->cc(config('kwartzlabos.membership_app.members.cc'));
+                }
+                if (config('kwartzlabos.membership_app.members.replyto') != NULL) {
+                    $this->replyto(config('kwartzlabos.membership_app.members.replyto'));
+                }
+                break;
+        }
 
-        if ($this->mail_attributes['cc'] != NULL) { $this->cc($this->mail_attributes['cc']); }
-        if ($this->mail_attributes['replyto'] != NULL) { $this->replyTo($this->mail_attributes['replyto']); }
-
-        return $this->markdown('emails.memberapp');
+        // only send the message if there is a valid email address from the config, otherwise skip
+        if (count($this->to)>0) {
+            return $this->view('emails.memberapp')
+                        ->text('emails.memberapp_plain');
+        }
 
     }
 }
