@@ -82,7 +82,7 @@
                   @if((($has_team) && ($team->is_lead(\Auth::user()->id))) || (\Auth::user()->can('manage-gatekeepers')))
                      <div class="hovereffect-square">
                         @if ($gatekeeper->photo != NULL)
-                           <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/gatekeepers/' . $gatekeeper->photo ?>-512px.jpeg" alt="">   
+                           <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/gatekeepers/' . $gatekeeper->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-gatekeeper-photo.png') }}';">
                         @else
                            <img src="/img/no-gatekeeper-photo.png" style="float:right; max-height:240px;" class="img-square"/>
                         @endif
@@ -92,7 +92,7 @@
                      </div>
                   @else
                      @if ($gatekeeper->photo != NULL)
-                        <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/gatekeepers/' . $gatekeeper->photo ?>-512px.jpeg">
+                        <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/gatekeepers/' . $gatekeeper->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-gatekeeper-photo.png') }}';">
                      @else
                      <img src="/img/no-gatekeeper-photo.png" style="float:right; max-height:240px;" class="img-square"/>
                      @endif

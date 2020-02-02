@@ -2,17 +2,25 @@
    <div class="card-body">
 
       <div class="row">
-         <div class="col-md-9">
+         <div class="col-md-8">
             <h2>{{ $user->first_name }} {{ $user->last_name }}</h2>
 
             @if($user->status == 'active')
-               <h5>Member Since {{ $user->date_admitted->toDateString() }}</h5>
+               @if(!is_null($user->date_admitted))
+                  <h5>Member Since {{ $user->date_admitted->toDateString() }}</h5>
+               @endif
             @elseif($user->status == 'inactive')
-               <h5>Withdrawn {{ $user->date_withdrawn->toDateString() }}</h5>
+               @if(!is_null($user->date_withdrawn))
+                  <h5>Withdrawn {{ $user->date_withdrawn->toDateString() }}</h5>
+               @endif
             @elseif($user->status == 'hiatus')
-               <h5>On Hiatus until {{ $user->date_hiatus_end->toDateString() }}</h5>
-            @elseif($user->status == 'applicant')
-               <h5>Applied {{ $user->date_applied->toDateString() }}</h5>
+               @if(!is_null($user->date_hiatus_end))
+                  <h5>On Hiatus until {{ $user->date_hiatus_end->toDateString() }}</h5>
+               @endif
+           @elseif($user->status == 'applicant')
+               @if(!is_null($user->date_applied))
+                  <h5>Applied {{ $user->date_applied->toDateString() }}</h5>
+               @endif
             @endif    
 
             <p style="margin:15px 0px 10px;">@if($user->status == 'active')<span class="badge badge-success">Active</span>
@@ -62,6 +70,9 @@
                @endforeach
             @endif
             </h5>
+         </div>
+         <div class="col">
+            &nbsp;
          </div>
 
          <div class="col-md-2.5">

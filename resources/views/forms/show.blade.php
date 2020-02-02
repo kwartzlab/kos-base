@@ -246,8 +246,19 @@ $(document).ready(function(){
    bsCustomFileInput.init()
    
    document.querySelector('#btnsubmit').onclick = function () {
-      $("#btnsubmit").addClass("disabled");      
-      $("#btnsubmit").html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Sending');
+      // make sure we have all the required fields filled out before disabling the button
+      var allRequired = true;
+      var required = $('input,textarea,select').filter('[required]:visible');
+      required.each(function(){
+         if($(this).val() == ''){
+            allRequired = false;
+         }
+      });
+
+      if(allRequired){
+         $("#btnsubmit").addClass("disabled");
+         $("#btnsubmit").html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Sending');
+      }
    }
 
    @forelse($errors->messages() as $element_name => $message)

@@ -84,6 +84,7 @@
       });
 
       $('.upload-result').on('click', function (ev) {
+         $(".upload-result").html('<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Uploading');
          $uploadCrop.croppie('result', {
             type: 'canvas',
             size: { width: 1024, height: 1024 },

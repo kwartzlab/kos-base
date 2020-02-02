@@ -65,7 +65,7 @@
                       <li style="width:20%">
                             <img class="profile-image img-responsive" style="margin-bottom:10px;max-height:96px !important;" src="{{ asset('/storage/images/users/' . $member->photo) }}-128px.jpeg"  onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
                             <a class="users-list-name text-sm" href="/members/{{ $member->id }}/profile" TITLE="View {{ $member->get_name() }}">{{ $member->get_name() }}</a>
-                        <span class="users-list-date text-sm">{{ $member->date_applied->diffForHumans() }}</span>
+                        <span class="users-list-date text-sm">{{ $member->created_at->diffForHumans() }}</span>
                       </li>
                   @endforeach
               </ul>

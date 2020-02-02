@@ -52,8 +52,8 @@
 								@endif
 							</td>
 			
-							<td>
-							<a class="btn btn-primary btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/dashboard" role="button"><i class="fas fa-cog"></i>&nbsp;&nbsp;Manage</a>&nbsp;&nbsp;
+							<td class="col-action">
+							<a class="btn btn-primary btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/dashboard" role="button"><i class="fas fa-cog"></i>Manage</a>
 							<a class="btn btn-primary btn-sm" href="/gatekeepers/{{ $gatekeeper->id }}/edit" role="button"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
 							</td>
 						</tr>

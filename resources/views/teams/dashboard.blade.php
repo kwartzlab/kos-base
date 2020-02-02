@@ -21,7 +21,7 @@
       <div class="card-body">
 
       <div class="row">
-         <div class="col-md-9">
+         <div class="col-md-8">
             @if ($team->is_member(\Auth::user()->id))
                <h5>My Roles</h5>   
                <p>@foreach($team->assignments()->where('user_id', \Auth::user()->id)->get() as $assignment)
@@ -34,11 +34,14 @@
                </p>
             @endif
          </div>         
+         <div class="col">
+            &nbsp;
+         </div>
          <div class="col-md-2.5">
             @if (($team->is_lead()) || (Auth::user()->can('manage-teams')))
                <div class="hovereffect-square">
                   @if ($team->photo != NULL)
-                     <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" alt="">   
+                     <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-team-photo.png') }}';">   
                   @else
                      <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/>   
                   @endif
@@ -48,7 +51,7 @@
                </div>
             @else
                @if ($team->photo != NULL)
-                  <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg">
+                  <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-team-photo.png') }}';">
                @else
                   <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/> 
                @endif

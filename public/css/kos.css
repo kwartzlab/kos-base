@@ -49,6 +49,14 @@
     max-width:250px;
 }
 
+/* formats the action table column (for buttons) */
+.col-action {
+  padding:0.25rem !important;
+  vertical-align: middle !important;
+}
+.col-action .btn-sm { margin: .15em .15em; }
+.col-action .btn-sm i { margin-right:0.5em; }
+
 td.dt-nowrap { white-space: nowrap }
 
 .circle-icon-64 {

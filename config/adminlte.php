@@ -199,7 +199,7 @@ return [
             'url'  => '/teams/training',
             'icon' => 'fas fa-graduation-cap fa-fw',
         ], */
-        [
+        [              
             'text' => 'Membership Application',
             'url'  => '/forms/3',
             'icon' => 'fas fa-edit fa-fw',

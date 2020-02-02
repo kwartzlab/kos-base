@@ -108,7 +108,7 @@
             @else
 
                <div class="row">
-                  <div class="col-md-9">
+                  <div class="col-md-8">
                      <h5>Team Lead(s)</h5>   
                      @foreach($team->leads()->get() as $lead)
                         <a href="/members/{{ $lead->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $lead->get_name() }}</span></a>&nbsp;
@@ -124,9 +124,12 @@
                         <a href="/gatekeepers/{{ $gatekeeper->id }}" title="View Tool"><span class="badge badge-info badge-large">{{ $gatekeeper->name }}</span></a>&nbsp;
                      @endforeach
                   </div>
+                  <div class="col">
+                     &nbsp;
+                  </div>
                   <div class="col-md-2.5">
                      @if ($team->photo != NULL)
-                        <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg">
+                        <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-team-photo.png') }}';">
                      @else
                         <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/> 
                      @endif
