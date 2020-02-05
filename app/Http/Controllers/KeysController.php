@@ -77,16 +77,16 @@ class KeysController extends Controller
 
                // verify more parameters if tool is in use
                if ($new_status->status == 'inuse') {
-                  if ((isset($new_status->lock_in)) && (isset($new_status->user_key))) {
+                  if ((isset($new_status->user_lock_in)) && (isset($new_status->user_rfid))) {
                      // convert key into user id
-                     $user_key = \App\Key::where('rfid', $new_status->user_key)->first();
+                     $user_key = \App\Key::where('rfid', $new_status->user_rfid)->first();
 
                      if ($user_key == NULL) {
                         // unknown user key - should not happen so return 403
                         return NULL;
                      }
                      $status->user_id = $user_key->user()->value('id');
-                     $status->lock_in = $new_status->lock_in;
+                     $status->user_lock_in = $new_status->user_lock_in;
                   } else {
                      return NULL;
                   }

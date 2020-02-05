@@ -31,7 +31,7 @@ return [
     */
 
     'logo' => '<span class="icon-Kwartzlab-Logo-square"></span><span style="position: relative; top: -0.2em;">&nbsp;kOS</span>',
-    'logo_img' => '/img/koslogo.png',
+    'logo_img' => null,
     'logo_img_class' => 'brand-image-xl',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -201,10 +201,10 @@ return [
         ], */
         [              
             'text' => 'Membership Application',
-            'url'  => '/forms/3',
+            'url'  => '/users/create',
             'icon' => 'fas fa-edit fa-fw',
         ],
-        ['header' => 'ADMINISTRATION'],
+        ['header' => 'ADMINISTRATION', 'can' => 'does-admin'],
         [
             'text' => 'Member Register',
             'url'  => '/users',

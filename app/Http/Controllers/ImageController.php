@@ -91,7 +91,7 @@ class ImageController extends Controller
         file_put_contents($path_filename, $data);
 
         // save jpg version of original and generate additional thumbnail sizes
-        $img = Image::make($path_filename);
+        $img = Image::make($path_filename)->orientate();
         $img->save($path . $image_name . '.jpeg');
         $img->resize(512, 512);
         $img->save($path . $image_name . '-512px.jpeg');

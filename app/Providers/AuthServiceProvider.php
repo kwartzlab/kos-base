@@ -62,6 +62,18 @@ class AuthServiceProvider extends ServiceProvider
             if (Auth::user()->is_allowed('keys', 'manage')) { return true; }
         });
 
+        // Returns true if user holds any of the manage- roles
+        Gate::define('does-admin', function ($user) {
+            if (Auth::user()->is_allowed('roles', 'manage')) { return true; }
+            if (Auth::user()->is_allowed('keys', 'manage')) { return true; }
+            if (Auth::user()->is_allowed('users', 'manage')) { return true; }
+            if (Auth::user()->is_allowed('teams', 'manage')) { return true; }
+            if (Auth::user()->is_allowed('gatekeepers', 'manage')) { return true; }
+            if (Auth::user()->is_allowed('reports', 'manage')) { return true; }
+            return false;
+        });
+
+
         //
     }
 }
