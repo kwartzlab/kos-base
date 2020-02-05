@@ -101,7 +101,7 @@ class RegenerateThumbnails extends Command
 
                         $this->info('Processing ' . $image_file);
                         // generate thumbnails
-                        $img = Image::make($image_path . $image_file);
+                        $img = Image::make($image_path . $image_file)->orientate();
                         // if we started with a PNG file, create a JPEG version
                         if ($image_ext == 'png') {
                             $img->save($image_path . $rec->photo . '.jpeg');
