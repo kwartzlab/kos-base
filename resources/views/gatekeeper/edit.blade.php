@@ -31,11 +31,9 @@
               @if (!old('status')))
                 <option value="doorway" @if ($gatekeeper->type == 'doorway') selected="selected" @endif>Doorway</option>
                 <option value="lockout" @if ($gatekeeper->type == 'lockout') selected="selected" @endif>Tool Lockout</option>
-                <option value="training" @if ($gatekeeper->type == 'training') selected="selected" @endif>Training Module</option>
               @else
                 <option value="doorway" @if (old('type') == 'doorway') selected="selected" @endif>Doorway</option>
                 <option value="lockout" @if (old('type') == 'lockout') selected="selected" @endif>Tool Lockout</option>
-                <option value="training" @if (old('type') == 'training') selected="selected" @endif>Training Module</option>
               @endif
 
             </select>

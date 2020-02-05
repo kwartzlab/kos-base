@@ -264,7 +264,7 @@ class GatekeepersController extends Controller
             // remove current status info
             $result = \App\GatekeeperStatus::where('gatekeeper_id',$id)->delete();
 
-            $message = "Gatekeeper and authentication history deleted successfully.";
+            $message = "Gatekeeper and related history deleted successfully.";
             return redirect('/gatekeepers')->with('success', $message);
 
         } else {

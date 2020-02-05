@@ -217,9 +217,13 @@
 @section('plugins.Select2', true)
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="/js/jquery.inputmask.bundle.min.js"></script>
 <script>
 
   $(document).ready(function () {
+
+    $("#phone").inputmask("(999) 999-9999");
+    $("#postal").inputmask("A9A 9A9");
 
     $('#skills').select2({
       placeholder: 'Select skills',

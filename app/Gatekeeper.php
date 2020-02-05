@@ -11,12 +11,14 @@ class Gatekeeper extends Model implements Auditable
    
    protected $dates = [ 'last_seen' ];
 
+   // returns active trainers
    public function trainers() {
-        return $this->hasMany(TeamAssignment::class)->where('team_role','trainer');
+        return $this->hasMany(TeamAssignment::class)->where(['team_role' => 'trainer','status' => 'active']);
     }
 
+   // returns active maintainers
    public function maintainers() {
-      return $this->hasMany(TeamAssignment::class)->where('team_role','maintainer');
+      return $this->hasMany(TeamAssignment::class)->where(['team_role' => 'maintainer', 'status' => 'active']);
    }
 
    public function current_status() {

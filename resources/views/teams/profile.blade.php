@@ -114,7 +114,7 @@
                         <a href="/members/{{ $lead->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $lead->get_name() }}</span></a>&nbsp;
                      @endforeach
                      <h5 style="margin-top:15px;">Members</h5>   
-                     @foreach($team->members()->get() as $member)
+                     @foreach($team->members()->get()->unique() as $member)
                         @if (!$team->is_lead($member->id))
                         <a href="/members/{{ $member->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $member->get_name() }}</span></a>&nbsp;
                         @endif

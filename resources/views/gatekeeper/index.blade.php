@@ -22,8 +22,9 @@
 			<table class="table table-striped" id="data-table">
 				<thead><tr>
 					<th>Name</th>
-					<th>Type & Status</th>
+					<th>Type</th>
 					<th>Last Seen</th>
+					<th>Team</th>
 					<th>Authorizations</th>
 					<th>Actions</th>
 				</tr></thead>
@@ -40,10 +41,11 @@
 							@else
 							<span class="badge badge-danger">Disabled</span> @endif
 							
-							@if($gatekeeper->is_default == 1)<span class="badge badge-warning">Default</span>@endif
+							<?php /* @if($gatekeeper->is_default == 1)<span class="badge badge-warning">Default</span>@endif */ ?>
 							
 							</td>
 							<td>@if ($gatekeeper->last_seen != NULL) {{ $gatekeeper->last_seen->diffForHumans() }} @else Never @endif</td>
+							<td>@php($team = $gatekeeper->team()->first()) @if ($team != NULL) <a href="/teams/{{ $team->id }}" title="View Team"><span class="badge badge-warning badge-team">{{ $team->name  }}</span></a> @endif</td>
 							<td>
 								@if($gatekeeper->is_default == 1)
 								All Users
