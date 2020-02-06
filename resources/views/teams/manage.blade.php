@@ -76,7 +76,7 @@
                      <td>{{ $team->name }}</td>
                      @foreach(config('kwartzlabos.team_roles') as $team_role => $team_data)
                         @if (($team_data['is_admin']) || ($team_data['is_trainer']) || ($team_data['is_maintainer']))
-                           <td>@php($role_members = $team->get_role_members($team_role))@if ($role_members != false) @foreach ($role_members as $role_member)<a href="/members/{{ $role_member->user->id }}/profile" TITLE="View Profile"><span class="badge @if($role_member->user->status != 'active') badge-danger @else badge-primary @endif">{{ $role_member->user->get_name() }}</a></span> @endforeach @endif &nbsp;</td>
+                           <td>@php($role_members = $team->role_members($team_role)->get())@if ($role_members != NULL) @foreach ($role_members->unique('user_id') as $role_member)<a href="/members/{{ $role_member->user->id }}/profile" TITLE="View Profile"><span class="badge @if($role_member->user->status != 'active') badge-danger @else badge-primary @endif">{{ $role_member->user->get_name() }}</a></span> @endforeach @endif &nbsp;</td>
                         @endif
                      @endforeach
                      <td style="min-width:220px;">

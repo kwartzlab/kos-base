@@ -341,6 +341,7 @@ class TeamsController extends Controller
         // save Team changes
         $team->save();
 
+
         // process team assignment changes
         foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
             // prevent trainers and maintainers from being assigned (requires approval and gatekeeper assignment)
@@ -352,7 +353,7 @@ class TeamsController extends Controller
                             $team->assignments()->create(['user_id' => $user_id, 'team_role' => $team_role, 'team_id' => $team->id]);
                         }
                         // find all relevant assignments and delete those which aren't in the form input
-                        $role_members = $team->get_role_members($team_role);
+                        $role_members = $team->role_members($team_role)->get();
                         foreach ($role_members as $role_member) {
                             if (!in_array($role_member['user_id'], $request->input($team_role))) {
                                 $role_member->delete();
@@ -361,7 +362,7 @@ class TeamsController extends Controller
                     }
                 } else {
                     // if there's no array, remove any remaining assigned members
-                    $role_members = $team->get_role_members($team_role);
+                    $role_members = $team->role_members($team_role)->get();
                     if ($role_members != false) {
                         foreach ($role_members as $role_member) {
                             $role_member->delete();

@@ -83,14 +83,9 @@ class Team extends Model implements Auditable
         }
     }
 
-    public function get_role_members($team_role) {
-        $results = \App\TeamAssignment::where(['team_role' => $team_role, 'team_id' => $this->id])->get();
-        if ($results->count() === 0 ) {
-            return false;
-        } else {
-            return $results;
-        }
-
+    // returns all team assignment records for a specific role
+    public function role_members($team_role) {
+        return $this->hasMany(TeamAssignment::class)->where('team_role',$team_role);
     }
 
 
