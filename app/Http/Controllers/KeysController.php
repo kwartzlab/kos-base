@@ -10,8 +10,14 @@ class KeysController extends Controller
    // main json parsing function - redirects to internal procs and outputs result
    public function index(Request $request) {
 
+      if ($request->has('status')) {
+         $status = $request->input('status');
+      } else {
+         $status = NULL;
+      }
+
       // make sure we have enough info to proceed
-      if ((!$request->has('auth_key')) || (!$request->has('status')) || (!$request->has('endpoint')) ) {
+      if ((!$request->has('auth_key')) || (!$request->has('endpoint')) ) {
          return response()->json([
             'code' => '400',
             'text' => 'Bad Request',
@@ -19,7 +25,7 @@ class KeysController extends Controller
          ]);
       }
 
-      $gatekeeper = $this->process_auth($request->input('auth_key'), $request->input('status'), \Request::ip());
+      $gatekeeper = $this->process_auth($request->input('auth_key'), $status, \Request::ip());
 
       // only continue if we have a gatekeeper object...
       if ($gatekeeper != NULL) {
@@ -59,14 +65,15 @@ class KeysController extends Controller
    private function process_auth($auth_key,$status_json,$ip_address) {
 
       if ($auth_key != NULL) {
-         $gatekeeper = \App\Gatekeeper::where('auth_key',$auth_key)->where('status','enabled')->get()->first();
-         if ($gatekeeper) {
+         $gatekeeper = \App\Gatekeeper::where('auth_key',$auth_key)->where('status','enabled')->first();
+         if ($gatekeeper != NULL) {
             $gatekeeper->last_seen = now();
             $gatekeeper->ip_address = $ip_address;
             $gatekeeper->save();
 
             // update status record (create if doesn't exist)
             $new_status = json_decode($status_json);
+
             if (isset($new_status->status)) {
                $status = $gatekeeper->current_status()->first();
 
@@ -103,9 +110,8 @@ class KeysController extends Controller
                $status->save();
 
                return $gatekeeper;
-
             } else {
-               return NULL;
+               return $gatekeeper;
             }
          } else {
             return NULL;
