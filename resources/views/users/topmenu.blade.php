@@ -6,7 +6,7 @@
    
 */?>
             <!-- Notifications Panel -->
-            <li class="nav-item dropdown" id="notifications">
+<?php /*            <li class="nav-item dropdown" id="notifications">
               <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
                 <i class="fas fa-bell"></i>
                 <span class="badge badge-danger navbar-badge">15</span>
@@ -32,7 +32,7 @@
                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
               </div>
             </li>
-
+*/ ?>
             <!-- User Account Menu -->
             <li class="nav-item dropdown user-menu">
               <!-- Menu Toggle Button -->
