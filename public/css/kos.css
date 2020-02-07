@@ -49,6 +49,18 @@
     max-width:250px;
 }
 
+/* Notifications panel */
+
+#notifications .nav-link {
+  font-size:1.8em;
+  margin-top:-8px;
+}
+
+#notifications .navbar-badge {
+  padding:5px;
+  border-radius:50%;
+}
+
 /* formats the action table column (for buttons) */
 .col-action {
   padding:0.25rem !important;

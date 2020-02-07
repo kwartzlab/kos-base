@@ -189,7 +189,7 @@ class KeysController extends Controller
 
          $key = \App\Key::where('rfid', $row['rfid'])->first();
 
-         if (count($key) > 0) {
+         if ($key != NULL) {
             $key_id = $key->id;
             $user_id = $key->user_id;
          } else {
