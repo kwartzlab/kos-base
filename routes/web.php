@@ -42,6 +42,10 @@ Route::middleware('auth')->group(function() {
     Route::get('/users/index/{filter?}', 'UsersController@index')->middleware(['auth','can:manage-users']);
     Route::get('/users/{user}/destroy_key/{key}', 'UsersController@destroy_key')->middleware(['auth','can:manage-keys']);
     Route::post('/users/{user}/store_key', 'UsersController@store_key')->middleware(['auth','can:manage-keys']);
+    Route::post('/users/{id}/status', 'UsersController@update_status')->middleware(['auth','can:manage-users']);
+    Route::delete('/users/{id}/status', 'UsersController@update_status')->middleware(['auth','can:manage-users']);
+    Route::post('/users/check_attributes', 'UsersController@check_attributes')->middleware(['auth']);
+    Route::post('/users/{id}/do_stuff', 'UsersController@do_stuff')->middleware(['auth']);
 });
 
 // Member Directory
@@ -55,7 +59,6 @@ Route::middleware('auth')->group(function() {
 // Training
 Route::middleware('auth')->group(function() {
     Route::resource('training', 'TrainingController');
-    Route::get('/training/{user}/destroy/{key}', 'TrainingController@destroy');
 });
 
 // Web Forms

@@ -127,10 +127,10 @@ class RoleController extends Controller
 
         // Get users list unassigned to this role
         $user_list = array();
-        foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
+        foreach (\App\User::where('status','active')->orderby('first_preferred')->get() as $user) {
 
             if ($user->has_role($id) === FALSE) {
-                $user_list[$user->id] = $user->first_name . " " . $user->last_name;
+                $user_list[$user->id] = $user->get_name();
             }
 
         }
@@ -140,7 +140,7 @@ class RoleController extends Controller
         foreach (\App\UserRole::where('role_id',$role->id)->get() as $assigned_user_role) {
             $assigned_user = \App\User::find($assigned_user_role['user_id']);
             $assigned_list[] = [
-                'name' => $assigned_user->first_name . ' ' . $assigned_user->last_name,
+                'name' => $assigned_user->get_name(),
                 'id' => $assigned_user->id,
                 'created_at' => $assigned_user_role->created_at->diffForHumans()
             ];

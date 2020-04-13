@@ -19,7 +19,7 @@ class User extends Authenticatable implements Auditable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password', 'status', 'acl', 'member_id', 'date_applied','date_admitted','date_hiatus_start','date_hiatus_end','date_withdrawn','phone','address','city','province','postal','photo'
+        'first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'password', 'status', 'acl', 'member_id', 'phone','address','city','province','postal','photo','notes'
     ];
 
     /**
@@ -30,8 +30,8 @@ class User extends Authenticatable implements Auditable
     protected $dates = [
         'created_at',
         'updated_at',
-        'date_admitted',
         'date_applied',
+        'date_admitted',
         'date_hiatus_start',
         'date_hiatus_end',
         'date_withdrawn'
@@ -65,6 +65,32 @@ class User extends Authenticatable implements Auditable
     public function certs() {
         return $this->hasMany(UserCert::class);
     }
+    
+    public function status_history() {
+        return $this->hasMany(UserStatus::class)->orderby('created_at');
+    }
+
+    // returns first instance of status type
+    public function first_status($type = NULL) {
+        if ($type == NULL) {
+            return $this->hasMany(UserStatus::class)->orderby('created_at')->limit(1);
+        } else {
+            return $this->hasMany(UserStatus::class)->where('status', $type)->orderby('created_at')->limit(1);
+        }
+    }
+
+    // returns last instance of status type
+    public function last_status($type = NULL) {
+        if ($type == NULL) {
+            return $this->hasMany(UserStatus::class)->orderby('created_at', 'desc')->limit(1);
+        } else {
+            return $this->hasMany(UserStatus::class)->where('status', $type)->orderby('created_at', 'desc')->limit(1);
+        }
+    }
+
+    public function current_status() {
+        return $this->hasMany(UserStatus::class)->where('created_at', '<', date('Y-m-d H:i:s', strtotime('tomorrow midnight')))->orderby('created_at','desc')->limit(1);
+    }
 
     public function team_assignments($team_id = 'all') {
         if ($team_id == 'all') {
@@ -80,8 +106,27 @@ class User extends Authenticatable implements Auditable
     }
 
     // return user's full name
-    public function get_name() {
-        return $this->first_name . ' ' . $this->last_name;
+    public function get_name($piece = NULL) {
+
+      
+        if ($this->first_preferred == NULL) {
+            $first_name = $this->first_name;
+            $last_name = $this->last_name;
+        } else {
+            $first_name = $this->first_preferred;
+            $last_name = $this->last_preferred;
+        } 
+       
+        switch ($piece) {
+            case 'first':
+                return $first_name;
+                break;
+            case 'last':
+                return $last_name;
+                break;
+            default:
+                return $first_name . ' ' . $last_name;
+        }
     }
 
     // returns all trainer records for current user

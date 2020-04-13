@@ -13,23 +13,13 @@
    <form method="POST" action="/forms/{{ $form->id }}/save" enctype="multipart/form-data">
    {{ csrf_field() }}
    <input type="hidden" id="form_id" name="form_id" value="{{ $form->id }}">
+   <input type="hidden" id="returning_user" name="returning_user" value="0">
 
       <div class="card-body">
          @if($form->description != NULL)
             {!! $form->description !!}
             <hr>
          @endif
-
-         @switch($form->special_form)
-            @case('new_user_app')
-               
-
-
-            @break
-            @case('helpdesk')
-            
-            @break
-         @endswitch
 
          @foreach($form_fields as $field_uuid => $form_field)
             
@@ -135,94 +125,17 @@
             @endif
          @endforeach
 
-         @switch($form->special_form)
-            @case('new_user_app')
-               <h3 class="form-heading">Contact Info</h3>
-               
-               <div class="row">
-                  <div class="form-group col-md-3">
-                     <label for="first_name">First Name <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control @if($errors->has('first_name')) is-invalid @endif" name="first_name" id="first_name" value="{{ old('first_name') }}" required>
-                  </div>
-                  <div class="form-group col-md-3">
-                     <label for="last_name">Last Name <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control @if($errors->has('last_name')) is-invalid @endif" name="last_name" id="last_name" value="{{ old('last_name') }}" required>
-                  </div>
-               </div>
-               
-               <div class="row">
-                  <div class="form-group col-md-3">
-                  <label for="email">Email Address <span class="text-danger">*</span></label>
-                     <div class="input-group">
-                        <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fas fa-envelope"></i></div>
-                        </div>
-                        <input type="email" class="form-control @if($errors->has('email')) is-invalid @endif" name="email" id="email" value="{{ old('email') }}" required>
-                     </div>
-                  </div>
-                  <div class="form-group col-md-3">
-                     <label for="phone">Phone Number <span class="text-danger">*</span></label>
-                     <div class="input-group">
-                        <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fas fa-phone"></i></div>
-                        </div>
-                        <input type="text" class="form-control @if($errors->has('phone')) is-invalid @endif" name="phone" id="phone" value="{{ old('phone') }}" required>
-                     </div>
-               </div>
-               </div>
-
-               <div class="row">
-                  <div class="form-group col-md-6">
-                     <label for="address">Street Address <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control @if($errors->has('address')) is-invalid @endif" name="address" id="address" value="{{ old('address') }}" required>
-                  </div>
-               </div>
-
-               <div class="row">
-                  <div class="form-group col-md-2">
-                     <label for="city">City <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control @if($errors->has('city')) is-invalid @endif" name="city" id="city" value="{{ old('city') }}" required>
-                  </div>
-                  <div class="form-group col-md-2">
-                     <label for="province">Province <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control @if($errors->has('province')) is-invalid @endif" name="province" id="province" value="{{ old('province') }}" required>
-                  </div>
-                  <div class="form-group col-md-2">
-                     <label for="postal">Postal Code <span class="text-danger">*</span></label>
-                     <input type="text" class="form-control @if($errors->has('postal')) is-invalid @endif" name="postal" id="postal" value="{{ old('postal') }}" required>
-                  </div>
-               </div>
-
-               <div class="row">
-                  <div class="form-group col-md-5">
-                     <div @if($errors->has('photo')) class="border rounded border-danger border-medium" @endif>
-                        <label>Applicant Photo <span class="text-danger">*</span></label><br />
-                        @if (old('photo') == NULL)
-                           <button type="button" class="btn btn-primary" id="photoupload"><i class="fas fa-camera"></i>&nbsp;&nbsp;Upload Photo</button>
-                        @else
-                           <button type="button" class="btn btn-success" id="photoupload"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Photo Uploaded</button>
-                        @endif
-                        <input type="hidden" id="photo" name="photo" value="{{ old('photo') }}">
-                     </div>
-                  </div>
-               </div>
-
-            @break
-         @endswitch
+         @if($form->special_form != NULL)
+            @includeIf('forms.special.' . $form->special_form)
+         @endif
 
       </div>
       <div class="card-footer">
          <button type="submit" id="btnsubmit" class="btn btn-primary">
-            @switch($form->special_form)
-               @case('new_user_app')
-                  Send Application
-               @break
-               @case('helpdesk')
-                  Send Request
-               @break
-               @default
-                  Send Form
-            @endswitch
+         @if($form->submit_label != NULL)
+            {{ $form->submit_label }}
+         @else Send Form
+         @endif
          </button>
       </div>
 
@@ -267,40 +180,6 @@ $(document).ready(function(){
       });
    @empty
    @endforelse
-
-   @switch($form->special_form)
-      @case('new_user_app')
-         $("#phone").inputmask("(999) 999-9999");
-         $("#postal").inputmask("A9A 9A9");
-
-         document.querySelector('#photoupload').onclick = function () {
-            var popup = window.open('/image-crop/users/new', '', "width=640, height=790");
-
-            var popupTick = setInterval(function() {
-            if (popup.closed) {
-            clearInterval(popupTick);
-               $.ajax({
-                  url: "/image/lastupload",
-                  type: "GET",
-                  data: "",
-                  success: function (data, textStatus, oHTTP) {
-                     if (data.filename != null) {
-                        $("#photo").val(data.filename);
-                        $("#photoupload").removeClass("btn-primary").addClass("btn-success");
-                        $("#photoupload").html('<i class="fas fa-check-circle"></i>&nbsp;&nbsp;Photo Uploaded');
-                     }
-                  }
-               });
-
-            }
-            }, 500);
-
-            return false;
-         };         
-
-
-         @break
-   @endswitch
 
    @foreach($form_fields as $field_uuid => $form_field)
       @if($form_field->label != NULL)
@@ -348,6 +227,12 @@ $(document).ready(function(){
       @endif
     @endforeach
 
+    $.ajaxSetup({
+            headers: {
+               'Accept': 'application/json',
+               'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            }
+         });
 });
 </script>
 @stop

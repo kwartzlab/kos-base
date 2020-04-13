@@ -241,11 +241,17 @@ class FormsController extends Controller
 
             // if we're a special form, add the extra fields for validation
             switch($form->special_form) {
+
                 case 'new_user_app':
+                    if (($request->has('user_id')) && ($request->input('user_id')>0)) {
+                        $user_id = $request->user_id;
+                    } else {
+                        $user_id = 0;
+                    }
+
                     $validation_list = array_merge($validation_list, [
                         'first_name' => 'required',
                         'last_name' => 'required',
-                        'email' => 'required|unique:users',
                         'address' => 'required',
                         'city' => 'required',
                         'province' => 'required',
@@ -253,6 +259,19 @@ class FormsController extends Controller
                         'photo' => 'required'
                         ]);
                     break;
+
+                    if ($user_id>0) {
+                        $validation_list = array_merge($validation_list, [
+                            'email' => 'required',
+                            ]);
+                        break;
+                    } else {
+                        $validation_list = array_merge($validation_list, [
+                            'email' => 'required|unique:users',
+                            ]);
+                        break;
+                    }
+
             }
 
             if (count($validation_list)>0) {
@@ -297,7 +316,7 @@ class FormsController extends Controller
                         $field_value = $request->input($element_name);
                 }
 
-                $responses[] = [
+                $responses[$field_uuid] = [
                     'label' => $form_field->label,
                     'value' => $field_value,
                     'type' => $form_field->type
@@ -312,6 +331,8 @@ class FormsController extends Controller
                     // add hard-coded responses from new user form
                     $responses['first_name'] = ['label' => 'First Name', 'value' => $request->input('first_name'), 'type' => 'input'];
                     $responses['last_name'] = ['label' => 'Last Name', 'value' => $request->input('last_name'), 'type' => 'input'];
+                    $responses['first_preferred'] = ['label' => 'Preferred First Name', 'value' => $request->input('first_preferred'), 'type' => 'input'];
+                    $responses['last_preferred'] = ['label' => 'Preferred Last Name', 'value' => $request->input('last_preferred'), 'type' => 'input'];
                     $responses['email'] = ['label' => 'Email Address', 'value' => $request->input('email'), 'type' => 'input'];
                     $responses['phone'] = ['label' => 'Phone Number', 'value' => $request->input('phone'), 'type' => 'input'];
                     $responses['address'] = ['label' => 'Street Address', 'value' => $request->input('address'), 'type' => 'input'];
@@ -320,10 +341,20 @@ class FormsController extends Controller
                     $responses['postal'] = ['label' => 'Postal Code', 'value' => $request->input('postal'), 'type' => 'input'];
                     $responses['photo'] = ['label' => 'Photo', 'value' => $request->input('photo'), 'type' => 'input'];
 
+                    if ($request->input('first_preferred') == NULL) {
+                        $first_preferred = $request->input('first_name');
+                        $last_preferred = $request->input('last_name');
+                    } else {
+                        $first_preferred = $request->input('first_preferred');
+                        $last_preferred = $request->input('last_preferred');
+                    }
+
                     // create the applicant user
                     $user = \App\User::create([
                         'first_name' => $request->input('first_name'),
                         'last_name' => $request->input('last_name'),
+                        'first_preferred' => $first_preferred,
+                        'last_preferred' => $last_preferred,
                         'email' => $request->input('email'),
                         'status' => 'applicant',
                         'date_applied' => date("Y-m-d"),
@@ -334,14 +365,23 @@ class FormsController extends Controller
                         'postal' => $request->input('postal'),
                         'password' => Hash::make($this->generate_random_password()),
                         'member_id' => rand(1000,9999),
-                        'photo' => $request->input('photo')
+                        'photo' => $request->input('photo'),
                         ]);
+
+                    // create user's initial status record
+                    $user_status = \App\UserStatus::create([
+                        'status' => 'applicant',
+                        'user_id' => $user->id,
+                        'updated_by' => 0,
+                        'created_at' => date('Y-m-d'),
+                        'updated_at' => date('Y-m-d')
+                    ]);
 
                       // build array for email use
                     $email_data = array(
                         'name' => $user->get_name(),
                         'photo' => \URL::to('/storage/images/users/' . $user->photo . '.jpeg'),
-                        'skip_fields' => ['first_name','last_name','email','phone','address','city','province','postal','photo'],
+                        'skip_fields' => ['first_name','last_name','first_preferred','last_preferred','email','phone','address','city','province','postal','photo'],
                         'form_data' => $responses
                     );
 
@@ -392,7 +432,7 @@ class FormsController extends Controller
                 // if we should skip any fields for display, set them
                 switch ($submission->special_form) {
                     case 'new_user_app':
-                        $skip_fields = ['first_name','last_name','email','phone','address','city','province','postal','photo'];
+                        $skip_fields = ['first_name','last_name','first_preferred','last_preferred','email','phone','address','city','province','postal','photo'];
                         break;
                 }
 

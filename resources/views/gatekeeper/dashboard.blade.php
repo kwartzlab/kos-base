@@ -245,12 +245,12 @@
                      <tbody>
                         @foreach($authorizations as $gkauth)
                            <tr class="request_row" id="authorization-{{ $gkauth->id }}">
-                              <td>{{ $gkauth->username() }}</td>
+                              <td>{{ $gkauth->user->get_name() }}</td>
                               <td>{{ $gkauth->created_at->diffForHumans() }}</td>
                               <td>
                                  <a href="/members/{{ $gkauth->user->id }}/profile/" class="btn btn-primary btn-sm" id="btnprofile" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Profile</a>&nbsp;&nbsp;
                                  @if($gatekeeper->is_trainer())
-                                    <button class="btn btn-danger btn-sm revoke_button" data-record-id="{{ $gkauth->id }}" data-record-title="{{ $gkauth->username() }}" data-toggle="modal" data-target="#confirm-delete-authorization"><i class="fas fa-ban"></i> Revoke</button>
+                                    <button class="btn btn-danger btn-sm revoke_button" data-record-id="{{ $gkauth->id }}" data-record-title="{{ $gkauth->user->get_name() }}" data-toggle="modal" data-target="#confirm-delete-authorization"><i class="fas fa-ban"></i> Revoke</button>
                                  @endif
                               </td>
                            </tr>

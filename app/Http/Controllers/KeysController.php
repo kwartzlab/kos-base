@@ -25,7 +25,7 @@ class KeysController extends Controller
          ]);
       }
 
-      $gatekeeper = $this->process_auth($request->input('auth_key'), $status, \Request::ip());
+      $gatekeeper = $this->process_auth($request->input('auth_key'), $status, $request->ip());
 
       // only continue if we have a gatekeeper object...
       if ($gatekeeper != NULL) {
@@ -93,7 +93,7 @@ class KeysController extends Controller
                         return NULL;
                      }
                      $status->user_id = $user_key->user()->value('id');
-                     $status->user_lock_in = $new_status->user_lock_in;
+                     $status->lock_in = $new_status->user_lock_in;
                   } else {
                      return NULL;
                   }

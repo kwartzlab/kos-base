@@ -55,7 +55,7 @@ class TeamsController extends Controller
             $team_roles = config('kwartzlabos.team_roles');
 
             $team_members = $team->members()->get();
-            $team_members = $team_members->unique('id')->sortBy('first_name');
+            $team_members = $team_members->unique('id')->sortBy('first_preferred');
 
             return view('teams.dashboard', compact('team', 'team_roles','team_members'));
         }
@@ -208,8 +208,8 @@ class TeamsController extends Controller
         if (\Auth::user()->can('manage-teams')) {
             // get all users
             $user_list = array();
-            foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
-                $user_list[$user->id] = $user->first_name . " " . $user->last_name;
+            foreach (\App\User::where('status','active')->orderby('first_preferred')->get() as $user) {
+                $user_list[$user->id] = $user->get_name();
             }
 
             return view('teams.create',['user_list' => $user_list]);
@@ -294,8 +294,8 @@ class TeamsController extends Controller
 
         // get all users
         $user_list = array();
-        foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
-            $user_list[$user->id] = $user->first_name . " " . $user->last_name;
+        foreach (\App\User::where('status','active')->orderby('first_preferred')->get() as $user) {
+            $user_list[$user->id] = $user->get_name();
         }
         
         // get team assignments and build array for dropdowns

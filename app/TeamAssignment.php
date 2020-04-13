@@ -10,7 +10,7 @@ class TeamAssignment extends Model implements Auditable
 
     use \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['user_id', 'role_id', 'team_id', 'team_role', 'gatekeeper_id','status'];
+    protected $fillable = ['user_id', 'role_id', 'team_id', 'team_role', 'gatekeeper_id', 'status', 'approved_by'];
 
     public function team() {
         return $this->belongsTo(Team::class, 'team_id', 'id');

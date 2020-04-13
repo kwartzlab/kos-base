@@ -200,7 +200,7 @@
 
 @if($user->status == 'applicant')
     @forelse($user->memberapp()->latest()->get() as $submission)
-        <?php $skip_fields = ['first_name','last_name','email','phone','address','city','province','postal','photo']; ?>
+        <?php $skip_fields = ['first_name','last_name','first_preferred','last_preferred','email','phone','address','city','province','postal','photo']; ?>
         @include('forms.submission')
     @empty
     @endforelse
@@ -311,7 +311,7 @@
 
     function create_UUID(){
         var dt = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx'.replace(/[xy]/g, function(c) {
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = (dt + Math.random()*16)%16 | 0;
             dt = Math.floor(dt/16);
             return (c=='x' ? r :(r&0x3|0x8)).toString(16);

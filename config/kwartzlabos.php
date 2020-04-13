@@ -42,13 +42,60 @@ return [
         ],
     ],
     'user_status' => [
-        'active' => 'Active',
-        'applicant' => 'Applicant',
-        'hiatus' => 'On Hiatus',
-        'withdrawn' => 'Withdrawn',
-        'suspended' => 'Suspended',
-        'abandoned' => 'Applicant [Abandoned]',
-        'denied' => 'Applicant [Denied]'
+        'active' => [
+            'name' => 'Active',
+            'icon' => 'fa-user-check',
+            'colour' => 'success',
+            'send-notifications' => TRUE
+        ],
+        'hiatus' => [
+            'name' => 'On Hiatus',
+            'icon' => 'fa-umbrella-beach',
+            'colour' => 'warning',
+            'send-notifications' => TRUE
+        ],
+        'suspended' => [
+            'name' => 'Suspended',
+            'icon' => 'fa-user-lock',
+            'colour' => 'danger',
+            'send-notifications' => TRUE
+        ],
+        'inactive' => [
+            'name' => 'Withdrawn',
+            'icon' => 'fa-user-slash',
+            'colour' => 'danger',
+            'send-notifications' => TRUE
+        ],
+        'inactive-abandoned' => [
+            'name' => 'Withdrawn [Abandoned]',
+            'icon' => 'fa-user-slash',
+            'colour' => 'danger',
+            'send-notifications' => TRUE
+        ],
+        'terminated' => [
+            'name' => 'Withdrawn [Terminated]',
+            'icon' => 'fa-user-slash',
+            'colour' => 'danger',
+            'send-notifications' => FALSE
+        ],
+        'applicant' => [
+            'name' => 'Applicant',
+            'icon' => 'fa-user-edit',
+            'colour' => 'warning',
+            'send-notifications' => FALSE
+        ],
+        'applicant-abandoned' => [
+            'name' => 'Applicant [Abandoned]',
+            'icon' => 'fa-user-times',
+            'colour' => 'warning',
+            'send-notifications' => FALSE
+        ],
+        'applicant-denied' => [
+            'name' => 'Applicant [Denied]',
+            'icon' => 'fa-user-minus',
+            'colour' => 'danger',
+            'send-notifications' => FALSE
+        ],
     ],
     'team_roles' => [
         'lead' => [

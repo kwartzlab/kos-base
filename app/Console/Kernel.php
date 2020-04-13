@@ -24,8 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('insipre')
-        //          ->hourly();
+        $schedule->command('process:userstatus')->dailyAt('1:00')->withoutOverlapping(10)->appendOutputTo(storage_path('logs/userstatusupdates.log'));
     }
 
     /**

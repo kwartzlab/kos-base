@@ -125,9 +125,15 @@ td.dt-nowrap { white-space: nowrap }
 
 /* Modal styles */
 
+.modal-dialog .overlay {
+  background-color:#FFF !important;
+  opacity:1 !important;
+
+}
+
 .modal-dialog .overlay-change {
-  opacity:1;
-  background-color:#FFF;
+  background-color:#FFF !important;
+  opacity:1 !important;
 }
 
 /* offset text from sidebar icons */
@@ -173,6 +179,15 @@ td.dt-nowrap { white-space: nowrap }
 
 .sidebargrey {
     background-color:#222d32; 
+}
+
+.timeline div.today-watermark {
+  margin-left:0;
+}
+
+.timeline div.today-watermark h3 {
+  padding:3px 8px !important;
+  font-weight:bold;
 }
 
 /* kwartzlab logo vector font */

@@ -9,17 +9,16 @@
 @section('content')
 @include('shared.alerts')
 
-@if(count($gatekeepers)>0)
-   @foreach($gatekeepers as $gatekeeper)
-      @include('gatekeeper.profile')
-   @endforeach
-@else
+
+@forelse($gatekeepers as $gatekeeper)
+   @include('gatekeeper.profile')
+@empty
    <div class="card card-outline card-warning">
       <div class="card-body">
          <h4>No active tools configured.</h4>
       </div>
    </div>
-@endif
+@endforelse
 
 @stop
 

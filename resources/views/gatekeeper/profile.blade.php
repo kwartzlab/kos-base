@@ -7,7 +7,7 @@
 <div class="card card-outline card-info" style="margin-bottom:40px;">
          <div class="card-header">
             <h3 class="card-title">{{ $gatekeeper->name }} 
-               @if ($gatekeeper->is_authorized())
+               @if (($gatekeeper->is_authorized()) || ($gatekeeper->is_default))
                   &nbsp;<i class="fas fa-check-circle text-success" title="You are authorized to use this tool"></i>
                @else
                   &nbsp;<i class="fas fa-ban text-danger" title="You are not authorized to use this tool"></i>

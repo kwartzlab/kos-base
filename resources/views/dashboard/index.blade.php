@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Welcome {{ \Auth::user()->first_name }}!</h1>
+    <h1>Welcome {{ \Auth::user()->get_name('first') }}!</h1>
 @stop
 
 @section('content')
@@ -148,7 +148,7 @@
                 @foreach($events as $key => $daily_events)
                       <tr>
                         <td>
-                            <span class="text-muted text-bold">{{ \Carbon\Carbon::CreateFromFormat('Y-m-d',$key)->format('F j') }}</span>
+                            <span class="text-muted text-bold">{{ \Carbon\Carbon::CreateFromFormat('Y-m-d',$key)->format('F j') }} @if(\Carbon\Carbon::CreateFromFormat('Y-m-d',$key)->format('Y-m-d') == \Carbon\Carbon::now()->format('Y-m-d'))<span class="text-sm"> - today! @endif</span></span>
                             <ul>
                               @foreach($daily_events as $event)
                                 <li><a href="#" data-toggle="tooltip" title="{{ $event->description }}">{{ $event->summary }}</a><br/><span class="text-sm">@if($event->startDateTime == NULL)All Day @else {{ $event->startDateTime->format('g:ia') }} - {{ $event->endDateTime->format('g:ia') }} @endif</span></li>

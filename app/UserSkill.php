@@ -20,7 +20,7 @@ class UserSkill extends Model
 
         $user_ids = \App\UserSkill::where(['skill' => $this->skill])->pluck('user_id')->toArray();
         if (count($user_ids)>0) {
-            $result = \App\User::where('status','active')->orderby('first_name')->find($user_ids);
+            $result = \App\User::where('status','active')->orderby('first_preferred')->find($user_ids);
             return $result;
         } else {
             return NULL;

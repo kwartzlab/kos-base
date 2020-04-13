@@ -82,7 +82,7 @@
                         <h2 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; color: #3d4852; font-size: 19px; font-weight: bold; margin-top: 0; text-align: left;">Applicant Interview</h2>
                         
                         @foreach($form_data as $key => $row)
-                           @if(array_search($key, $skip_fields) === FALSE)
+                           @if(array_search($key, $skip_fields) == FALSE)
                            <p style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; box-sizing: border-box; color: #3d4852; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">{{ $row['label'] }}</p>
                               @if(is_array($row['value']))
                                  @foreach ($row['value'] as $key => $value)

@@ -1,33 +1,47 @@
+<?php
+   if (!isset($user_status)) {
+      $user_status = config('kwartzlabos.user_status');
+   }
+?>
 <div class="card card-warning card-outline member-profile">
    <div class="card-body">
 
       <div class="row">
          <div class="col-md-8">
-            <h2>{{ $user->first_name }} {{ $user->last_name }}</h2>
+            <h2>{{ $user->get_name() }}</h2>
 
-            @if($user->status == 'active')
-               @if(!is_null($user->date_admitted))
-                  <h5>Member Since {{ $user->date_admitted->toDateString() }}</h5>
-               @endif
-            @elseif($user->status == 'inactive')
-               @if(!is_null($user->date_withdrawn))
-                  <h5>Withdrawn {{ $user->date_withdrawn->toDateString() }}</h5>
-               @endif
-            @elseif($user->status == 'hiatus')
-               @if(!is_null($user->date_hiatus_end))
-                  <h5>On Hiatus until {{ $user->date_hiatus_end->toDateString() }}</h5>
-               @endif
-           @elseif($user->status == 'applicant')
-               @if(!is_null($user->date_applied))
-                  <h5>Applied {{ $user->date_applied->toDateString() }}</h5>
-               @endif
-            @endif    
+            @switch($user->status)
+               @case('active')
+                  <h5>Member Since {{ $user->first_status('active')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('inactive')
+                  <h5>Withdrawn {{ $user->last_status('inactive')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('abandoned')
+                  <h5>Withdrawn {{ $user->last_status('abandoned')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('hiatus')
+                  <h5>On Hiatus until {{ $user->last_status('active')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('terminated')
+                  <h5>Membership Revoked {{ $user->last_status('terminated')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('suspended')
+                  <h5>Membership Suspended {{ $user->last_status('suspended')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('applicant')
+                  <h5>Applied {{ $user->last_status('applicant')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('applicant-abandoned')
+                  <h5>Application Abandoned {{ $user->last_status('applicant-abandoned')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('applicant-denied')
+                  <h5>Application Denied {{ $user->last_status('applicant-denied')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+            @endswitch
 
-            <p style="margin:15px 0px 10px;">@if($user->status == 'active')<span class="badge badge-success">Active</span>
-            @elseif($user->status == 'hiatus')<span class="badge badge-warning">On Hiatus</span>
-            @elseif($user->status == 'applicant')<span class="badge badge-warning">Applicant</span>
-            @else
-            <span class="badge badge-danger">Withdrawn</span>@endif
+            <p style="margin:15px 0px 10px;">
+            @include('users.status')
             @php ($roles = $user->roles()->get())
             @if(count($roles) > 0)
                @foreach($roles as $role)

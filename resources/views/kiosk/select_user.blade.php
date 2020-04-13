@@ -30,8 +30,8 @@
 @endif
 <div class="row userlist">
    @foreach ($users as $user)
-   <div class="col-xs-6" data-sname="{{ $user->first_name }}" data-sid={{ str_pad($user->id, 3, '0', STR_PAD_LEFT) }}>
-      <button type="submit" name="user_id" class="btn btn-primary btn-block btn-user" value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</button>
+   <div class="col-xs-6" data-sname="{{ $user->get_name('first') }}" data-sid={{ str_pad($user->id, 3, '0', STR_PAD_LEFT) }}>
+      <button type="submit" name="user_id" class="btn btn-primary btn-block btn-user" value="{{ $user->id }}">{{ $user->get_name() }}</button>
    </div>
    @endforeach
 </div>

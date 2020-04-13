@@ -13,7 +13,7 @@ class RegenerateThumbnails extends Command
      *
      * @var string
      */
-    protected $signature = 'regen:thumbnails {--type= : Image types to process (valid: all, users, teams, gatekeepers)}';
+    protected $signature = 'generate:thumbnails {--type= : Image types to process (valid: all, users, teams, gatekeepers)}';
 
     /**
      * The console command description.

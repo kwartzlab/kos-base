@@ -15,7 +15,7 @@ class MembersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index($view = 'default') {
-        $users = \App\User::where('status', 'active')->orwhere('status', 'hiatus')->orderby('first_name')->get();
+        $users = \App\User::where('status', 'active')->orwhere('status', 'hiatus')->orderby('first_preferred')->get();
 
         $page_title = 'Member Directory (' . count($users) . ')';
         return view('members.index', compact('page_title','users'));

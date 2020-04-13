@@ -5,7 +5,7 @@
 
 @section('content')
 
-<h2 style="margin-bottom:20px"><strong>Hello {{ Auth::user()->first_name }}</strong></h2>
+<h2 style="margin-bottom:20px"><strong>Hello {{ Auth::user()->get_name('first') }}</strong></h2>
 
 <div class="row">
    <div class="col-xs-6 col-xs-offset-3">

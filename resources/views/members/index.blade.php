@@ -25,13 +25,8 @@
                @foreach($users as $user)
                   <tr>
                      <td>{{ $user->get_name() }}</td>
-                     <td nowrap>{{ $user->date_admitted->toDateString() }}</td>
-                     <td>@if($user->status == 'active')<span class="badge badge-success">Active</span>
-                     @elseif($user->status == 'hiatus')<span class="badge badge-warning">On Hiatus</span>
-                     @elseif($user->status == 'applicant')<span class="badge badge-warning">Applicant</span>
-                     @else
-                     <span class="badge badge-danger">Withdrawn</span></td>@endif
-
+                     <td nowrap>@isset($user->date_admitted) {{ $user->date_admitted->toDateString() }} @endisset</td>
+                     <td>@include('users.status')
                      @php ($roles = $user->roles()->get())
                      @if(count($roles) > 0)
                         @foreach($roles as $role)

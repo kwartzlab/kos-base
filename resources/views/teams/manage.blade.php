@@ -34,7 +34,7 @@
                      <td>{{ $assignment->user()->first()->get_name() }}</td>
                      <td>{{ config('kwartzlabos.team_roles.' . $assignment->team_role . '.name') }}</td>
                      <td>
-                        <button class="btn btn-success btn-sm approve_button" id="{{ $assignment->id }}" role="button"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Approve</button>
+                        <button class="btn btn-success btn-sm approve_button" data-record-id="{{ $assignment->id }}" id="{{ $assignment->id }}" role="button"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Approve</button>
                         &nbsp;<button class="btn btn-danger btn-sm confirm-remove-request" data-record-id="{{ $assignment->id }}" data-toggle="modal" data-target="#confirm-remove-request"><i class="fas fa-ban"></i>&nbsp;&nbsp;Remove</button>
                      </td>
                   </tr>
@@ -123,17 +123,17 @@
       $('#data-table').dataTable({
          ordering: false,
          pagingType: "simple_numbers",
-         iDisplayLength: 25,
+         iDisplayLength: 10,
          "language": {
             "emptyTable": "No teams defined."
          }				
       });
 
-      $('.approve_button').click(function(e){
+      $(document).on('click', '.approve_button', function(e) {
          e.preventDefault();
 
-         // get gatekeeper id for this item
-         request_id = $(this).attr('id');
+         var request_id = $(this).attr('data-record-id');
+
          button_id = '#' + request_id
          row_id = '#request-' + request_id;
 

@@ -146,9 +146,9 @@ class GatekeepersController extends Controller
             
             // get all users who are not yet authorized
             $user_ids = array();
-            foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
+            foreach (\App\User::where('status','active')->orderby('first_preferred')->get() as $user) {
                 if ($user->is_trainer($id) === FALSE) {
-                    $user_ids[$user->id] = $user->first_name . " " . $user->last_name;
+                    $user_ids[$user->id] = $user->get_name();
                 }
             }
 
@@ -284,6 +284,7 @@ class GatekeepersController extends Controller
                     $assignment = \App\TeamAssignment::find($request_id);
                     if ($assignment != NULL) {
                         $assignment->status = 'active';
+                        $assignment->approved_by = \Auth::user()->id;
                         $assignment->save();
                         return response()->json(['status' => 'success', 'message' => 'Request Approved']);
                     }
@@ -437,7 +438,7 @@ class GatekeepersController extends Controller
 
                 // compile user list array with additional info for dropdowns
                 $all_users = array();
-                foreach (\App\User::where('status','active')->orderby('first_name')->get() as $user) {
+                foreach (\App\User::where('status','active')->orderby('first_preferred')->get() as $user) {
                     $all_users[$user->id] = [
                         'name' => $user->get_name(),
                         'is_trainer' => $user->is_trainer($gatekeeper->id),

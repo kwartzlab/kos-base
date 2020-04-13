@@ -54,7 +54,7 @@
                   @else
                     <img src="/storage/images/users/no_profile_photo.png" class="img-circle elevation-2" alt="Member Image"/>
                   @endif
-                  <p class="text-lg"> {{ \Auth::user()->first_name }} {{ \Auth::user()->last_name }}<br /><small>Joined {{ \Auth::user()->date_admitted->format('Y-m-d') }}</small></p>
+                  <p class="text-lg"> {{ \Auth::user()->get_name() }}<br /><small>Joined {{ \Auth::user()->first_status('active')->first()->created_at->format('Y-m-d') }}</small></p>
                 </li>
                 <li class="user-body text-center">
                      @if(\Auth::user()->status == 'active')<span class="badge badge-success">Active</span>
