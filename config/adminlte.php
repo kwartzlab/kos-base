@@ -200,6 +200,11 @@ return [
             'icon' => 'fas fa-graduation-cap fa-fw',
         ], */
         [              
+            'text' => 'COVID-19 Agreement',
+            'url'  => '/forms/2',
+            'icon' => 'fas fa-edit fa-fw',
+        ],
+        [              
             'text' => 'Membership Application',
             'url'  => '/users/create',
             'icon' => 'fas fa-edit fa-fw',
