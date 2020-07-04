@@ -42,6 +42,11 @@
                            <input type="text" class="form-control @if($errors->has($element_name)) is-invalid @endif" name="{{ $element_name }}" id="{{ $element_name }}" value="{{ $element_value }}" @if($form_field->length != NULL) maxlength="{{ $form_field->length }}" @endif @if($form_field->required) required @endif>
                         </div>
                         @break
+                     @case('text')
+                        <div class="form-group col-md-12" id="{{ $element_name }}">
+                           {!! $form_field->label !!}
+                        </div>
+                        @break
                      @case('textarea')
                         <div class="form-group col-md-6">
                            <label for="{{ $element_name }}">{{ $form_field->label }} @if($form_field->required) <span class="text-danger">*</span> @endif</label>
@@ -49,9 +54,9 @@
                         </div>
                         @break
                      @case('switch')
-                        <div class="row col-md-6">
+                        <div class="row col-md-12">
                            <div style="margin-bottom:0px">
-                              <label class="col-md-12">{{ $form_field->label }} @if($form_field->required) <span class="text-danger">*</span> @endif</label>
+                              <label class="col-md-12">{!! $form_field->label !!} @if($form_field->required) <span class="text-danger">*</span> @endif</label>
                            </div>
                         </div>
                         <div class="form-group col-md-12" style="margin:5px 10px 5px 0px">
@@ -164,6 +169,14 @@ $(document).ready(function(){
       var required = $('input,textarea,select').filter('[required]:visible');
       required.each(function(){
          if($(this).val() == ''){
+            allRequired = false;
+         }
+      });
+
+      // validate checkboxes
+      var required = $('input:checkbox').filter('[required]');
+      required.each(function(){
+         if($(this).prop("checked") == false){
             allRequired = false;
          }
       });

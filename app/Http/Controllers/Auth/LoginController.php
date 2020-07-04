@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -39,28 +39,11 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-        /**
-     * Validate the user login request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function validateLogin(Request $request)
-    {
-        $request->validate([
-            $this->username() => 'required|string',
-            'password' => 'required|string',
-            'status' => 'active'
-        ]);
+    public function showLoginForm() {
+        if (!session()->has('url.intended')) {
+            session(['url.intended' => url()->previous()]);
+        }
+        return view('auth.login');
     }
-
-    protected function credentials(Request $request) {
-        $email = $request->input('email');
-        $password = $request->input('password');
-        return ['email' => $email, 'password' => $password, 'status' => 'active'];
-    }
-
 
 }

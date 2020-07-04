@@ -15,6 +15,7 @@
 // Dashboard
 Route::middleware('auth')->group(function() {
     Route::get('/', 'DashboardController@index');
+    Route::get('/dashboard', 'DashboardController@index');
     Route::get('/home', 'DashboardController@index');
 });
 

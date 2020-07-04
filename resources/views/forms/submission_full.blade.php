@@ -3,7 +3,7 @@
 @section('title', 'Viewing Form Submission')
 
 @section('content_header')
-    <h1>Viewing {{ $submission->form_name }}</h1>
+    <h1>Viewing Form Submission</h1>
 @stop
 
 @section('content')

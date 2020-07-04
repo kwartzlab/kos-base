@@ -161,7 +161,7 @@ class KeysController extends Controller
                   $gatekeeper_id = $gatekeeper->id;
                }
                
-               if ($user->is_authorized($gatekeeper_id)) {
+               if (($user->is_authorized($gatekeeper_id)) && (!$user->flags->contains('flag', 'keys_disabled'))) {
                   foreach ($user->keys as $key) {
                      $key_list[] = $key->rfid;
                   }	
@@ -171,9 +171,11 @@ class KeysController extends Controller
          } else {
             // default gatekeeper - get all active users and their keys
             foreach(\App\User::where('status','active')->get() as $user) {
-               foreach ($user->keys as $key) {
-                  $key_list[] = $key->rfid;
-               }	
+               if (!$user->flags->contains('flag', 'keys_disabled')) {
+                  foreach ($user->keys as $key) {
+                     $key_list[] = $key->rfid;
+                  }	
+               }
             }
          }
 

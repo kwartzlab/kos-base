@@ -70,6 +70,11 @@ class User extends Authenticatable implements Auditable
         return $this->hasMany(UserStatus::class)->orderby('created_at');
     }
 
+    public function flags() {
+        return $this->hasMany(UserFlag::class);
+    }
+
+
     // returns first instance of status type
     public function first_status($type = NULL) {
         if ($type == NULL) {

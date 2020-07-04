@@ -197,6 +197,27 @@ class FormsController extends Controller
 
         if ($form != NULL) {
             $form_fields = json_decode($form->fields);
+
+            // determine any form conditions
+            if ($form->conditions != NULL) {
+                $form_conditions = json_decode($form->conditions);
+                $message = NULL;
+
+                // loop through actions
+                foreach ($form_conditions as $key => $form_condition) {
+                    switch($form_condition->condition) {
+                        // user must have a speciifc status to continue
+                        case 'user_status':
+                            if (\Auth::user()->status != $form_condition->value) {
+                                $message .= ' ' . $form_condition->text . ' [' . $form->name . ']';
+                                return redirect('/')->with('error', $message);
+                            }
+                            break;
+                    }
+                }
+
+            }
+
             return view('forms.show', compact('form','form_fields'));
         }
     }
@@ -324,6 +345,29 @@ class FormsController extends Controller
 
             }
 
+            $append_message = NULL;
+
+            // check and run any extra form actions
+            if ($form->actions != NULL) {
+                $form_actions = json_decode($form->actions);
+
+                // loop through actions
+                foreach ($form_actions as $key => $form_action) {
+                    switch($form_action->action) {
+                        // remove a user flag from form submitter
+                        case 'userflag_remove':
+                            $user = \App\User::where('id', \Auth::user()->id)->first();
+                            if ($user->flags->contains('flag', $form_action->value)) {
+                                $user->flags()->where('flag', $form_action->value)->delete();
+                                $append_message .= ' ' . $form_action->text;
+                            }
+                            break;
+                    }
+
+                }
+
+            }
+
             // do anything that special forms require
             switch($form->special_form) {
                 case 'new_user_app':
@@ -413,6 +457,12 @@ class FormsController extends Controller
                 'user_id' => $user_id,
                 'data' => json_encode($responses)
             ]);
+
+            // append text from form actions to $message
+            if ($append_message != NULL) {
+                $message .= $append_message;
+            }
+
 
             return redirect('/forms/' . $form->id)->with('success', $message);
 

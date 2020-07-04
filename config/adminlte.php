@@ -235,13 +235,13 @@ return [
             'icon' => 'fas fa-user-tag fa-fw',
             'can' => 'manage-roles'
         ],
-/*        [
+        [
             'text' => 'Reports',
             'url'  => '/reports',
             'icon' => 'fas fa-chart-pie fa-fw',
             'can' => 'manage-reports'
 
-        ], */
+        ],
 
     ],
 

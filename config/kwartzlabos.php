@@ -190,7 +190,13 @@ return [
         'technical' => 'Technical',
         'other' => 'Other',
     ],
+    'user_flags' => [
+        'keys_disabled' => 'Keys Disabled',
+        'test_1' => 'Test 1',
+    ],
+
     
+
 ];
 
 
