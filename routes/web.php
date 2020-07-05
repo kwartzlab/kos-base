@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function() {
     Route::delete('/users/{id}/status', 'UsersController@update_status')->middleware(['auth','can:manage-users']);
     Route::post('/users/check_attributes', 'UsersController@check_attributes')->middleware(['auth']);
     Route::post('/users/{id}/do_stuff', 'UsersController@do_stuff')->middleware(['auth']);
+    Route::get('/users/{id}/toggle_flag/{flag}', 'UsersController@toggle_flag')->middleware(['auth','can:manage-users']);
+
 });
 
 // Member Directory

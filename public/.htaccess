@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Redirect old photo links to new directory
+    RewriteBase /
+    RewriteRule ^storage/photos/(.*)$ /storage/images/users/$1 [L,NC,R=302]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
@@ -17,4 +21,5 @@
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 </IfModule>

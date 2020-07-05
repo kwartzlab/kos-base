@@ -153,8 +153,42 @@
       </div>
     </div>
 
-  </section>
+  {{-- Form Submissions --}}
+  <div class="card card-warning card-outline" style="margin-top:25px;">
+      <div class="card-header">
+        <h3 class="card-title">Form Submissions</h3>
+      </div>
 
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped" id="forms-table">
+            <thead><tr>
+              <th>Form Name</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr></thead>
+            <tbody>
+              @forelse ($user->submitted_forms as $form_submission)
+              <tr>
+                  <td>{{ $form_submission->form_name }}</td>
+                  <td>{{ $form_submission->created_at }}</td>
+                  <td class="col-action">
+                    <a href="/forms/submission/{{ $form_submission->id }}" class="btn btn-success btn-sm" role="button"><i class="far fa-file-alt"></i>View</a>
+                  </td>
+
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="5">No submitted forms found.</td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</section>
+  
   {{-- Status Timeline --}}
   <section class="col-md-4">
     <div class="card card-outline card-primary">
@@ -253,8 +287,43 @@
           <i class="fas fa-clock bg-gray"></i>
         </div>
       </div>
+
+      {{-- User Flags --}}
+
+      <div class="card card-outline card-primary" style="clear:both;margin-top:65px;">
+          <div class="card-header">
+            <h3 class="card-title small">User Flags</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body p-0">
+            <ul class="users-list clearfix">
+            <table class="table table-striped">
+              <tbody>
+                @forelse(config('kwartzlabos.user_flags') as $key => $value)
+                  <tr>
+                    <td><strong>{{ $value }}</strong></td>
+                    <td>
+                      <label class="switch">
+                      <input type="checkbox" class="primary user-flag" data-record-id="{{ $key }}" @if ($user->flags->contains('flag', $key)) checked @endif>
+                        <span class="slider round"></span>
+                      </label>
+                    </td>
+                  </tr>
+                @empty
+                  <tr><td>No user flags.</td></tr>
+                @endforelse
+
+
+              </tbody> 
+            </table>
+          </div>
+      </div>
+
     </section>
 </div>
+
+{{-- Modals --}}
+
 
 <div class="modal fade" id="update-status" tabindex="-1" role="dialog" aria-labelledby="modal-update-status" aria-hidden="true">
   <div class="modal-dialog">
@@ -395,10 +464,39 @@
 @section('plugins.Sweetalert2', true)
 
 @section('js')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
   <script src="/js/jquery.inputmask.bundle.min.js"></script>
    <script>
+
     $(document).ready(function(){
+
+      $('#forms-table').dataTable({
+				ordering: true,
+				pagingType: "simple_numbers",
+        order: [ 1, "desc" ],
+        iDisplayLength: 10,
+				"language": {
+					"emptyTable": "No items."
+				}				
+      });
+      
+      // allows user flags to be toggled
+      $(".user-flag").on("click", function (e) {
+        var user_flag = $(this).attr('data-record-id');
+        var user_id = "{{ $user->id }}";
+        var flag_checkbox = $(this);
+        e.preventDefault();
+
+        jQuery.ajax({
+          url: "{{ url('/users') }}" + '/' + user_id + '/toggle_flag/' + user_flag,
+          method: 'get',
+          success: function(result){
+            flag_checkbox.prop("checked", !flag_checkbox.prop("checked"));
+            return true
+          },
+        }); 
+        return false
+      });      
 
       $( ".timeline-item" ).hover(
         function() {

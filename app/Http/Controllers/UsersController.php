@@ -331,6 +331,29 @@ class UsersController extends Controller
 
     }
 
+    // toggles a user flag
+    public function toggle_flag($user_id, $flag) {
+
+        // ensure specified flag exists
+        if (!array_key_exists($flag,config('kwartzlabos.user_flags'))) {
+            return response()->json("invalid",500);    
+        } else {
+            // get user
+            $user = \App\User::find($user_id);
+
+            // check specified flag and toggle it
+            if ($user->flags->contains('flag', $flag)) {
+                $user->flags()->where('flag', $flag)->delete();
+            } else {
+                $flag = new \App\UserFlag(['flag' => $flag]);
+                $user->flags()->save($flag);
+            }
+            return response()->json(['status' => 'OK']);
+
+        }
+
+    }
+
     // get key add form
     public function create_key($user_id) {
 

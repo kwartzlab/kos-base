@@ -106,8 +106,17 @@ class User extends Authenticatable implements Auditable
     }
 
     // returns user's membership application (if exists)
-    public function memberapp() {
+/*    public function memberapp() {
         return $this->hasMany(FormSubmission::class,'user_id', 'id')->where('special_form','new_user_app');
+    }
+*/
+    // returns all forms the user has submitted (with optional special form filter)
+    public function submitted_forms($special_form = NULL) {
+        if ($special_form != NULL) {
+            return $this->hasMany(FormSubmission::class,'submitted_by', 'id')->where('special_form', $special_form)->orderby('created_at');
+        } else {
+            return $this->hasMany(FormSubmission::class,'submitted_by', 'id')->orderby('created_at');
+        }
     }
 
     // return user's full name

@@ -3,6 +3,12 @@
       $user_status = config('kwartzlabos.user_status');
    }
 ?>
+@if ($user->flags->contains('flag', 'keys_disabled'))
+<div class="alert alert-warning">
+   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+   <h5 style="margin-bottom:0;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Notice: Your key(s) are currently disabled.</h5>
+</div>
+@endif
 <div class="card card-warning card-outline member-profile">
    <div class="card-body">
 
