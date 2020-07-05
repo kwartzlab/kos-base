@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class FormsController extends Controller
 {
@@ -203,9 +204,17 @@ class FormsController extends Controller
                 $form_conditions = json_decode($form->conditions);
                 $message = NULL;
 
-                // loop through actions
+                // loop through conditions
                 foreach ($form_conditions as $key => $form_condition) {
                     switch($form_condition->condition) {
+                        // has form opened yet?
+                        case 'form_opens':
+                            $form_opens = new Carbon($form_condition->value);
+                            if ($form_opens->gt(Carbon::now())) {
+                                $message .= 'The ' . $form->name . ' form does not open until ' . $form_opens->format('Y-m-d') . ' at ' . $form_opens->format('g:ia T');
+                                return redirect('/')->with('error', $message);
+                            }
+                            break;
                         // user must have a speciifc status to continue
                         case 'user_status':
                             if (\Auth::user()->status != $form_condition->value) {
