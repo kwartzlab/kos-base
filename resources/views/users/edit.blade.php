@@ -10,12 +10,11 @@
 @include('shared.alerts')
 
 @include('users.profile')
-
 {{-- Contact Information --}}
 <div class="row">
   <section class="col-md-8">
   <div class="card card-outline card-primary">
-      <form method="POST" action="/users/{{ $user->id }}" enctype="multipart/form-data">
+      <form method="POST" action="/users/{{ $user->id }}" enctype="multipart/form-data" autocomplete="false">
         <div class="card-body">
           {{ method_field('PATCH') }}
           {{ csrf_field() }}
@@ -88,7 +87,7 @@
               <div class="input-group-prepend">
                 <div class="input-group-text"><i class="fas fa-key"></i></div>
               </div>
-              <input type="password" class="form-control" name="password" id="password">
+              <input type="password" class="form-control" name="password" id="password" autocomplete="new-password">
 
               </div>
             </div>

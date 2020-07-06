@@ -18,7 +18,7 @@
 @if($user->id == \Auth::user()->id)
 
 <div class="card card-outline card-primary">
-  <form method="POST" action="/members/{{ $user->id }}" enctype="multipart/form-data" id="profile-form">
+  <form method="POST" action="/members/{{ $user->id }}" enctype="multipart/form-data" id="profile-form" autocomplete="false">
     <div class="card-body">
 
         {{ method_field('PATCH') }}
@@ -172,7 +172,7 @@
             <div class="input-group-prepend">
                 <div class="input-group-text"><i class="fas fa-key"></i></div>
             </div>
-            <input type="password" class="form-control" name="password" id="password">
+            <input type="password" class="form-control" name="password" id="password" autocomplete="new-password">
 
             </div>
             </div>
