@@ -79,7 +79,7 @@
           </div>
 
         <h3 class="form-heading">Change Password</h3>
-
+        <p><em>Complete both fields below to change the user's password. The user will be immediately logged out of kOS and will need to log back in using their new password.</em></p>
           <div class="row">
             <div class="form-group col-md-6">
             <label for="password">New Password</label>

@@ -156,7 +156,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @endforeach?
                     @endif
 
                 </div>
@@ -164,7 +164,7 @@
         </div>
 
         <h3 class="form-heading">Change Password</h3>
-
+        <p><em>If you wish to change your password, fill out both fields below. You will be logged out of kOS and will need to log back in using your new password.</em></p>
         <div class="row">
             <div class="form-group col-md-4">
             <label for="password">Password (leave blank if unchanged)</label>
@@ -195,6 +195,42 @@
 
   </form>
 </div>
+
+{{-- Form Submissions --}}
+  <div class="card card-warning card-outline" style="margin-top:25px;">
+      <div class="card-header">
+        <h3 class="card-title">Form Submissions</h3>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped" id="forms-table">
+            <thead><tr>
+              <th>Form Name</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr></thead>
+            <tbody>
+              @forelse ($user->submitted_forms as $form_submission)
+              <tr>
+                  <td>{{ $form_submission->form_name }}</td>
+                  <td>{{ $form_submission->created_at }}</td>
+                  <td class="col-action">
+                    <a href="/forms/submission/{{ $form_submission->id }}" class="btn btn-success btn-sm" role="button"><i class="far fa-file-alt"></i>View</a>
+                  </td>
+
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="5">No submitted forms found.</td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
 
 @endif
 
@@ -243,6 +279,16 @@
             autoclose: true
         });
     });    
+
+    $('#forms-table').dataTable({
+        ordering: true,
+        pagingType: "simple_numbers",
+        order: [ 1, "desc" ],
+        iDisplayLength: 10,
+        "language": {
+        "emptyTable": "No items."
+        }				
+    });
 
     $("#profile-form").on('click', 'button.btn-add-social-account', function() {
          option_id = create_UUID();
