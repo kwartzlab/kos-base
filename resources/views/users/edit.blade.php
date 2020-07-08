@@ -177,9 +177,6 @@
 
                 </tr>
               @empty
-                <tr>
-                  <td colspan="5">No submitted forms found.</td>
-                </tr>
               @endforelse
             </tbody>
           </table>
@@ -475,7 +472,7 @@
         order: [ 1, "desc" ],
         iDisplayLength: 10,
 				"language": {
-					"emptyTable": "No items."
+					"emptyTable": "No submitted forms."
 				}				
       });
       
