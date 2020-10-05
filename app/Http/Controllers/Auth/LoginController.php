@@ -43,7 +43,13 @@ class LoginController extends Controller
         if (!session()->has('url.intended')) {
             session(['url.intended' => url()->previous()]);
         }
-        return view('auth.login');
+
+        // if kiosk logout, make sure we go back to the right login page
+        if (strpos(url()->previous(), '/kiosk') !== false) {
+            return redirect('/kiosk');
+        } else {
+            return view('auth.login');
+        }
     }
 
 }

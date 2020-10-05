@@ -3,10 +3,12 @@
       $user_status = config('kwartzlabos.user_status');
    }
 ?>
-@if ($user->flags->contains('flag', 'keys_disabled'))
+@if (($user->id == \Auth::user()->id) && ($user->flags->contains('flag', 'keys_disabled')))
 <div class="alert alert-warning">
    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
-   <h5 style="margin-bottom:0;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Notice: Your key(s) are currently disabled.</h5>
+   <h5 style="margin-bottom:0;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;
+         Notice: Your key(s) are currently disabled.
+   </h5>
 </div>
 @endif
 <div class="card card-warning card-outline member-profile">
@@ -27,7 +29,7 @@
                   <h5>Withdrawn {{ $user->last_status('abandoned')->first()->created_at->format('Y-m-d') }}</h5>
                @break
                @case('hiatus')
-                  <h5>On Hiatus until {{ $user->last_status('active')->first()->created_at->format('Y-m-d') }}</h5>
+                  <h5>On Hiatus until {{ $user->last_status('hiatus')->first()->ending_at }}</h5>
                @break
                @case('terminated')
                   <h5>Membership Revoked {{ $user->last_status('terminated')->first()->created_at->format('Y-m-d') }}</h5>

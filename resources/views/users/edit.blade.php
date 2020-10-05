@@ -9,6 +9,20 @@
 @section('content')
 @include('shared.alerts')
 
+{{-- Notable Flags & Reminders --}}
+
+@if ($notifications != NULL)
+<div class="alert alert-warning">
+   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+    @if (is_array($notifications))
+      @foreach($notifications as $key => $message)
+      <h5 style="margin-bottom:0;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;{{ $message }}</h5>
+      @endforeach
+    @endif
+</div>
+@endif
+
+
 @include('users.profile')
 {{-- Contact Information --}}
 <div class="row">
@@ -197,7 +211,7 @@
       </div>
 
       <div class="card-body" style="text-align:center;">
-          <button class="btn btn-primary" id="btn-update-status" data-toggle="modal" data-target="#update-status"><i class="fas fa-user-tag"></i>&nbsp;&nbsp;Update Member Status</button>
+          <button class="btn btn-primary" id="btn-add-status" data-toggle="modal" data-target="#status-update"><i class="fas fa-user-tag"></i>&nbsp;&nbsp;Add to Status Timeline</button>
       </div>
     </div>
 
@@ -229,12 +243,11 @@
         <div>
           <i class="fas {{ $user_status[$status->status]['icon'] }} bg-{{ $user_status[$status->status]['colour'] }}"></i>
           <div class="timeline-item">
-            @if ($status->updated_by > 0)
               <span class="time invisible">
                 <?php /* <a href="#" class="edit-status" title="Edit Status Update"><i class="fas fa-edit"></i></a>&nbsp;&nbsp; */ ?>
-                <a href="#" class="delete-status" title="Delete Status Update" data-record-id="{{ $status->id }}" data-toggle="modal" data-target="#confirm-delete-update"><i class="fas fa-times-circle"></i></a>
+                <a href="#" class="edit-status" title="Edit Status Update" data-record-id="{{ $status->id }}" data-status-name="{{ $status->name() }}" data-status-type="{{ $status->status }}" data-effective-date="{{ $status->created_at->toDateString() }}" data-effective-date-ending="{{ $status->ending_at }}" data-toggle="modal" data-target="#status-update"><i class="fas fa-edit"></i></a>
+                &nbsp;<a href="#" class="delete-status" title="Delete Status Update" data-record-id="{{ $status->id }}" data-toggle="modal" data-target="#confirm-delete-update"><i class="fas fa-times-circle"></i></a>
               </span>
-            @endif
 
             <h3 class="timeline-header" style="font-size:0.9em">
               @switch($status->status)
@@ -261,6 +274,10 @@
               @if ($status->note != NULL)
                 <br /><span style="font-style:italic;">{{ $status->note }}</span>
               @endif
+              @if ($status->ending_at != NULL)
+                <br /><span style="font-style:italic;">Until {{ $status->ending_at }}</span>
+              @endif
+
             </h3>
           </div>
         </div>
@@ -318,31 +335,32 @@
     </section>
 </div>
 
-{{-- Modals --}}
+{{-- Modal: Add/Edit Status --}}
 
-
-<div class="modal fade" id="update-status" tabindex="-1" role="dialog" aria-labelledby="modal-update-status" aria-hidden="true">
+<div class="modal fade" id="status-update" tabindex="-1" role="dialog" aria-labelledby="modal-status-update" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="overlay d-flex justify-content-center align-items-center invisible">
          <i class="fas fa-4x fa-sync fa-spin"></i>
       </div>
       <div class="modal-header">
-        <h4 class="modal-title" id="modal-update-status">Update Member Status</h4>
+        <h4 class="modal-title" id="modal-status-update">&nbsp;</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       </div>
         <form id="status-form">
         {{ csrf_field() }}
+        <input type="hidden" name="todays_date" id="todays-date" value="<?php echo date('Y-m-d') ?>">
+
         <div class="modal-body">
             <p>Select the type of status update and it's effective date(s). <ul><li>If date is in the future, the member's current status will automatically change on that date.</li><li>If the date is in the past, it will be added to their timeline.</li><li>If it's the most recent past change on their timeline, their current status will update immediately to match.</li></ul></p>
-              <label for="effective_date">Status</label>
+              <label for="status-type">Status</label>
               <div class="input-group">
                 <div class="input-group-prepend">
                   <div class="input-group-text"><i class="fas fa-user-tag"></i></div>
                 </div>
                 <select class="form-control" name="status_type" id="status-type">
                   @foreach(config('kwartzlabos.user_status') as $status_type => $row)
-                    @if ($status_type != 'applicant')
+                    @if (($status_type != 'applicant') && ($status_type != 'unknown'))
                       <option value="{{ $status_type }}">{{$row['name']}}</option>
                     @endif
                   @endforeach
@@ -364,7 +382,7 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                   </div>
-                  <input type="text" class="form-control" name="effective_date_ending" id="effective-date-ending" value="{{ date('Y-m-d', strtotime("+4 months")) }}">
+                  <input type="text" class="form-control" name="effective_date_ending" id="effective-date-ending" value="">
                 </div>
                </div>
             </div>
@@ -372,11 +390,14 @@
       </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary btn-update-status">Save Update</button>
+        <button type="button" class="btn btn-primary btn-status-update">Save Update</button>
       </div>
     </div>
   </div>
 </div>
+
+
+{{-- Modal: Delete Status --}}
 
 <div class="modal fade" id="confirm-delete-update" tabindex="-1" role="dialog" aria-labelledby="modal-delete-update" aria-hidden="true">
   <div class="modal-dialog">
@@ -502,6 +523,7 @@
         }
       );
 
+      // add/edit status update modal
       $('#effective-date').datepicker({
             format: 'yyyy-mm-dd',
             orientation: 'bottom',
@@ -509,10 +531,7 @@
             autoclose: true
         }).on('changeDate', function (selected) {
           var minDate = new Date(selected.date.valueOf())
-          endDateString = minDate.getFullYear() + '-' + ('0' + (minDate.getMonth()+5)).slice(-2) + '-' + ('0' + minDate.getDate()).slice(-2);
-          $("#effective-date-ending").val(endDateString);
           $('#effective-date-ending').datepicker('setStartDate', minDate);
-          $('#effective-date-ending').datepicker('defaultViewDate', endDateString);
         });
 
         $('#effective-date-ending').datepicker({
@@ -531,7 +550,8 @@
         }
       });
 
-      $('#update-status').on('click', '.btn-update-status', function(e) {
+
+      $('#add-status').on('click', '.btn-add-status', function(e) {
             var $modalDiv = $(e.delegateTarget);
             var $overlayDiv = $modalDiv.find('.overlay')
 
@@ -552,6 +572,52 @@
                 }
             });
          });
+
+         $('#status-update').on('show.bs.modal', function(e) {
+            var data = $(e.relatedTarget).data();
+
+            // set modal defaults
+            $('#status-type').prop( "disabled", false );
+            $('#status-type').val("")
+            $('#modal-status-update').text('Add to Status Timeline')
+            $('#effective-date-ending', this).val('');
+            if(data.statusType == 'hiatus') {
+                $('.hiatus-date-field').removeClass('invisible')
+            } else {
+              $('.hiatus-date-field').addClass('invisible')
+            }
+
+            // fill in appropriate fields if we're editing an existing update
+            if ($(e.relatedTarget).hasClass('edit-status')) {
+              $('#modal-status-update').text('Editing Existing Status')
+              $('.btn-ok', this).data('recordId', data.recordId);
+
+              $('#status-type').val(data.statusType)
+              $('#status-type').prop( "disabled", true );
+
+              $('#effective-date', this).val(data.effectiveDate);
+              $('#effective-date-ending', this).val(data.effectiveDateEnding);
+
+            } else {
+              $('#effective-date', this).val($('#todays-date').val());
+            }
+
+         });         
+
+         $('#edit-status').on('show.bs.modal', function(e) {
+            var data = $(e.relatedTarget).data();
+            $('.status-name', this).text(data.statusName);
+            $('.btn-ok', this).data('recordId', data.recordId);
+            $('.effective-date', this).val(data.effectiveDate);
+            $('.effective-date-ending', this).val(data.effectiveDateEnding);
+
+            if(data.statusType == 'hiatus') {
+              $('.hiatus-date-field').removeClass('invisible')
+            } else {
+              $('.hiatus-date-field').addClass('invisible')
+            }
+
+         });         
 
          $('#confirm-delete-update').on('show.bs.modal', function(e) {
             var data = $(e.relatedTarget).data();

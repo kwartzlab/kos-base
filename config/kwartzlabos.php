@@ -96,6 +96,12 @@ return [
             'colour' => 'danger',
             'send-notifications' => FALSE
         ],
+        'unknown' => [
+            'name' => 'UNKNOWN',
+            'icon' => 'fa-user-times',
+            'colour' => 'danger',
+            'send-notifications' => FALSE
+        ],
     ],
     'team_roles' => [
         'lead' => [

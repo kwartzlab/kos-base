@@ -113,8 +113,19 @@ class UsersController extends Controller
         // less messy to deal with an array than the direct config values
         $user_status = config('kwartzlabos.user_status');
 
-        return view('users.edit', compact('user','user_status'));
-
+        // generate notifications
+        $notifications = NULL;
+        switch($user->status) {
+            case 'hiatus':
+              $hiatus_return = $user->last_status('hiatus')->first()->ending_at;
+              if ($hiatus_return < \Carbon\Carbon::now()) {
+                $notifications[] = 'User\'s hiatus ended on ' . $hiatus_return;
+              } else if ($hiatus_return < \Carbon\Carbon::now()->addDays(15)) {
+                $notifications[] = 'User\'s hiatus is ending soon (' . $hiatus_return . ')';
+              }
+            break;
+        }
+            return view('users.edit', compact('user','user_status','notifications'));
     }
 
     // (ajax) checks an email address and returns user data if it exists (used in new user process for returning users)
@@ -184,18 +195,9 @@ class UsersController extends Controller
                     $status->save();
                 break;
                 case 'hiatus':
-                    // create both the hiatus record and the active record for when hiatus is over
                     $status->status = 'hiatus';
+                    $status->ending_at = $request->input('effective_date_ending');
                     $status->save();
-                    $status_end = new \App\UserStatus([
-                        'user_id' => $user->id,
-                        'updated_by' => \Auth::user()->id,
-                        'status' => 'active',
-                        'note' => 'Ending Hiatus',
-                        'created_at' => $request->input('effective_date_ending'),
-                        'updated_at' => date('Y-m-d')
-                    ]);
-                    $status_end->save(['timestamps' => false]);
                 break;
                 case 'suspended':
                     $status->status = 'suspended';
@@ -214,13 +216,16 @@ class UsersController extends Controller
                     $status->save();
                 break;
             }
+        } else if ($request->isMethod('update')) {
+            
+
         } else if ($request->isMethod('delete')) {
             // find & delete status update
             if ($request->has('status_id')) {
                 $status = \App\UserStatus::find($request->input('status_id'));
                 
                 // ensure this update is related to supplied user and was not created by kOS (not deletable)
-                if (($status->user_id == $user->id) && ($status->updated_by > 0)) {
+                if ($status->user_id == $user->id) {
                     $status->delete();
                 } else {
                     return response()->json(['error' => 'error']);                    

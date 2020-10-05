@@ -190,6 +190,12 @@ td.dt-nowrap { white-space: nowrap }
   font-weight:bold;
 }
 
+.timeline-item .time {
+  padding:5px !important;
+  font-size:1.1em !important;
+
+}
+
 /* kwartzlab logo vector font */
 
 @font-face {

@@ -93,10 +93,12 @@ class User extends Authenticatable implements Auditable
         }
     }
 
+    // returns current user status
     public function current_status() {
         return $this->hasMany(UserStatus::class)->where('created_at', '<', date('Y-m-d H:i:s', strtotime('tomorrow midnight')))->orderby('created_at','desc')->limit(1);
     }
 
+    // returns all current team assignments
     public function team_assignments($team_id = 'all') {
         if ($team_id == 'all') {
             return $this->hasMany(TeamAssignment::class);

@@ -16,5 +16,10 @@ class UserStatus extends Model implements Auditable
         return $this->belongsTo(User::class);
     }
 
+    // returns display name of status
+    public function name() {
+        $this_status = config('kwartzlabos.user_status.' . $this->status);
+        return $this_status['name'];
+    }
 
 }
