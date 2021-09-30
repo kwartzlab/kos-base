@@ -192,7 +192,7 @@ return [
     ],
     'user_flags' => [
         'keys_disabled' => 'Keys Disabled',
-        'test_1' => 'Test 1',
+	'covid_vaccine' => 'Vaccinated/Exempt',
     ],
 
     
