@@ -12,7 +12,6 @@ class User extends Authenticatable implements Auditable
     use Notifiable;
     use \OwenIt\Auditing\Auditable;
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -49,7 +48,7 @@ class User extends Authenticatable implements Auditable
     public function keys() {
         return $this->hasMany(Key::class);
     }
-    
+
     public function authorizations() {
         return $this->hasMany(Authorization::class);
     }
@@ -65,7 +64,7 @@ class User extends Authenticatable implements Auditable
     public function certs() {
         return $this->hasMany(UserCert::class);
     }
-    
+
     public function status_history() {
         return $this->hasMany(UserStatus::class)->orderby('created_at');
     }
@@ -73,7 +72,6 @@ class User extends Authenticatable implements Auditable
     public function flags() {
         return $this->hasMany(UserFlag::class);
     }
-
 
     // returns first instance of status type
     public function first_status($type = NULL) {
@@ -121,16 +119,14 @@ class User extends Authenticatable implements Auditable
 
     // return user's full name
     public function get_name($piece = NULL) {
-
-      
         if ($this->first_preferred == NULL) {
             $first_name = $this->first_name;
             $last_name = $this->last_name;
         } else {
             $first_name = $this->first_preferred;
             $last_name = $this->last_preferred;
-        } 
-       
+        }
+
         switch ($piece) {
             case 'first':
                 return $first_name;
@@ -151,7 +147,7 @@ class User extends Authenticatable implements Auditable
         } else {
             return $result;
         }
-    
+
     }
 
     // returns true or false if user is authorized for specified gatekeeper
@@ -199,7 +195,6 @@ class User extends Authenticatable implements Auditable
     }
 
     public function add_authorization($gatekeeper_id) {
-
         \App\Authorization::create([
             'user_id' => $this->id,
             'gatekeeper_id' => $gatekeeper_id
@@ -209,7 +204,6 @@ class User extends Authenticatable implements Auditable
 
     // clears specific authorization for a user
     public function delete_authorization($gatekeeper_id) {
-
         $result = \App\Authorization::where(['user_id',$this->id],['gatekeeper_id',$gatekeeper_id])->delete();
         return true;
 
@@ -217,7 +211,6 @@ class User extends Authenticatable implements Auditable
 
     // clears all authorizations for a user
     public function clear_authorizations() {
-
         $result = \App\Authorization::where('user_id',$this->id)->delete();
         return true;
 
@@ -232,7 +225,6 @@ class User extends Authenticatable implements Auditable
     // can the user program keys?
     public function is_keyadmin() {
         if ($this->acl == 'keyadmin') { return true; } else { return false; }
-
     }
 
     // is member a lead of specifed team?
@@ -275,14 +267,10 @@ class User extends Authenticatable implements Auditable
 
     // can the user program the system?
     public function is_superuser() {
-        
         if (count($this->roles()->where('role_id','1')->get())>0) {
             return true;
         } else {
             return false;
         }
-
     }
-
-
 }
