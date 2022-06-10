@@ -20,7 +20,7 @@
     "require-dev": {
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.2",
-        "phpunit/phpunit": "^8.3",
+        "phpunit/phpunit": "^7",
         "filp/whoops": "^2.4",
         "nunomaduro/collision": "^3.0",
         "beyondcode/laravel-dump-server": "^1.0"
