@@ -27,3 +27,6 @@ backups
 
 # VS Code
 .vscode
+
+# PHPUnit
+.phpunit.result.cache
