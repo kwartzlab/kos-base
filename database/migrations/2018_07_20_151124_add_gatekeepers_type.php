@@ -14,8 +14,7 @@ class AddGatekeepersType extends Migration
     public function up()
     {
         Schema::table('gatekeepers', function (Blueprint $table) {
-            //
-            $table->string('type')->after('description');
+            $table->string('type')->after('description')->nullable();
         });
     }
 
@@ -27,7 +26,6 @@ class AddGatekeepersType extends Migration
     public function down()
     {
         Schema::table('gatekeepers', function (Blueprint $table) {
-            //
             $table->dropColumn('type');
         });
     }

@@ -14,7 +14,14 @@ class ModifyUsersPhone extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('phone')->nullable()->change();
+            if (Schema::hasColumn('users', 'phone')) {
+                Schema::table('users', function (Blueprint $table) {
+                    $table->string('phone')->nullable()->change();
+                });
+            }
+            else {
+                $table->string('phone')->nullable();
+            }
         });
     }
 
