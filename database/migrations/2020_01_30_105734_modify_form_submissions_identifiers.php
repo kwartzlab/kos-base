@@ -14,10 +14,9 @@ class ModifyFormSubmissionsIdentifiers extends Migration
     public function up()
     {
         Schema::table('form_submissions', function (Blueprint $table) {
-            //
-            $table->ipAddress('submitter_ip')->after('submitted_by');
-            $table->string('submitter_agent')->after('submitter_ip');
-            $table->string('special_form')->nullable()->after('form_id');
+            $table->ipAddress('submitter_ip')->after('submitted_by')->nullable();
+            $table->string('submitter_agent')->after('submitter_ip')->nullable();
+            $table->string('special_form')->nullable()->after('form_id')->nullable();
         });
     }
 

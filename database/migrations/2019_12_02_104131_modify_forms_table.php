@@ -28,6 +28,9 @@ class ModifyFormsTable extends Migration
     {
         Schema::table('forms', function (Blueprint $table) {
             $table->dropColumn('special_form');
+        });
+
+        Schema::table('forms', function (Blueprint $table) {
             $table->string('description')->change();
         });
     }
