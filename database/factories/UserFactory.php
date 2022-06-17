@@ -1,6 +1,9 @@
 <?php
 
+use App\Role;
 use App\User;
+use App\UserRole;
+use App\UserStatus;
 use Illuminate\Database\Eloquent\Factory;
 use Faker\Generator;
 
@@ -18,7 +21,7 @@ $factory->define(App\User::class, function (Generator $faker) {
         'last_preferred' => $lastName,
         'email' => "$firstName.$lastName@example.com",
         'password' => $password ?: $password = bcrypt('secret'),
-        'status' => 'active',
+        'status' => '',
         'member_id' => User::query()->max('member_id') + 1,
         'acl' => '',
         'date_applied' => now()->subDays(14),
@@ -38,13 +41,59 @@ $factory->define(App\User::class, function (Generator $faker) {
     ];
 });
 
-$factory->state(User::class, 'applied', [
-    'status' => 'inactive',
-    'date_applied' => now()->subDays(7),
-    'date_admitted' => null,
-]);
+$factory
+    ->state(
+        User::class,
+        'active',
+        [
+            'status' => 'active',
+            'date_applied' => now()->subDays(7),
+            'date_admitted' => null,
+        ]
+    )
+    ->afterCreatingState(User::class, 'active', function (User $user) {
+        factory(UserStatus::class)->create(['user_id' => $user->id, 'status' => 'active']);
+    });
 
-$factory->state(User::class, 'hiatus', [
-    'status' => 'hiatus',
-    'date_hiatus_start' => now()->subDays(7)
-]);
+$factory
+    ->state(
+        User::class,
+        'applied',
+        [
+            'status' => 'inactive',
+            'date_applied' => now()->subDays(7),
+            'date_admitted' => null,
+        ]
+    )
+    ->afterCreatingState(User::class, 'applied', function (User $user) {
+        factory(UserStatus::class)->create(['user_id' => $user->id, 'status' => 'inactive']);
+    });
+
+$factory
+    ->state(
+        User::class,
+        'hiatus', [
+            'status' => 'hiatus',
+            'date_hiatus_start' => now()->subDays(7)
+        ]
+    )
+    ->afterCreatingState(User::class, 'hiatus', function (User $user) {
+        factory(UserStatus::class)->create(['user_id' => $user->id, 'status' => 'inactive']);
+    });
+
+$factory
+    ->state(
+        User::class,
+        'admin',
+        function (Generator $faker) {
+            return [];
+        }
+    )
+    ->afterCreatingState(
+        User::class,
+        'admin',
+        function (User $user) {
+            $adminRole = Role::updateOrCreate(['name' => 'Admin']);
+            UserRole::create(['user_id' => $user->id, 'role_id' => $adminRole->id]);
+        }
+    );
