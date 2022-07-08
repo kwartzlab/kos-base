@@ -18,12 +18,14 @@
         "spatie/laravel-google-calendar": "^2.3"
     },
     "require-dev": {
+        "beyondcode/laravel-dump-server": "^1.0",
+        "filp/whoops": "^2.4",
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.2",
-        "phpunit/phpunit": "^7",
-        "filp/whoops": "^2.4",
         "nunomaduro/collision": "^3.0",
-        "beyondcode/laravel-dump-server": "^1.0"
+        "phpunit/phpunit": "^7",
+        "symfony/dom-crawler": "^5.4",
+        "ext-dom": ""
     },
     "autoload": {
         "classmap": [

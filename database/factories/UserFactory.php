@@ -22,7 +22,8 @@ $factory->define(App\User::class, function (Generator $faker) {
         'email' => "$firstName.$lastName@example.com",
         'password' => $password ?: $password = bcrypt('secret'),
         'status' => '',
-        'member_id' => User::query()->max('member_id') + 1,
+        'member_id' => implode('', $faker->randomElements(range(1, 50), 10))
+            . (User::query()->max('member_id') + 1),
         'acl' => '',
         'date_applied' => now()->subDays(14),
         'date_admitted' => now()->subDays(7),
