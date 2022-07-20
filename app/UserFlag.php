@@ -13,6 +13,6 @@ class UserFlag extends Model implements Auditable
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->hasOne(\App\User::class);
     }
 }
