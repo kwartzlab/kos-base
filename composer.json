@@ -1,7 +1,10 @@
 {
     "name": "laravel/laravel",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -15,7 +18,8 @@
         "laravel/tinker": "^1.0",
         "owen-it/laravel-auditing": "^9.0",
         "robinherbots/jquery.inputmask": "^4.0",
-        "spatie/laravel-google-calendar": "^2.3"
+        "spatie/laravel-google-calendar": "^2.3",
+        "laravel/ui": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
@@ -51,11 +55,10 @@
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ],
-	"post-autoload-dump": [
-        	"Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-	        "@php artisan package:discover"
-	]
-
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
+        ]
     },
     "config": {
         "preferred-install": "dist",
