@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class User extends Authenticatable implements Auditable
 {
@@ -18,7 +18,7 @@ class User extends Authenticatable implements Auditable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'password', 'status', 'acl', 'member_id', 'phone','address','city','province','postal','photo','notes'
+        'first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'password', 'status', 'acl', 'member_id', 'phone', 'address', 'city', 'province', 'postal', 'photo', 'notes',
     ];
 
     /**
@@ -33,7 +33,7 @@ class User extends Authenticatable implements Auditable
         'date_admitted',
         'date_hiatus_start',
         'date_hiatus_end',
-        'date_withdrawn'
+        'date_withdrawn',
     ];
 
     /**
@@ -45,37 +45,45 @@ class User extends Authenticatable implements Auditable
         'password', 'remember_token',
     ];
 
-    public function keys() {
+    public function keys()
+    {
         return $this->hasMany(Key::class);
     }
 
-    public function authorizations() {
+    public function authorizations()
+    {
         return $this->hasMany(Authorization::class);
     }
 
-    public function socials() {
+    public function socials()
+    {
         return $this->hasMany(UserSocial::class);
     }
 
-    public function skills() {
+    public function skills()
+    {
         return $this->hasMany(UserSkill::class);
     }
 
-    public function certs() {
+    public function certs()
+    {
         return $this->hasMany(UserCert::class);
     }
 
-    public function status_history() {
+    public function status_history()
+    {
         return $this->hasMany(UserStatus::class)->orderby('created_at');
     }
 
-    public function flags() {
+    public function flags()
+    {
         return $this->hasMany(UserFlag::class);
     }
 
     // returns first instance of status type
-    public function first_status($type = NULL) {
-        if ($type == NULL) {
+    public function first_status($type = null)
+    {
+        if ($type == null) {
             return $this->hasMany(UserStatus::class)->orderby('created_at')->limit(1);
         } else {
             return $this->hasMany(UserStatus::class)->where('status', $type)->orderby('created_at')->limit(1);
@@ -83,43 +91,49 @@ class User extends Authenticatable implements Auditable
     }
 
     // returns last instance of status type
-    public function last_status($type = NULL) {
-        if ($type == NULL) {
+    public function last_status($type = null)
+    {
+        if ($type == null) {
             return $this->hasMany(UserStatus::class)->orderby('created_at', 'desc')->limit(1);
         } else {
             return $this->hasMany(UserStatus::class)->where('status', $type)->orderby('created_at', 'desc')->limit(1);
         }
     }
 
-    public function current_status() {
-        return $this->hasMany(UserStatus::class)->where('created_at', '<', date('Y-m-d H:i:s', strtotime('tomorrow midnight')))->orderby('created_at','desc')->limit(1);
+    public function current_status()
+    {
+        return $this->hasMany(UserStatus::class)->where('created_at', '<', date('Y-m-d H:i:s', strtotime('tomorrow midnight')))->orderby('created_at', 'desc')->limit(1);
     }
 
-    public function team_assignments($team_id = 'all') {
+    public function team_assignments($team_id = 'all')
+    {
         if ($team_id == 'all') {
             return $this->hasMany(TeamAssignment::class);
         } else {
-            return $this->hasMany(TeamAssignment::class)->where('team_id',$team_id);
+            return $this->hasMany(TeamAssignment::class)->where('team_id', $team_id);
         }
     }
 
     // returns user's membership application (if exists)
-    public function memberapp() {
-        return $this->hasMany(FormSubmission::class,'user_id', 'id')->where('special_form','new_user_app');
+    public function memberapp()
+    {
+        return $this->hasMany(FormSubmission::class, 'user_id', 'id')->where('special_form', 'new_user_app');
     }
 
     // returns all forms the user has submitted (with optional special form filter)
-    public function submitted_forms($special_form = NULL) {
-        if ($special_form != NULL) {
-            return $this->hasMany(FormSubmission::class,'submitted_by', 'id')->where('special_form', $special_form)->orderby('created_at');
+    public function submitted_forms($special_form = null)
+    {
+        if ($special_form != null) {
+            return $this->hasMany(FormSubmission::class, 'submitted_by', 'id')->where('special_form', $special_form)->orderby('created_at');
         } else {
-            return $this->hasMany(FormSubmission::class,'submitted_by', 'id')->orderby('created_at');
+            return $this->hasMany(FormSubmission::class, 'submitted_by', 'id')->orderby('created_at');
         }
     }
 
     // return user's full name
-    public function get_name($piece = NULL) {
-        if ($this->first_preferred == NULL) {
+    public function get_name($piece = null)
+    {
+        if ($this->first_preferred == null) {
             $first_name = $this->first_name;
             $last_name = $this->last_name;
         } else {
@@ -135,100 +149,112 @@ class User extends Authenticatable implements Auditable
                 return $last_name;
                 break;
             default:
-                return $first_name . ' ' . $last_name;
+                return $first_name.' '.$last_name;
         }
     }
 
     // returns all trainer records for current user
-    public function trainer_for() {
-        $result = \App\Trainers::where('user_id',$this->id)->get();
-        if ($result->count() === 0 ) {
-            return NULL;
+    public function trainer_for()
+    {
+        $result = \App\Trainers::where('user_id', $this->id)->get();
+        if ($result->count() === 0) {
+            return null;
         } else {
             return $result;
         }
-
     }
 
     // returns true or false if user is authorized for specified gatekeeper
-    public function is_authorized($gatekeeper_id) {
-        $result = \App\Authorization::where('user_id',$this->id)->where('gatekeeper_id',$gatekeeper_id)->get();
-        if ($result->count() === 0 ) {
+    public function is_authorized($gatekeeper_id)
+    {
+        $result = \App\Authorization::where('user_id', $this->id)->where('gatekeeper_id', $gatekeeper_id)->get();
+        if ($result->count() === 0) {
             return false;
         } else {
             return true;
         }
-
     }
 
     // returns true or false if user is a trainer for specified gatekeeper
-    public function is_trainer($gatekeeper_id) {
+    public function is_trainer($gatekeeper_id)
+    {
         $result = $this->hasOne(TeamAssignment::class)->where(['team_role' => 'trainer', 'gatekeeper_id' => $gatekeeper_id]);
-        if ($result->count() === 0 ) {
+        if ($result->count() === 0) {
             return false;
         } else {
             return true;
         }
-
     }
 
-    public function is_maintainer($gatekeeper_id) {
+    public function is_maintainer($gatekeeper_id)
+    {
         $result = $this->hasOne(TeamAssignment::class)->where(['team_role' => 'maintainer', 'gatekeeper_id' => $gatekeeper_id]);
-        if ($result->count() === 0 ) {
+        if ($result->count() === 0) {
             return false;
         } else {
             return true;
         }
-
     }
-
 
     // returns training requests (past or present)
-    public function training_requests($status = 'all') {
-    	if ($status == 'all') {
-            return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('created_at','desc')->get();
-        } else if ($status == 'history') {
-			return \App\TeamRequest::where('status','!=','new')->where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('updated_at','desc')->get();
+    public function training_requests($status = 'all')
+    {
+        if ($status == 'all') {
+            return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('created_at', 'desc')->get();
+        } elseif ($status == 'history') {
+            return \App\TeamRequest::where('status', '!=', 'new')->where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('updated_at', 'desc')->get();
         } else {
-			return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training', 'status' => $status])->orderby('created_at','desc')->get();
-		}
+            return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training', 'status' => $status])->orderby('created_at', 'desc')->get();
+        }
     }
 
-    public function add_authorization($gatekeeper_id) {
+    public function add_authorization($gatekeeper_id)
+    {
         \App\Authorization::create([
             'user_id' => $this->id,
-            'gatekeeper_id' => $gatekeeper_id
-            ]);
-
+            'gatekeeper_id' => $gatekeeper_id,
+        ]);
     }
 
     // clears specific authorization for a user
-    public function delete_authorization($gatekeeper_id) {
-        $result = \App\Authorization::where(['user_id',$this->id],['gatekeeper_id',$gatekeeper_id])->delete();
-        return true;
+    public function delete_authorization($gatekeeper_id)
+    {
+        $result = \App\Authorization::where(['user_id', $this->id], ['gatekeeper_id', $gatekeeper_id])->delete();
 
+        return true;
     }
 
     // clears all authorizations for a user
-    public function clear_authorizations() {
-        $result = \App\Authorization::where('user_id',$this->id)->delete();
-        return true;
+    public function clear_authorizations()
+    {
+        $result = \App\Authorization::where('user_id', $this->id)->delete();
 
+        return true;
     }
 
     // can the user program the system?
-    public function is_admin() {
-        if ($this->acl == 'admin') { return true; } else { return false; }
-
+    public function is_admin()
+    {
+        if ($this->acl == 'admin') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // can the user program keys?
-    public function is_keyadmin() {
-        if ($this->acl == 'keyadmin') { return true; } else { return false; }
+    public function is_keyadmin()
+    {
+        if ($this->acl == 'keyadmin') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // is member a lead of specifed team?
-    public function is_team_lead($team_id) {
+    public function is_team_lead($team_id)
+    {
         $result = \App\TeamAssignment::where(['user_id' => $this->id, 'team_id' => $team_id, 'team_role' => 'lead'])->get();
         if (count($result) > 0) {
             return true;
@@ -238,12 +264,14 @@ class User extends Authenticatable implements Auditable
     }
 
     // returns all teams the user is part of
-    public function teams() {
-        return $this->belongsToMany(Team::class, 'team_assignments','user_id');
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_assignments', 'user_id');
     }
 
-    public function has_role($role_id) {
-        if (count($this->roles()->where('role_id',$role_id)->get())>0) {
+    public function has_role($role_id)
+    {
+        if (count($this->roles()->where('role_id', $role_id)->get()) > 0) {
             return true;
         } else {
             return false;
@@ -251,12 +279,14 @@ class User extends Authenticatable implements Auditable
     }
 
     // returns all roles the user holds
-    public function roles() {
+    public function roles()
+    {
         return $this->hasMany(UserRole::class, 'user_id');
     }
 
     // check user roles to verify permissions
-    public function is_allowed($object, $operation) {
+    public function is_allowed($object, $operation)
+    {
         return Db::table('role_permissions')
             ->where('object', $object)
             ->where('operation', $operation)
@@ -266,8 +296,9 @@ class User extends Authenticatable implements Auditable
     }
 
     // can the user program the system?
-    public function is_superuser() {
-        if (count($this->roles()->where('role_id','1')->get())>0) {
+    public function is_superuser()
+    {
+        if (count($this->roles()->where('role_id', '1')->get()) > 0) {
             return true;
         } else {
             return false;

@@ -16,7 +16,7 @@ class CreateGatekeeperStatusesTable extends Migration
         Schema::create('gatekeeper_statuses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('gatekeeper_id');
-            $table->string('status',50)->default('online');
+            $table->string('status', 50)->default('online');
             $table->string('status_text')->nullable();
             $table->integer('user_id')->nullable();
             $table->datetime('lock_in')->nullable();

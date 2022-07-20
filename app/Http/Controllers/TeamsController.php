@@ -13,19 +13,18 @@ class TeamsController extends Controller
      */
     public function index()
     {
- 
+
         // get teams user belongs to
         $my_teams = \Auth::user()->teams()->get();
         $my_teams = $my_teams->unique();
 
         $teams = \App\Team::all();
 
-        $other_teams = array();
+        $other_teams = [];
         $team_roles = config('kwartzlabos.team_roles');
 
-        return view('teams.index', compact('my_teams','teams','team_roles'));
+        return view('teams.index', compact('my_teams', 'teams', 'team_roles'));
     }
-
 
     /**
      * Manages teams (admin)
@@ -34,34 +33,29 @@ class TeamsController extends Controller
      */
     public function manage()
     {
-
         if (\Auth::user()->can('manage-teams')) {
             $teams = \App\Team::orderby('name')->get();
-            $team_assignments = \App\TeamAssignment::where('status','new')->orderby('gatekeeper_id')->get();
-            return view('teams.manage', compact('teams','team_assignments'));
-        }
+            $team_assignments = \App\TeamAssignment::where('status', 'new')->orderby('gatekeeper_id')->get();
 
+            return view('teams.manage', compact('teams', 'team_assignments'));
+        }
     }
 
     // Team dashboard
     public function dashboard($team_id)
     {
-        
         $team = \App\Team::find($team_id);
 
         // ensure user is a member of team or a teams manager
-        if (($team != NULL) && (($team->is_member()) || (\Auth::user()->can('manage-teams')))) {
-
+        if (($team != null) && (($team->is_member()) || (\Auth::user()->can('manage-teams')))) {
             $team_roles = config('kwartzlabos.team_roles');
 
             $team_members = $team->members()->get();
             $team_members = $team_members->unique('id')->sortBy('first_preferred');
 
-            return view('teams.dashboard', compact('team', 'team_roles','team_members'));
+            return view('teams.dashboard', compact('team', 'team_roles', 'team_members'));
         }
-
     }
-
 
     /**
      * Send training requests & view past requests
@@ -70,13 +64,13 @@ class TeamsController extends Controller
      */
     public function training()
     {
-        $gatekeepers = \App\Gatekeeper::where('status','enabled')->orderby('name')->get();
+        $gatekeepers = \App\Gatekeeper::where('status', 'enabled')->orderby('name')->get();
         $request_status = config('kwartzlabos.team_request_status');
 
-        return view('teams.training', compact('gatekeepers','request_status'));
+        return view('teams.training', compact('gatekeepers', 'request_status'));
     }
 
-        /**
+    /**
      * Send training requests & view past requests
      *
      * @return \Illuminate\Http\Response
@@ -84,76 +78,74 @@ class TeamsController extends Controller
     public function training_request($gatekeeper)
     {
         $gatekeeper_requested = \App\Gatekeeper::where(['status' => 'enabled', 'id' => $gatekeeper])->first();
-        if (!$gatekeeper_requested == NULL) {
+        if (! $gatekeeper_requested == null) {
             $team = $gatekeeper_requested->team()->first();
             // check if request has already been submitted
-            $request = \App\TeamRequest::whereNotIn('status',['cancelled','failed'])->where(['request_type' => 'training', 'user_id' => \Auth::user()->id, 'gatekeeper_id' => $gatekeeper_requested->id])->first();
-            if ($request == NULL) {      // save request
-                if ($team == NULL) { $team_id = 0; } else { $team_id = $team->id; }
+            $request = \App\TeamRequest::whereNotIn('status', ['cancelled', 'failed'])->where(['request_type' => 'training', 'user_id' => \Auth::user()->id, 'gatekeeper_id' => $gatekeeper_requested->id])->first();
+            if ($request == null) {      // save request
+                if ($team == null) {
+                    $team_id = 0;
+                } else {
+                    $team_id = $team->id;
+                }
                 \App\TeamRequest::create([
                     'request_type' => 'training',
                     'status' => 'new',
                     'user_id' => \Auth::user()->id,
                     'team_id' => $team_id,
-                    'gatekeeper_id' => $gatekeeper_requested->id
-                    ]);
+                    'gatekeeper_id' => $gatekeeper_requested->id,
+                ]);
 
                 return response()->json(['status' => 'success', 'message' => 'Request Sent']);
             } else {                        // request already exists
                 return response()->json(['status' => 'error', 'message' => 'Request already exists.']);
             }
-
         } else {
-            $message = "Unknown Gatekeeper.";
+            $message = 'Unknown Gatekeeper.';
+
             return redirect('/teams/training')->with('error', $message);
         }
     }
 
     public function training_cancel($request_id)
     {
-
         $training_request = \App\TeamRequest::find($request_id);
 
         // ensure it's the user's request (or is a trainer for the gatekeeper)
         if (($training_request->user_id == \Auth::user()->id) || ($training_request->team()->is_trainer())) {
-
             $training_request->status = 'cancelled';
             $training_request->save();
-            
-            return response()->json(['status' => 'success', 'message' => 'Request Cancelled']);
 
+            return response()->json(['status' => 'success', 'message' => 'Request Cancelled']);
         } else {
             return response()->json(['status' => 'error']);
         }
-
     }
 
     public function training_pass($request_id)
     {
-
         $training_request = \App\TeamRequest::find($request_id);
 
         // ensure it's the user's request (or is a trainer for the gatekeeper)
         if (($training_request->user_id == \Auth::user()->id) || ($training_request->team()->is_trainer())) {
-
             $training_request->status = 'completed';
             $training_request->save();
-            
+
             $gatekeeper = $training_request->gatekeeper()->first();
 
             // Authorize user for gatekeepers
-            $authorization = \App\Authorization::where(['gatekeeper_id' => $gatekeeper->id,'user_id' => $training_request->user_id])->get();
+            $authorization = \App\Authorization::where(['gatekeeper_id' => $gatekeeper->id, 'user_id' => $training_request->user_id])->get();
             if (count($authorization) == 0) {
                 $authorization = \App\Authorization::create([
                     'user_id' => $training_request->user_id,
-                    'gatekeeper_id' => $gatekeeper->id
-                    ]);
+                    'gatekeeper_id' => $gatekeeper->id,
+                ]);
             }
+
             return response()->json(['status' => 'success', 'message' => 'Request Complete']);
         } else {
             return response()->json(['status' => 'error']);
         }
-
     }
 
     public function training_fail($request_id)
@@ -162,40 +154,35 @@ class TeamsController extends Controller
 
         // ensure it's the user's request (or is a trainer for the gatekeeper)
         if (($training_request->user_id == \Auth::user()->id) || ($training_request->team()->is_trainer())) {
-
             $training_request->status = 'failed';
             $training_request->save();
-            
-            return response()->json(['status' => 'success', 'message' => 'Request Complete']);
 
+            return response()->json(['status' => 'success', 'message' => 'Request Complete']);
         } else {
             return response()->json(['status' => 'error']);
         }
-
     }
 
     public function requests($team_id, $request_type)
     {
-
         $team = \App\Team::find($team_id);
 
-        if ($team != NULL) {
+        if ($team != null) {
             if ($request_type == 'training') {
                 // ensure user is a trainer for this team
                 if (($team->is_trainer()) || ($team->is_lead())) {
-                    $gatekeepers = $team->gatekeepers()->where('status','enabled')->orderby('name')->get();
+                    $gatekeepers = $team->gatekeepers()->where('status', 'enabled')->orderby('name')->get();
                     $request_status = config('kwartzlabos.team_request_status');
-                    return view('teams.requests', compact('team','gatekeepers', 'request_status'));
 
+                    return view('teams.requests', compact('team', 'gatekeepers', 'request_status'));
                 } else {
-                    $message = "You are not a trainer on that team.";
+                    $message = 'You are not a trainer on that team.';
+
                     return redirect('/teams')->with('error', $message);
                 }
-            } else if ($request_type == 'maintenance') {
-
+            } elseif ($request_type == 'maintenance') {
             }
         }
-
     }
 
     /**
@@ -207,12 +194,12 @@ class TeamsController extends Controller
     {
         if (\Auth::user()->can('manage-teams')) {
             // get all users
-            $user_list = array();
-            foreach (\App\User::where('status','active')->orderby('first_preferred')->get() as $user) {
+            $user_list = [];
+            foreach (\App\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
                 $user_list[$user->id] = $user->get_name();
             }
 
-            return view('teams.create',['user_list' => $user_list]);
+            return view('teams.create', ['user_list' => $user_list]);
         }
     }
 
@@ -224,45 +211,44 @@ class TeamsController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
-            'name' => 'required|unique:teams'
+            'name' => 'required|unique:teams',
         ]);
 
         if (\Auth::user()->can('manage-teams')) {
             // save team
             $team = \App\Team::create([
                 'name' => $request->input('name'),
-                'description' => $request->input('description')
+                'description' => $request->input('description'),
             ]);
 
-            $team_assignments = array();
+            $team_assignments = [];
             // add selected users to team roles
             foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
                 // only allow team leads to be changed by team managers
-                if (($team_data['is_admin']) && (\Auth::user()->can('manage-teams')) || (!$team_data['is_admin'])) {
+                if (($team_data['is_admin']) && (\Auth::user()->can('manage-teams')) || (! $team_data['is_admin'])) {
                     // prevent trainers and maintainers from being assigned (requires approval and gatekeeper assignment)
-                    if ((!$team_data['is_trainer']) && (!$team_data['is_maintainer'])) {
+                    if ((! $team_data['is_trainer']) && (! $team_data['is_maintainer'])) {
                         $team_array = $request->input($team_role);
-                        if ($team_array != NULL) {
+                        if ($team_array != null) {
                             foreach ($team_array as $key => $user_id) {
                                 $team_assignments[] = [
                                     'user_id' => $user_id,
                                     'team_role' => $team_role,
-                                    'team_id' => $team->id
+                                    'team_id' => $team->id,
                                 ];
                             }
                         }
                     }
                 }
-                
             }
 
             // add team assignments
             $team->assignments()->createMany($team_assignments);
 
-            $message = "Team created successfully.";
-            return redirect('/teams/' . $team->id . '/edit')->with('success', $message);
+            $message = 'Team created successfully.';
+
+            return redirect('/teams/'.$team->id.'/edit')->with('success', $message);
         }
     }
 
@@ -276,8 +262,9 @@ class TeamsController extends Controller
     {
         $team = \App\Team::find($id);
 
-        if ($team != NULL) {
+        if ($team != null) {
             $team_roles = config('kwartzlabos.team_roles');
+
             return view('teams.show', compact('team', 'team_roles'));
         }
     }
@@ -293,15 +280,15 @@ class TeamsController extends Controller
         $team = \App\Team::find($id);
 
         // get all users
-        $user_list = array();
-        foreach (\App\User::where('status','active')->orderby('first_preferred')->get() as $user) {
+        $user_list = [];
+        foreach (\App\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
             $user_list[$user->id] = $user->get_name();
         }
-        
+
         // get team assignments and build array for dropdowns
-        $team_assignments = array();
+        $team_assignments = [];
         foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
-            if (old($team_role) != NULL) { 
+            if (old($team_role) != null) {
                 foreach (old($team_role) as $key => $user_id) {
                     $team_assignments[$team_role][] = $user_id;
                 }
@@ -312,7 +299,6 @@ class TeamsController extends Controller
                     }
                 }
             }
-
         }
 
         return view('teams.edit', compact('team', 'team_assignments', 'user_list'));
@@ -327,9 +313,8 @@ class TeamsController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
         ]);
 
         // load existing record and update
@@ -341,11 +326,10 @@ class TeamsController extends Controller
         // save Team changes
         $team->save();
 
-
         // process team assignment changes
         foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
             // prevent trainers and maintainers from being assigned (requires approval and gatekeeper assignment)
-            if ((!$team_data['is_trainer']) && (!$team_data['is_maintainer'])) {
+            if ((! $team_data['is_trainer']) && (! $team_data['is_maintainer'])) {
                 if ($request->has($team_role)) {
                     // go through existing records and add/update based on the form input
                     foreach ($request->input($team_role) as $key => $user_id) {
@@ -355,7 +339,7 @@ class TeamsController extends Controller
                         // find all relevant assignments and delete those which aren't in the form input
                         $role_members = $team->role_members($team_role)->get();
                         foreach ($role_members as $role_member) {
-                            if (!in_array($role_member['user_id'], $request->input($team_role))) {
+                            if (! in_array($role_member['user_id'], $request->input($team_role))) {
                                 $role_member->delete();
                             }
                         }
@@ -372,9 +356,9 @@ class TeamsController extends Controller
             }
         }
 
-        $message = "Team updated successfully.";
-        return redirect('/teams/' . $team->id . '/edit')->with('success', $message);
+        $message = 'Team updated successfully.';
 
+        return redirect('/teams/'.$team->id.'/edit')->with('success', $message);
     }
 
     /**
@@ -405,14 +389,13 @@ class TeamsController extends Controller
                     $assignment->save();
                 }
             }
-            
+
             $team->delete();
             session(['message' => 'Team deleted successfully.']);
-            return response()->json(['status' => 'success', 'message' => 'Team Deleted']);
 
+            return response()->json(['status' => 'success', 'message' => 'Team Deleted']);
         } else {                        // request already exists
             return response()->json(['status' => 'error', 'message' => 'Cannot Delete Team']);
         }
-
     }
 }

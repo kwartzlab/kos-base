@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use Carbon\Carbon;
-
+use Illuminate\Console\Command;
 
 class SendActiveMembersEmail extends Command
 {
@@ -39,18 +38,17 @@ class SendActiveMembersEmail extends Command
      */
     public function handle()
     {
-
         $this->info('Generating list of active members...');
 
         // get all active users
-        $users = \App\User::where('status','active')->orderby('first_name')->orderby('last_name')->get();
-    
+        $users = \App\User::where('status', 'active')->orderby('first_name')->orderby('last_name')->get();
+
         // find authentications from the past month, if more than 3 add them to the list
-        $email_data['member_list'] = array();
+        $email_data['member_list'] = [];
         foreach ($users as $user) {
-            $recs = \App\Authentication::where('user_id',$user['id'])->where('gatekeeper_id','11')->where('created_at', '>=', Carbon::now()->subMonth()->toDateTimeString())->get();
+            $recs = \App\Authentication::where('user_id', $user['id'])->where('gatekeeper_id', '11')->where('created_at', '>=', Carbon::now()->subMonth()->toDateTimeString())->get();
             if (count($recs) >= 3) {
-                $email_data['member_list'][] = $user['first_name'] . ' ' . $user['last_name'];
+                $email_data['member_list'][] = $user['first_name'].' '.$user['last_name'];
             }
         }
 
@@ -61,6 +59,5 @@ class SendActiveMembersEmail extends Command
         \Mail::send(new \App\Mail\RecentMembers($email_data));
 
         $this->info('Email sent.');
-
     }
 }

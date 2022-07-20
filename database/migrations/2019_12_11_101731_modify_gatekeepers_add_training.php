@@ -19,7 +19,6 @@ class ModifyGatekeepersAddTraining extends Migration
             $table->text('training_desc')->nullable()->after('team_id');
             $table->string('training_eta', 80)->nullable()->after('training_desc');
             $table->integer('training_prereq')->default(0)->after('training_eta');
-
         });
     }
 

@@ -21,24 +21,24 @@ return [
         'admin' => [
             'to' => 'membership@kwartzlab.ca',
             'cc' => 'bod@kwartzlab.ca',
-            'replyto' => NULL,
-            'subject' => 'New Member App [BoD Version]'
+            'replyto' => null,
+            'subject' => 'New Member App [BoD Version]',
         ],
 
         'members' => [
             'to' => 'members@kwartzlab.ca',
-            'cc' => NULL,
+            'cc' => null,
             'replyto' => 'members@kwartzlab.ca',
-            'subject' => 'New Member Application'
+            'subject' => 'New Member Application',
         ],
 
     ],
     'special_forms' => [
         'new_user_app' => [
-            'name' => 'New Member Application'
+            'name' => 'New Member Application',
         ],
         'helpdesk' => [
-            'name' => 'Helpdesk Form'
+            'name' => 'Helpdesk Form',
         ],
     ],
     'user_status' => [
@@ -46,55 +46,55 @@ return [
             'name' => 'Active',
             'icon' => 'fa-user-check',
             'colour' => 'success',
-            'send-notifications' => TRUE
+            'send-notifications' => true,
         ],
         'hiatus' => [
             'name' => 'On Hiatus',
             'icon' => 'fa-umbrella-beach',
             'colour' => 'warning',
-            'send-notifications' => TRUE
+            'send-notifications' => true,
         ],
         'suspended' => [
             'name' => 'Suspended',
             'icon' => 'fa-user-lock',
             'colour' => 'danger',
-            'send-notifications' => TRUE
+            'send-notifications' => true,
         ],
         'inactive' => [
             'name' => 'Withdrawn',
             'icon' => 'fa-user-slash',
             'colour' => 'danger',
-            'send-notifications' => TRUE
+            'send-notifications' => true,
         ],
         'inactive-abandoned' => [
             'name' => 'Withdrawn [Abandoned]',
             'icon' => 'fa-user-slash',
             'colour' => 'danger',
-            'send-notifications' => TRUE
+            'send-notifications' => true,
         ],
         'terminated' => [
             'name' => 'Withdrawn [Terminated]',
             'icon' => 'fa-user-slash',
             'colour' => 'danger',
-            'send-notifications' => FALSE
+            'send-notifications' => false,
         ],
         'applicant' => [
             'name' => 'Applicant',
             'icon' => 'fa-user-edit',
             'colour' => 'warning',
-            'send-notifications' => FALSE
+            'send-notifications' => false,
         ],
         'applicant-abandoned' => [
             'name' => 'Applicant [Abandoned]',
             'icon' => 'fa-user-times',
             'colour' => 'warning',
-            'send-notifications' => FALSE
+            'send-notifications' => false,
         ],
         'applicant-denied' => [
             'name' => 'Applicant [Denied]',
             'icon' => 'fa-user-minus',
             'colour' => 'danger',
-            'send-notifications' => FALSE
+            'send-notifications' => false,
         ],
     ],
     'team_roles' => [
@@ -104,7 +104,7 @@ return [
             'is_admin' => true,
             'is_trainer' => false,
             'is_maintainer' => false,
-            'approval_required' => false
+            'approval_required' => false,
         ],
         'trainer' => [
             'name' => 'Trainer',
@@ -112,7 +112,7 @@ return [
             'is_admin' => false,
             'is_trainer' => true,
             'is_maintainer' => false,
-            'approval_required' => true
+            'approval_required' => true,
         ],
         'maintainer' => [
             'name' => 'Maintainer',
@@ -120,7 +120,7 @@ return [
             'is_admin' => false,
             'is_trainer' => false,
             'is_maintainer' => true,
-            'approval_required' => false
+            'approval_required' => false,
         ],
         'consumables' => [
             'name' => 'Consumables',
@@ -128,7 +128,7 @@ return [
             'is_admin' => false,
             'is_trainer' => false,
             'is_maintainer' => false,
-            'approval_required' => false
+            'approval_required' => false,
         ],
         'sme' => [
             'name' => 'Subject Matter Expert',
@@ -136,7 +136,7 @@ return [
             'is_admin' => false,
             'is_trainer' => false,
             'is_maintainer' => false,
-            'approval_required' => false
+            'approval_required' => false,
         ],
         'documentation' => [
             'name' => 'Documentation',
@@ -144,7 +144,7 @@ return [
             'is_admin' => false,
             'is_trainer' => false,
             'is_maintainer' => false,
-            'approval_required' => false
+            'approval_required' => false,
         ],
         'communications' => [
             'name' => 'Communications',
@@ -152,18 +152,18 @@ return [
             'is_admin' => false,
             'is_trainer' => false,
             'is_maintainer' => false,
-            'approval_required' => false
+            'approval_required' => false,
         ],
 
     ],
     'team_requests' => [
         'training' => [
             'name' => 'Training',
-            'notify' => ['lead','trainer']
+            'notify' => ['lead', 'trainer'],
         ],
         'maintenance' => [
             'name' => 'Maintenance',
-            'notify' => ['lead','maintenance']
+            'notify' => ['lead', 'maintenance'],
         ],
     ],
     'team_request_status' => [
@@ -192,11 +192,7 @@ return [
     ],
     'user_flags' => [
         'keys_disabled' => 'Keys Disabled',
-	'covid_vaccine' => 'Vaccinated/Exempt',
+        'covid_vaccine' => 'Vaccinated/Exempt',
     ],
 
-    
-
 ];
-
-

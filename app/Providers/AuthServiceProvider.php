@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -58,21 +58,37 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('manage-users-keys', function ($user) {
-            if (Auth::user()->is_allowed('users', 'manage')) { return true; }
-            if (Auth::user()->is_allowed('keys', 'manage')) { return true; }
+            if (Auth::user()->is_allowed('users', 'manage')) {
+                return true;
+            }
+            if (Auth::user()->is_allowed('keys', 'manage')) {
+                return true;
+            }
         });
 
         // Returns true if user holds any of the manage- roles
         Gate::define('does-admin', function ($user) {
-            if (Auth::user()->is_allowed('roles', 'manage')) { return true; }
-            if (Auth::user()->is_allowed('keys', 'manage')) { return true; }
-            if (Auth::user()->is_allowed('users', 'manage')) { return true; }
-            if (Auth::user()->is_allowed('teams', 'manage')) { return true; }
-            if (Auth::user()->is_allowed('gatekeepers', 'manage')) { return true; }
-            if (Auth::user()->is_allowed('reports', 'manage')) { return true; }
+            if (Auth::user()->is_allowed('roles', 'manage')) {
+                return true;
+            }
+            if (Auth::user()->is_allowed('keys', 'manage')) {
+                return true;
+            }
+            if (Auth::user()->is_allowed('users', 'manage')) {
+                return true;
+            }
+            if (Auth::user()->is_allowed('teams', 'manage')) {
+                return true;
+            }
+            if (Auth::user()->is_allowed('gatekeepers', 'manage')) {
+                return true;
+            }
+            if (Auth::user()->is_allowed('reports', 'manage')) {
+                return true;
+            }
+
             return false;
         });
-
 
         //
     }

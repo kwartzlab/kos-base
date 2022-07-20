@@ -40,15 +40,14 @@ class GenerateMemberID extends Command
         $this->info('Generating membership IDs');
 
         // get all users
-        $users = \App\User::where('date_admitted','!=',NULL)->orderby('date_admitted')->orderby('first_preferred')->get();
-        
+        $users = \App\User::where('date_admitted', '!=', null)->orderby('date_admitted')->orderby('first_preferred')->get();
+
         $member_id = 1;
         foreach ($users as $user) {
-            $this->info('Processing ' . $user->get_name());
+            $this->info('Processing '.$user->get_name());
             $user->member_id = $member_id;
             $user->save();
             $member_id++;
         }
-
     }
 }

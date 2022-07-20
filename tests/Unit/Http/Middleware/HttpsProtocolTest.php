@@ -22,11 +22,12 @@ class HttpsProtocolTest extends TestCase
         $this->assertFalse($request->isSecure());
 
         /** @var RedirectResponse $response */
-        $response = $middleware->handle(app(Request::class), function () {});
+        $response = $middleware->handle(app(Request::class), function () {
+        });
 
         $this->assertTrue(
             $response->isRedirect(URL::to('/', [], true)),
-            "Failed asserting that non-secure request is redirected in production environment."
+            'Failed asserting that non-secure request is redirected in production environment.'
         );
     }
 

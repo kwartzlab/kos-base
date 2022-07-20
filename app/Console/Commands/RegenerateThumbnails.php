@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use Image;
 
 class RegenerateThumbnails extends Command
@@ -41,7 +40,7 @@ class RegenerateThumbnails extends Command
     {
         $image_type = $this->option('type');
 
-        switch($image_type) {
+        switch ($image_type) {
             case 'users':
                 $image_types = ['users'];
             break;
@@ -52,59 +51,59 @@ class RegenerateThumbnails extends Command
                 $image_types = ['gatekeepers'];
             break;
             case 'all':
-                $image_types = ['users','teams','gatekeepers'];
+                $image_types = ['users', 'teams', 'gatekeepers'];
             break;
             default:
                 $this->error('No valid image type specified. Valid: all, users, teams, gatekeepers');
+
                 return false;
         }
 
         $this->info('Regenerating image thumbnails');
 
-        foreach($image_types as $image_type) {
+        foreach ($image_types as $image_type) {
 
             // grab the records we want to process
             switch ($image_type) {
                 case 'users':
-                    $recs = \App\User::where('photo','!=',NULL)->get();
+                    $recs = \App\User::where('photo', '!=', null)->get();
                     break;
                 case 'teams':
-                    $recs = \App\Team::where('photo','!=',NULL)->get();
+                    $recs = \App\Team::where('photo', '!=', null)->get();
                     break;
                 case 'gatekeepers':
-                    $recs = \App\Gatekeeper::where('photo','!=',NULL)->get();
+                    $recs = \App\Gatekeeper::where('photo', '!=', null)->get();
                     break;
             }
-            $this->comment('Processing images for ' . $image_type);
+            $this->comment('Processing images for '.$image_type);
 
-            if (count($recs)>0) {
-                $image_path = public_path() . "/storage/images/" . $image_type . '/';
+            if (count($recs) > 0) {
+                $image_path = public_path().'/storage/images/'.$image_type.'/';
                 foreach ($recs as $rec) {
 
                     // older images have file extension in db photo field so strip it off and update the record
-                    if (strpos($rec->photo,'.')>0) {
-                        $rec->photo = substr($rec->photo, 0, strrpos($rec->photo, "."));
+                    if (strpos($rec->photo, '.') > 0) {
+                        $rec->photo = substr($rec->photo, 0, strrpos($rec->photo, '.'));
                         $rec->save();
                     }
 
-                    $image_file = NULL;
+                    $image_file = null;
                     // look for original file in the order of preference
-                    if (file_exists($image_path . $rec->photo . '.png')) {
-                        $image_file = $rec->photo . '.png';
+                    if (file_exists($image_path.$rec->photo.'.png')) {
+                        $image_file = $rec->photo.'.png';
                         $image_ext = 'png';
-                    } else if (file_exists($image_path . $rec->photo . '.jpeg')) {
-                        $image_file = $rec->photo . '.jpeg';
+                    } elseif (file_exists($image_path.$rec->photo.'.jpeg')) {
+                        $image_file = $rec->photo.'.jpeg';
                         $image_ext = 'jpeg';
                     }
 
-                    if ($image_file != NULL) {
-
-                        $this->info('Processing ' . $image_file);
+                    if ($image_file != null) {
+                        $this->info('Processing '.$image_file);
                         // generate thumbnails
-                        $img = Image::make($image_path . $image_file)->orientate();
+                        $img = Image::make($image_path.$image_file)->orientate();
                         // if we started with a PNG file, create a JPEG version
                         if ($image_ext == 'png') {
-                            $img->save($image_path . $rec->photo . '.jpeg');
+                            $img->save($image_path.$rec->photo.'.jpeg');
                         }
 
                         // if image is not 1:1 aspect ratio, fill it out before resizing
@@ -117,25 +116,22 @@ class RegenerateThumbnails extends Command
                         }
 
                         $img->resize(512, 512);
-                        $img->save($image_path . $rec->photo . '-512px.jpeg');
+                        $img->save($image_path.$rec->photo.'-512px.jpeg');
 
                         $img->resize(256, 256);
-                        $img->save($image_path . $rec->photo . '-256px.jpeg');
+                        $img->save($image_path.$rec->photo.'-256px.jpeg');
 
                         $img->resize(128, 128);
-                        $img->save($image_path . $rec->photo . '-128px.jpeg');
-
+                        $img->save($image_path.$rec->photo.'-128px.jpeg');
                     } else {
-                        $this->error('Could not find image - ' . $rec->photo);
+                        $this->error('Could not find image - '.$rec->photo);
                     }
                 }
             } else {
                 $this->info('No images for this type to process.');
             }
-
         }
 
         $this->info('Thumbnail generation complete.');
-
     }
 }

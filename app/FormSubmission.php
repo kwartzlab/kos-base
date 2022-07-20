@@ -7,7 +7,6 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class FormSubmission extends Model implements Auditable
 {
-
     use \OwenIt\Auditing\Auditable;
 
     /**
@@ -16,29 +15,32 @@ class FormSubmission extends Model implements Auditable
      * @var array
      */
     protected $fillable = [
-        'form_id', 'form_name', 'submitted_by', 'user_id', 'data','submitter_ip','submitter_agent','special_form'
+        'form_id', 'form_name', 'submitted_by', 'user_id', 'data', 'submitter_ip', 'submitter_agent', 'special_form',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
-  
-    public function submitter() {
+
+    public function submitter()
+    {
         return $this->hasOne(User::class, 'id', 'submitted_by');
     }
 
     // returns true or false whether user can view form submission
-    public function canview() {
+    public function canview()
+    {
         // only submitter, associated user and form managers can view associated forms for now
         if ((\Auth::user()->id == $this->submitted_by) || (\Auth::user()->id == $this->user_id) || (\Gate::allows('manage-forms'))) {
-            return TRUE;
+            return true;
         } else {
             // any user can view an applicant form
             if ($this->user()->get()->status == 'applicant') {
-                return TRUE;
+                return true;
             }
-            return FALSE;
+
+            return false;
         }
     }
-
 }

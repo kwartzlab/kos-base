@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 class TrainingController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +13,6 @@ class TrainingController extends Controller
      */
     public function index()
     {
-
-        
     }
 
     /**
@@ -36,8 +33,6 @@ class TrainingController extends Controller
      */
     public function store(Request $request)
     {
-
-
     }
 
     /**
@@ -59,7 +54,6 @@ class TrainingController extends Controller
      */
     public function edit($id)
     {
-
     }
 
     /**
@@ -80,9 +74,7 @@ class TrainingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($gatekeeper_id,$id)
+    public function destroy($gatekeeper_id, $id)
     {
-
-
     }
 }
