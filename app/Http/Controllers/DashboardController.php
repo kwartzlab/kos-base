@@ -59,15 +59,16 @@ class DashboardController extends Controller
                          ->backgroundcolor('rgba(60,141,188,0.9)');
 
         /* EVENTS CALENDAR */
-        $events = Event::get(Carbon::now(),Carbon::now()->addDay(14));
-        $events = $events->groupby((function ($val) {
-            if ($val->start->date == NULL) {
-                return Carbon::parse($val->startDateTime)->format('Y-m-d');
-            } else {
-                return Carbon::parse($val->startDate)->format('Y-m-d');
-            }
-        }));
-        $events = $events->slice(0,9);
+//        $events = Event::get(Carbon::now(),Carbon::now()->addDay(14));
+//        $events = $events->groupby((function ($val) {
+//            if ($val->start->date == NULL) {
+//                return Carbon::parse($val->startDateTime)->format('Y-m-d');
+//            } else {
+//                return Carbon::parse($val->startDate)->format('Y-m-d');
+//            }
+//        }));
+//        $events = $events->slice(0,9);
+        $events = collect();
 
 
         return view('dashboard.index',compact('latest_members','latest_applicants','gatekeepers','attendance_chart','events'));

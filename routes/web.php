@@ -72,7 +72,10 @@ Route::middleware('auth')->group(function() {
 });
 
 // Reports
-Route::get('/reports', 'ReportsController@index')->middleware('auth');
+Route::middleware(['auth','can:manage-roles'])->group(function() {
+    Route::get('/reports', 'ReportsController@index');
+    Route::get('/reports/fob-usage', 'Reports\\FobUsageController@show');
+});
 
 // Gatekeeper sync and key authentication routes
 Route::post('/keys', 'KeysController@index');
