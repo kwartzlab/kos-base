@@ -42,7 +42,7 @@ class UserFlagRemove extends Command
         if (array_key_exists($this->argument('flag'), config('kwartzlabos.user_flags'))) {
             if ($this->option('email')) {                   // specific user
                 // lookup email address
-                $user = \App\User::where('email', $this->option('email'))->first();
+                $user = \App\Models\User::where('email', $this->option('email'))->first();
                 if ($user != null) {
 
                     // remove flag
@@ -61,7 +61,7 @@ class UserFlagRemove extends Command
                     $this->info('Removing flag *'.$this->argument('flag').'* for all users...');
 
                     // get all users
-                    $users = \App\User::orderby('first_name')->orderby('last_name')->get();
+                    $users = \App\Models\User::orderby('first_name')->orderby('last_name')->get();
                     foreach ($users as $user) {
                         // skip if flag already exists
                         if ($user->flags->contains('flag', $this->argument('flag'))) {

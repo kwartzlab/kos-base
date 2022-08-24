@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -151,7 +151,7 @@ class User extends Authenticatable implements Auditable
     // returns all trainer records for current user
     public function trainer_for()
     {
-        $result = \App\Trainers::where('user_id', $this->id)->get();
+        $result = \App\Models\Trainers::where('user_id', $this->id)->get();
         if ($result->count() === 0) {
             return null;
         } else {
@@ -195,11 +195,11 @@ class User extends Authenticatable implements Auditable
     public function training_requests($status = 'all')
     {
         if ($status == 'all') {
-            return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('created_at', 'desc')->get();
+            return \App\Models\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('created_at', 'desc')->get();
         } elseif ($status == 'history') {
-            return \App\TeamRequest::where('status', '!=', 'new')->where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('updated_at', 'desc')->get();
+            return \App\Models\TeamRequest::where('status', '!=', 'new')->where(['user_id' => \Auth::user()->id, 'request_type' => 'training'])->orderby('updated_at', 'desc')->get();
         } else {
-            return \App\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training', 'status' => $status])->orderby('created_at', 'desc')->get();
+            return \App\Models\TeamRequest::where(['user_id' => \Auth::user()->id, 'request_type' => 'training', 'status' => $status])->orderby('created_at', 'desc')->get();
         }
     }
 
@@ -250,7 +250,7 @@ class User extends Authenticatable implements Auditable
     // is member a lead of specifed team?
     public function is_team_lead($team_id)
     {
-        $result = \App\TeamAssignment::where(['user_id' => $this->id, 'team_id' => $team_id, 'team_role' => 'lead'])->get();
+        $result = \App\Models\TeamAssignment::where(['user_id' => $this->id, 'team_id' => $team_id, 'team_role' => 'lead'])->get();
         if (count($result) > 0) {
             return true;
         } else {

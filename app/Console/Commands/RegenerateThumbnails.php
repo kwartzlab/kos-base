@@ -66,10 +66,10 @@ class RegenerateThumbnails extends Command
             // grab the records we want to process
             switch ($image_type) {
                 case 'users':
-                    $recs = \App\User::where('photo', '!=', null)->get();
+                    $recs = \App\Models\User::where('photo', '!=', null)->get();
                     break;
                 case 'teams':
-                    $recs = \App\Team::where('photo', '!=', null)->get();
+                    $recs = \App\Models\Team::where('photo', '!=', null)->get();
                     break;
                 case 'gatekeepers':
                     $recs = \App\Gatekeeper::where('photo', '!=', null)->get();

@@ -25,7 +25,7 @@ class RoleTableSeeder extends Seeder
 
         // Create superuser role and give it to first user account
         DB::table('roles')->delete();
-        \App\Role::create(['name' => 'Superusers', 'description' => 'Access to all KwartzlabOS functions']);
-        \App\UserRole::create(['user_id' => '1', 'role_id' => '1']);
+        \App\Models\Role::create(['name' => 'Superusers', 'description' => 'Access to all KwartzlabOS functions']);
+        \App\Models\UserRole::create(['user_id' => '1', 'role_id' => '1']);
     }
 }

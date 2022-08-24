@@ -39,7 +39,7 @@ class UserFlagList extends Command
     {
         if ($this->option('email')) {                   // specific user
             // lookup email address
-            $user = \App\User::where('email', $this->option('email'))->first();
+            $user = \App\Models\User::where('email', $this->option('email'))->first();
             if ($user != null) {
                 $flags = null;
                 foreach ($user->flags as $set_flag) {
@@ -58,7 +58,7 @@ class UserFlagList extends Command
             $this->info('Showing flags for all users...');
 
             // get all users
-            $users = \App\User::orderby('first_name')->orderby('last_name')->get();
+            $users = \App\Models\User::orderby('first_name')->orderby('last_name')->get();
             foreach ($users as $user) {
                 $flags = null;
                 foreach ($user->flags as $set_flag) {

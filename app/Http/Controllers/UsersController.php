@@ -26,9 +26,9 @@ class UsersController extends Controller
         }
 
         if ($filter == 'all') {
-            $users = \App\User::orderby('first_preferred')->get();
+            $users = \App\Models\User::orderby('first_preferred')->get();
         } else {
-            $users = \App\User::where('status', $filter)->orderby('first_preferred')->get();
+            $users = \App\Models\User::where('status', $filter)->orderby('first_preferred')->get();
         }
 
         // Add All to status options (for filtering purposes)
@@ -59,7 +59,7 @@ class UsersController extends Controller
     {
 
         // See if we have an form designated as a new user application and redirect if needed
-        $form = \App\Form::where('special_form', 'new_user_app')->first();
+        $form = \App\Models\Form::where('special_form', 'new_user_app')->first();
         if ($form != null) {
             \Session::flash('skip_individual_errors', 1);
             $form_fields = json_decode($form->fields);
@@ -101,7 +101,7 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        $user = \App\User::find($id);
+        $user = \App\Models\User::find($id);
 
         // less messy to deal with an array than the direct config values
         $user_status = config('kwartzlabos.user_status');
@@ -113,9 +113,9 @@ class UsersController extends Controller
     public function check_attributes(Request $request)
     {
         if ($request->has('email')) {
-            $user = \App\User::where('email', $request->input('email'))->first();
+            $user = \App\Models\User::where('email', $request->input('email'))->first();
         } elseif ($request->has('first_name') || $request->has('last_name')) {
-            $user = \App\User::where(['first_name' => $request->input('first_name'), 'last_name' => $request->input('last_name')])->first();
+            $user = \App\Models\User::where(['first_name' => $request->input('first_name'), 'last_name' => $request->input('last_name')])->first();
         }
 
         if ($user != null) {
@@ -140,7 +140,7 @@ class UsersController extends Controller
     // adds or modifies a user status update
     public function update_status(Request $request, $id)
     {
-        $user = \App\User::find($id);
+        $user = \App\Models\User::find($id);
 
         if ($user == null) {
             return view('errors.403', null, 403);
@@ -151,7 +151,7 @@ class UsersController extends Controller
                 return view('errors.403', null, 403);
             }
             // create new status update
-            $status = new \App\UserStatus([
+            $status = new \App\Models\UserStatus([
                 'user_id' => $user->id,
                 'updated_by' => \Auth::user()->id,
                 'created_at' => $request->input('effective_date'),
@@ -178,7 +178,7 @@ class UsersController extends Controller
                     // create both the hiatus record and the active record for when hiatus is over
                     $status->status = 'hiatus';
                     $status->save();
-                    $status_end = new \App\UserStatus([
+                    $status_end = new \App\Models\UserStatus([
                         'user_id' => $user->id,
                         'updated_by' => \Auth::user()->id,
                         'status' => 'active',
@@ -208,7 +208,7 @@ class UsersController extends Controller
         } elseif ($request->isMethod('delete')) {
             // find & delete status update
             if ($request->has('status_id')) {
-                $status = \App\UserStatus::find($request->input('status_id'));
+                $status = \App\Models\UserStatus::find($request->input('status_id'));
 
                 // ensure this update is related to supplied user and was not created by kOS (not deletable)
                 if (($status->user_id == $user->id) && ($status->updated_by > 0)) {
@@ -246,7 +246,7 @@ class UsersController extends Controller
                 'password' => 'confirmed',
             ]);
 
-            $user = \App\User::find($id);
+            $user = \App\Models\User::find($id);
 
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
@@ -294,12 +294,12 @@ class UsersController extends Controller
 
                 return redirect('/users')->with('error', $message);
             } else {
-                $user = \App\User::find($id);
+                $user = \App\Models\User::find($id);
 
                 if ($user->status == 'applicant') {
 
                     // remove related form entries
-                    $result = \App\FormSubmission::where(['user_id' => $user->id, 'special_form' => 'new_user_app'])->delete();
+                    $result = \App\Models\FormSubmission::where(['user_id' => $user->id, 'special_form' => 'new_user_app'])->delete();
 
                     // remove user
                     $user->delete();
@@ -325,13 +325,13 @@ class UsersController extends Controller
             return response()->json('invalid', 500);
         } else {
             // get user
-            $user = \App\User::find($user_id);
+            $user = \App\Models\User::find($user_id);
 
             // check specified flag and toggle it
             if ($user->flags->contains('flag', $flag)) {
                 $user->flags()->where('flag', $flag)->delete();
             } else {
-                $flag = new \App\UserFlag(['flag' => $flag]);
+                $flag = new \App\Models\UserFlag(['flag' => $flag]);
                 $user->flags()->save($flag);
             }
 
@@ -342,7 +342,7 @@ class UsersController extends Controller
     // get key add form
     public function create_key($user_id)
     {
-        $user = \App\User::find($user_id);
+        $user = \App\Models\User::find($user_id);
         if (count($user) != 0) {
             $page_title = 'Adding key for '.$user->name;
 

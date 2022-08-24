@@ -42,7 +42,7 @@ class UserFlagSet extends Command
         if (array_key_exists($this->argument('flag'), config('kwartzlabos.user_flags'))) {
             if ($this->option('email')) {                   // specific user
                 // lookup email address
-                $user = \App\User::where('email', $this->option('email'))->first();
+                $user = \App\Models\User::where('email', $this->option('email'))->first();
                 if ($user != null) {
 
                     // skip if flag already exists
@@ -50,7 +50,7 @@ class UserFlagSet extends Command
                         $this->info('Setting flag *'.$this->argument('flag').'* for '.$user->get_name().' - already exists, skipping');
                     } else {
                         $this->info('Setting flag *'.$this->argument('flag').'* for '.$user->get_name());
-                        $flag = new \App\UserFlag(['flag' => $this->argument('flag')]);
+                        $flag = new \App\Models\UserFlag(['flag' => $this->argument('flag')]);
                         $user->flags()->save($flag);
                     }
                 } else {
@@ -62,14 +62,14 @@ class UserFlagSet extends Command
                     $this->info('Setting flag *'.$this->argument('flag').'* for all users...');
 
                     // get all users
-                    $users = \App\User::orderby('first_name')->orderby('last_name')->get();
+                    $users = \App\Models\User::orderby('first_name')->orderby('last_name')->get();
                     foreach ($users as $user) {
                         // skip if flag already exists
                         if ($user->flags->contains('flag', $this->argument('flag'))) {
                             $this->info('Setting flag *'.$this->argument('flag').'* for '.$user->get_name().' - already exists, skipping');
                         } else {
                             $this->info('Setting flag *'.$this->argument('flag').'* for '.$user->get_name());
-                            $flag = new \App\UserFlag(['flag' => $this->argument('flag')]);
+                            $flag = new \App\Models\UserFlag(['flag' => $this->argument('flag')]);
                             $user->flags()->save($flag);
                         }
                     }

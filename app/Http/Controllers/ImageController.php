@@ -55,13 +55,13 @@ class ImageController extends Controller
                         if ($request->input('id') != 'new') {
                             // make sure user has permission to modify the user photo
                             if ((\Gate::allows('manage-users')) || ($request->input('id') == \Auth::user()->id)) {
-                                $rec = \App\User::find($request->input('id'));
+                                $rec = \App\Models\User::find($request->input('id'));
                             }
                         }
                         break;
                     case 'teams':
                         // make sure user has permission to modify the team photo
-                        $team = \App\Team::find($request->input('id'));
+                        $team = \App\Models\Team::find($request->input('id'));
                         if ($team != null) {
                             if ((\Gate::allows('manage-teams')) || ($team->is_lead())) {
                                 $rec = $team;
@@ -72,7 +72,7 @@ class ImageController extends Controller
                         // make sure user has permission to modify the gatekeeper photo
                         $gatekeeper = \App\Gatekeeper::find($request->input('id'));
                         if ($gatekeeper != null) {
-                            $team = \App\Team::find($gatekeeper->team_id);
+                            $team = \App\Models\Team::find($gatekeeper->team_id);
                             if ($team != null) {
                                 $has_team = true;
                             } else {

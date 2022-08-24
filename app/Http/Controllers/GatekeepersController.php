@@ -53,7 +53,7 @@ class GatekeepersController extends Controller
             $auth_key = $this->generate_auth_key();
 
             // set up teams dropdown
-            $teams = \App\Team::orderby('name')->get();
+            $teams = \App\Models\Team::orderby('name')->get();
             if (old('team_id')) {
                 $selected_team = old('team_id');
             } else {
@@ -146,14 +146,14 @@ class GatekeepersController extends Controller
 
             // get all users who are not yet authorized
             $user_ids = [];
-            foreach (\App\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
+            foreach (\App\Models\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
                 if ($user->is_trainer($id) === false) {
                     $user_ids[$user->id] = $user->get_name();
                 }
             }
 
             // set up teams dropdown
-            $teams = \App\Team::orderby('name')->get();
+            $teams = \App\Models\Team::orderby('name')->get();
             if (old('team_id')) {
                 $selected_team = old('team_id');
             } else {
@@ -200,7 +200,7 @@ class GatekeepersController extends Controller
 
             // if team was changed, update gatekeeper-specific team assignments
             if ($gatekeeper->team_id != $request->input('team_id')) {
-                $assignments = \App\TeamAssignment::where('gatekeeper_id', $gatekeeper->id)->get();
+                $assignments = \App\Models\TeamAssignment::where('gatekeeper_id', $gatekeeper->id)->get();
                 if ($assignments != null) {
                     foreach ($assignments as $assignment) {
                         $assignment->team_id = $request->input('team_id');
@@ -259,10 +259,10 @@ class GatekeepersController extends Controller
             $result = \App\Authentication::where('gatekeeper_id', $id)->delete();
 
             // remove any gatekeeper-specific team assignments (eg trainers, maintainers)
-            $result = \App\TeamAssignment::where('gatekeeper_id', $id)->delete();
+            $result = \App\Models\TeamAssignment::where('gatekeeper_id', $id)->delete();
 
             // remove current status info
-            $result = \App\GatekeeperStatus::where('gatekeeper_id', $id)->delete();
+            $result = \App\Models\GatekeeperStatus::where('gatekeeper_id', $id)->delete();
 
             $message = 'Gatekeeper and related history deleted successfully.';
 
@@ -280,7 +280,7 @@ class GatekeepersController extends Controller
         if (\Gate::allows('manage-teams')) {
             switch ($request_action) {
                 case 'approve':
-                    $assignment = \App\TeamAssignment::find($request_id);
+                    $assignment = \App\Models\TeamAssignment::find($request_id);
                     if ($assignment != null) {
                         $assignment->status = 'active';
                         $assignment->approved_by = \Auth::user()->id;
@@ -290,7 +290,7 @@ class GatekeepersController extends Controller
                     }
                     break;
                 case 'remove':
-                    $assignment = \App\TeamAssignment::find($request_id);
+                    $assignment = \App\Models\TeamAssignment::find($request_id);
                     if ($assignment != null) {
                         $assignment->delete();
 
@@ -328,7 +328,7 @@ class GatekeepersController extends Controller
 
         // ensure user actually has access
         if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
-            \App\TeamAssignment::create([
+            \App\Models\TeamAssignment::create([
                 'user_id' => $user_id,
                 'team_id' => $team_id,
                 'team_role' => 'trainer',
@@ -358,7 +358,7 @@ class GatekeepersController extends Controller
 
         // ensure user actually has access
         if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
-            $trainer = \App\TeamAssignment::where(['user_id' => $trainer_id, 'gatekeeper_id' => $gatekeeper_id, 'team_role' => 'trainer'])->first();
+            $trainer = \App\Models\TeamAssignment::where(['user_id' => $trainer_id, 'gatekeeper_id' => $gatekeeper_id, 'team_role' => 'trainer'])->first();
             $trainer->delete();
 
             return response()->json(['status' => 'success', 'message' => 'Trainer Removed']);
@@ -391,7 +391,7 @@ class GatekeepersController extends Controller
 
         // ensure user actually has access
         if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
-            \App\TeamAssignment::create([
+            \App\Models\TeamAssignment::create([
                 'user_id' => $user_id,
                 'team_id' => $team_id,
                 'team_role' => 'maintainer',
@@ -421,7 +421,7 @@ class GatekeepersController extends Controller
 
         // ensure user actually has access
         if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
-            $maintainer = \App\TeamAssignment::where(['user_id' => $maintainer_id, 'gatekeeper_id' => $gatekeeper_id, 'team_role' => 'maintainer'])->first();
+            $maintainer = \App\Models\TeamAssignment::where(['user_id' => $maintainer_id, 'gatekeeper_id' => $gatekeeper_id, 'team_role' => 'maintainer'])->first();
             $maintainer->delete();
 
             return response()->json(['status' => 'success', 'message' => 'Maintainer Removed']);
@@ -450,7 +450,7 @@ class GatekeepersController extends Controller
 
                 // compile user list array with additional info for dropdowns
                 $all_users = [];
-                foreach (\App\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
+                foreach (\App\Models\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
                     $all_users[$user->id] = [
                         'name' => $user->get_name(),
                         'is_trainer' => $user->is_trainer($gatekeeper->id),

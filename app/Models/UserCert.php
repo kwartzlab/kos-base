@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -13,6 +13,6 @@ class UserCert extends Model implements Auditable
 
     public function user()
     {
-        return $this->hasOne(\App\User::class);
+        return $this->hasOne(\App\Models\User::class);
     }
 }

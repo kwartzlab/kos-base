@@ -13,7 +13,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = \App\Role::orderby('name')->get();
+        $roles = \App\Models\Role::orderby('name')->get();
 
         return view('roles.index', compact('roles'));
     }
@@ -57,7 +57,7 @@ class RoleController extends Controller
         ]);
 
         // save User Role
-        $acl_role = \App\Role::create([
+        $acl_role = \App\Models\Role::create([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
         ]);
@@ -108,7 +108,7 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $role = \App\Role::find($id);
+        $role = \App\Models\Role::find($id);
 
         $acl_permissions = $role->permissions()->get()->toArray();
 
@@ -120,7 +120,7 @@ class RoleController extends Controller
 
         // Get users list unassigned to this role
         $user_list = [];
-        foreach (\App\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
+        foreach (\App\Models\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
             if ($user->has_role($id) === false) {
                 $user_list[$user->id] = $user->get_name();
             }
@@ -128,8 +128,8 @@ class RoleController extends Controller
 
         // grab existing users assigned to this role
         $assigned_list = [];
-        foreach (\App\UserRole::where('role_id', $role->id)->get() as $assigned_user_role) {
-            $assigned_user = \App\User::find($assigned_user_role['user_id']);
+        foreach (\App\Models\UserRole::where('role_id', $role->id)->get() as $assigned_user_role) {
+            $assigned_user = \App\Models\User::find($assigned_user_role['user_id']);
             $assigned_list[] = [
                 'name' => $assigned_user->get_name(),
                 'id' => $assigned_user->id,
@@ -154,7 +154,7 @@ class RoleController extends Controller
         ]);
 
         // load existing record and update
-        $acl_role = \App\Role::find($id);
+        $acl_role = \App\Models\Role::find($id);
 
         $acl_role->name = $request->input('name');
         $acl_role->description = $request->input('description');
@@ -210,7 +210,7 @@ class RoleController extends Controller
             return redirect('/roles')->with('error', $message);
         }
 
-        $role = \App\Role::find($id);
+        $role = \App\Models\Role::find($id);
 
         // delete role permissions first
         $role->permissions()->delete();
@@ -228,14 +228,14 @@ class RoleController extends Controller
 
         // make sure trainer isn't already in there
 
-        $assigned_user = \App\UserRole::where(['role_id' => $role_id, 'user_id' => request('assign-user')])->get();
+        $assigned_user = \App\Models\UserRole::where(['role_id' => $role_id, 'user_id' => request('assign-user')])->get();
 
         if (count($assigned_user) > 0) {
             $message = 'User is already assigned to this role.';
 
             return redirect('/roles/'.$role_id.'/edit')->with('info', $message);
         } else {
-            $assigned_user = \App\UserRole::create([
+            $assigned_user = \App\Models\UserRole::create([
                 'user_id' => request('assign-user'),
                 'role_id' => $role_id,
             ]);
@@ -252,7 +252,7 @@ class RoleController extends Controller
 
         // ensure there is at least one superuser remaining
         if ($role_id == 1) {
-            $role = \App\Role::find(1);
+            $role = \App\Models\Role::find(1);
             if (count($role->users()->get()) < 2) {
                 $message = 'Need to have at least one Superuser.';
 
@@ -260,7 +260,7 @@ class RoleController extends Controller
             }
         }
 
-        $assigned_user = \App\UserRole::where(['user_id' => $user_id, 'role_id' => $role_id]);
+        $assigned_user = \App\Models\UserRole::where(['user_id' => $user_id, 'role_id' => $role_id]);
         $assigned_user->delete();
 
         $message = 'User removed successfully.';

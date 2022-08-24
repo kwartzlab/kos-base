@@ -41,7 +41,7 @@ class SendActiveMembersEmail extends Command
         $this->info('Generating list of active members...');
 
         // get all active users
-        $users = \App\User::where('status', 'active')->orderby('first_name')->orderby('last_name')->get();
+        $users = \App\Models\User::where('status', 'active')->orderby('first_name')->orderby('last_name')->get();
 
         // find authentications from the past month, if more than 3 add them to the list
         $email_data['member_list'] = [];

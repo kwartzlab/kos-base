@@ -77,7 +77,7 @@ class KeysController extends Controller
 
                     // if no record, create one
                     if ($status == null) {
-                        $status = new \App\GatekeeperStatus();
+                        $status = new \App\Models\GatekeeperStatus();
                     }
 
                     // verify more parameters if tool is in use
@@ -149,7 +149,7 @@ class KeysController extends Controller
 
         if ($gatekeeper->is_default == 0) {
             // non-default gatekeeper -- only get authorized keys
-            foreach (\App\User::where('status', 'active')->get() as $user) {
+            foreach (\App\Models\User::where('status', 'active')->get() as $user) {
                 if ($gatekeeper->shared_auth != 0) {
                     $gatekeeper_id = $gatekeeper->shared_auth;
                 } else {
@@ -164,7 +164,7 @@ class KeysController extends Controller
             }
         } else {
             // default gatekeeper - get all active users and their keys
-            foreach (\App\User::where('status', 'active')->get() as $user) {
+            foreach (\App\Models\User::where('status', 'active')->get() as $user) {
                 if (! $user->flags->contains('flag', 'keys_disabled') && ($user->flags->contains('flag', 'covid_vaccine'))) {
                     foreach ($user->keys as $key) {
                         $key_list[] = $key->rfid;

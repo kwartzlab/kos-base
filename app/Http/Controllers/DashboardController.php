@@ -11,10 +11,10 @@ class DashboardController extends Controller
     {
 
         // compile latest new members
-        $latest_members = \App\User::where(['status' => 'active'])->orderby('date_admitted', 'desc')->orderby('first_preferred')->limit(5)->get();
+        $latest_members = \App\Models\User::where(['status' => 'active'])->orderby('date_admitted', 'desc')->orderby('first_preferred')->limit(5)->get();
 
         // compile latest applicants
-        $latest_applicants = \App\User::where(['status' => 'applicant'])->orderby('date_applied', 'desc')->orderby('first_preferred')->limit(5)->get();
+        $latest_applicants = \App\Models\User::where(['status' => 'applicant'])->orderby('date_applied', 'desc')->orderby('first_preferred')->limit(5)->get();
 
         // get active gatekeepers that user is authorized for
         $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->orderby('name')->get();

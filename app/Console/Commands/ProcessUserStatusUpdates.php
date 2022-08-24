@@ -43,7 +43,7 @@ class ProcessUserStatusUpdates extends Command
         $this->info('['.date('Y-m-d G:i:s').'] Processing user status...');
 
         // grab all users and start processing statuses
-        $users = \App\User::all();
+        $users = \App\Models\User::all();
 
         $bar = $this->output->createProgressBar(count($users));
 
