@@ -297,7 +297,7 @@ class GatekeepersController extends Controller
                         return response()->json(['status' => 'success', 'message' => 'Request Removed']);
                     }
                     break;
-                }
+            }
         }
 
         return response()->json(['status' => 'error', 'message' => 'Error Approving Request']);

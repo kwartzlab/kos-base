@@ -116,7 +116,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('teams', 'TeamsController');
 });
 
- // Helpdesk routes
+// Helpdesk routes
 Route::middleware(['auth'])->group(function () {
     Route::resource('helpdesk', 'HelpdeskController');
 });

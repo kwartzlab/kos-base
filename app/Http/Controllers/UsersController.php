@@ -165,15 +165,15 @@ class UsersController extends Controller
                 case 'active':
                     $status->status = 'active';
                     $status->save();
-                break;
+                    break;
                 case 'inactive':
                     $status->status = 'inactive';
                     $status->save();
-                break;
+                    break;
                 case 'inactive-abandoned':
                     $status->status = 'inactive-abandoned';
                     $status->save();
-                break;
+                    break;
                 case 'hiatus':
                     // create both the hiatus record and the active record for when hiatus is over
                     $status->status = 'hiatus';
@@ -187,23 +187,23 @@ class UsersController extends Controller
                         'updated_at' => date('Y-m-d'),
                     ]);
                     $status_end->save(['timestamps' => false]);
-                break;
+                    break;
                 case 'suspended':
                     $status->status = 'suspended';
                     $status->save();
-                break;
+                    break;
                 case 'terminated':
                     $status->status = 'terminated';
                     $status->save();
-                break;
+                    break;
                 case 'applicant-abandoned':
                     $status->status = 'applicant-abandoned';
                     $status->save();
-                break;
+                    break;
                 case 'applicant-denied':
                     $status->status = 'applicant-denied';
                     $status->save();
-                break;
+                    break;
             }
         } elseif ($request->isMethod('delete')) {
             // find & delete status update

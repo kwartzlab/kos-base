@@ -53,7 +53,7 @@ class MemberApp extends Mailable implements ShouldQueue
                 if (config('kwartzlabos.membership_app.admin.replyto') != null) {
                     $this->replyto(config('kwartzlabos.membership_app.admin.replyto'));
                 }
-            break;
+                break;
             case 'members':
                 $this->to(config('kwartzlabos.membership_app.members.to'));
                 $this->subject(config('kwartzlabos.membership_app.members.subject').' - '.$this->name);

@@ -124,7 +124,7 @@ class Gatekeeper extends Model implements Auditable
     public function training_requested()
     {
 
-      // get any non-cancelled records
+        // get any non-cancelled records
         $result = \App\TeamRequest::whereNotIn('status', ['cancelled', 'failed'])->where(['gatekeeper_id' => $this->id, 'user_id' => \Auth::user()->id])->count();
         if ($result == 0) {
             return false;

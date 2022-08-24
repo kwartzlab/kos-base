@@ -43,16 +43,16 @@ class RegenerateThumbnails extends Command
         switch ($image_type) {
             case 'users':
                 $image_types = ['users'];
-            break;
+                break;
             case 'teams':
                 $image_types = ['teams'];
-            break;
+                break;
             case 'gatekeepers':
                 $image_types = ['gatekeepers'];
-            break;
+                break;
             case 'all':
                 $image_types = ['users', 'teams', 'gatekeepers'];
-            break;
+                break;
             default:
                 $this->error('No valid image type specified. Valid: all, users, teams, gatekeepers');
 
