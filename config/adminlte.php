@@ -328,7 +328,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '//unpkg.com/chart.js@^2.9.3/dist/Chart.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js',
                 ],
             ],
         ],

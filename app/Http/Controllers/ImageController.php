@@ -91,8 +91,10 @@ class ImageController extends Controller
 
         $path_filename = $path.$image_name.'.png';
 
+
         // save file
         file_put_contents($path_filename, $data);
+
 
         // save jpg version of original and generate additional thumbnail sizes
         $img = Image::make($path_filename);
@@ -104,6 +106,9 @@ class ImageController extends Controller
         $img->save($path.$image_name.'-256px.jpeg');
         $img->resize(128, 128);
         $img->save($path.$image_name.'-128px.jpeg');
+
+        
+
 
         // update database with photo filename as needed
         if ($rec != null) {
