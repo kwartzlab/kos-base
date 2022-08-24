@@ -30,7 +30,6 @@ class UserFlagList extends Command
         parent::__construct();
     }
 
-
     /**
      * Execute the console command.
      *
@@ -38,44 +37,40 @@ class UserFlagList extends Command
      */
     public function handle()
     {
-
         if ($this->option('email')) {                   // specific user
             // lookup email address
             $user = \App\User::where('email', $this->option('email'))->first();
-            if ($user != NULL) {
-                $flags = NULL;
+            if ($user != null) {
+                $flags = null;
                 foreach ($user->flags as $set_flag) {
-                    $flags .= ' *'.$set_flag->flag .'* ';
+                    $flags .= ' *'.$set_flag->flag.'* ';
                 }
-                
-                if ($flags == NULL) {
-                    $this->info($user->get_name() . ': <no flags set>');
+
+                if ($flags == null) {
+                    $this->info($user->get_name().': <no flags set>');
                 } else {
-                    $this->info($user->get_name() . ':' . $flags);
+                    $this->info($user->get_name().':'.$flags);
                 }
-
             } else {
-                $this->error('No user found with email address ' . $this->option('email'));
+                $this->error('No user found with email address '.$this->option('email'));
             }
-
         } else {                                        // all users
             $this->info('Showing flags for all users...');
 
             // get all users
             $users = \App\User::orderby('first_name')->orderby('last_name')->get();
             foreach ($users as $user) {
-                $flags = NULL;
+                $flags = null;
                 foreach ($user->flags as $set_flag) {
-                    $flags .= ' *'.$set_flag->flag .'* ';
+                    $flags .= ' *'.$set_flag->flag.'* ';
                 }
-                
-                if ($flags == NULL) {
-                    $this->info($user->get_name() . ': <no flags set>');
+
+                if ($flags == null) {
+                    $this->info($user->get_name().': <no flags set>');
                 } else {
-                    $this->info($user->get_name() . ':' . $flags);
+                    $this->info($user->get_name().':'.$flags);
                 }
             }
-
         }
     }
 }

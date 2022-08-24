@@ -13,13 +13,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RoleTableSeeder::class);
     }
-
-
-
 }
 
-class RoleTableSeeder extends Seeder {
-
+class RoleTableSeeder extends Seeder
+{
     public function run()
     {
 
@@ -27,7 +24,5 @@ class RoleTableSeeder extends Seeder {
         DB::table('roles')->delete();
         \App\Role::create(['name' => 'Superusers', 'description' => 'Access to all KwartzlabOS functions']);
         \App\UserRole::create(['user_id' => '1', 'role_id' => '1']);
-
     }
-
 }

@@ -7,12 +7,12 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class UserFlag extends Model implements Auditable
 {
-	use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['user_id','flag'];
+    protected $fillable = ['user_id', 'flag'];
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->hasOne(\App\User::class);
     }
 }

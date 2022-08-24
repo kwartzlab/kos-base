@@ -8,21 +8,22 @@ use Image;
 
 class ImageController extends Controller
 {
-
     /* Displays image upload and crop interface */
-    public function imageCrop($photo_type = NULL, $id = NULL)
+    public function imageCrop($photo_type = null, $id = null)
     {
-        if (!in_array($photo_type,['users','teams','gatekeepers'])) {
-            $photo_type = NULL;
-            $id = NULL;
+        if (! in_array($photo_type, ['users', 'teams', 'gatekeepers'])) {
+            $photo_type = null;
+            $id = null;
         }
-        return view('shared.imagecrop',compact('photo_type','id'));
+
+        return view('shared.imagecrop', compact('photo_type', 'id'));
     }
 
     /* returns the last image uploaded by user */
 
-    public function getLastImage() {
-        return response()->json(['success'=>'done', 'filename' => session('last_image_upload')]);
+    public function getLastImage()
+    {
+        return response()->json(['success' => 'done', 'filename' => session('last_image_upload')]);
     }
 
     /* Process cropped image for use by kOS */
@@ -32,22 +33,22 @@ class ImageController extends Controller
         // parse input from croppie
         $data = $request->image;
 
-        list($type, $data) = explode(';', $data);
-        list(, $data)      = explode(',', $data);
+        [$type, $data] = explode(';', $data);
+        [, $data] = explode(',', $data);
 
         $data = base64_decode($data);
 
         // create random filename and set path
-        $image_name= md5(Str::uuid() . microtime());
+        $image_name = md5(Str::uuid().microtime());
 
-        $rec = NULL;
+        $rec = null;
         if ($request->filled('photo_type')) {
             $photo_type = $request->input('photo_type');
-            $path = public_path() . "/storage/images/" . $photo_type . '/';
+            $path = public_path().'/storage/images/'.$photo_type.'/';
 
             if ($request->filled('id')) {
                 // Update db records as needed
-                switch($photo_type) {
+                switch ($photo_type) {
                     case 'users':
 
                         // If image is uploaded as part of the application, don't update the record
@@ -61,7 +62,7 @@ class ImageController extends Controller
                     case 'teams':
                         // make sure user has permission to modify the team photo
                         $team = \App\Team::find($request->input('id'));
-                        if ($team != NULL) {
+                        if ($team != null) {
                             if ((\Gate::allows('manage-teams')) || ($team->is_lead())) {
                                 $rec = $team;
                             }
@@ -70,42 +71,50 @@ class ImageController extends Controller
                     case 'gatekeepers':
                         // make sure user has permission to modify the gatekeeper photo
                         $gatekeeper = \App\Gatekeeper::find($request->input('id'));
-                        if ($gatekeeper != NULL) {
+                        if ($gatekeeper != null) {
                             $team = \App\Team::find($gatekeeper->team_id);
-                            if ($team != NULL) { $has_team = TRUE; } else { $has_team = FALSE; }
+                            if ($team != null) {
+                                $has_team = true;
+                            } else {
+                                $has_team = false;
+                            }
                             if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_lead()))) {
                                 $rec = $gatekeeper;
                             }
                         }
                         break;
-                } 
+                }
             }
-
         } else {
-            $path = public_path() . "/storage/images/";
+            $path = public_path().'/storage/images/';
         }
-       
-        $path_filename = $path . $image_name . '.png';
+
+        $path_filename = $path.$image_name.'.png';
+
 
         // save file
         file_put_contents($path_filename, $data);
 
+
         // save jpg version of original and generate additional thumbnail sizes
         $img = Image::make($path_filename);
         $img->orientate();
-        $img->save($path . $image_name . '.jpeg');
+        $img->save($path.$image_name.'.jpeg');
         $img->resize(512, 512);
-        $img->save($path . $image_name . '-512px.jpeg');
+        $img->save($path.$image_name.'-512px.jpeg');
         $img->resize(256, 256);
-        $img->save($path . $image_name . '-256px.jpeg');
+        $img->save($path.$image_name.'-256px.jpeg');
         $img->resize(128, 128);
-        $img->save($path . $image_name . '-128px.jpeg');
+        $img->save($path.$image_name.'-128px.jpeg');
+
+        
+
 
         // update database with photo filename as needed
-        if ($rec != NULL) {
+        if ($rec != null) {
             // delete previous image files to keep things tidy
-            if ($rec->photo != NULL) {
-                foreach(glob($path . $rec->photo . "*") as $f) {
+            if ($rec->photo != null) {
+                foreach (glob($path.$rec->photo.'*') as $f) {
                     unlink($f);
                 }
             }
@@ -117,7 +126,6 @@ class ImageController extends Controller
         session(['last_image_upload' => $image_name]);
 
         // send success response
-        return response()->json(['success'=>'done', 'filename' => $image_name]);
+        return response()->json(['success' => 'done', 'filename' => $image_name]);
     }
-
 }

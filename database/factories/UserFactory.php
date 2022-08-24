@@ -1,8 +1,8 @@
 <?php
 
 use App\User;
-use Illuminate\Database\Eloquent\Factory;
 use Faker\Generator;
+use Illuminate\Database\Eloquent\Factory;
 
 /** @var Factory $factory */
 $factory->define(App\User::class, function (Generator $faker) {
@@ -46,5 +46,5 @@ $factory->state(User::class, 'applied', [
 
 $factory->state(User::class, 'hiatus', [
     'status' => 'hiatus',
-    'date_hiatus_start' => now()->subDays(7)
+    'date_hiatus_start' => now()->subDays(7),
 ]);

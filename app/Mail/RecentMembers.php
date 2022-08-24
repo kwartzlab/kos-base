@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,6 +11,7 @@ class RecentMembers extends Mailable
     use Queueable, SerializesModels;
 
     public $month_reported;
+
     public $member_list;
 
     /**
@@ -33,17 +33,16 @@ class RecentMembers extends Mailable
      */
     public function build()
     {
-
         $this->to(config('kwartzlabos.membership_app.admin.to'));
-        $this->subject('Active member visits for ' . $this->month_reported);
-        if (config('kwartzlabos.membership_app.admin.cc') != NULL) {
+        $this->subject('Active member visits for '.$this->month_reported);
+        if (config('kwartzlabos.membership_app.admin.cc') != null) {
             $this->cc(config('kwartzlabos.membership_app.admin.cc'));
         }
-        if (config('kwartzlabos.membership_app.admin.replyto') != NULL) {
+        if (config('kwartzlabos.membership_app.admin.replyto') != null) {
             $this->replyto(config('kwartzlabos.membership_app.admin.replyto'));
         }
 
-        if (count($this->to)>0) {
+        if (count($this->to) > 0) {
             return $this->view('emails.recentmembers');
         }
     }

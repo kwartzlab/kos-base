@@ -27,9 +27,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="line-chart">
-              {!! $attendance_chart->container() !!}
-            </div>
+            <div class="line-chart" id="lab-activity-chart" style="height:300px;max-height:300px;"></div>
           </div>
         </div>
 
@@ -190,7 +188,18 @@
 
 @section('plugins.Chartjs', true)
 @section('js')
-  {!! $attendance_chart->script() !!}
+
+  <script>
+    const chart = new Chartisan({
+      el: '#lab-activity-chart',
+      url: "@chart('lab_activity_chart')",
+      hooks: new ChartisanHooks()
+        .colors(['#3C8DBC'])
+        .datasets('line')
+        .legend(false)
+        .beginAtZero(true)
+    });
+  </script>
 
   <script>
     $(document).ready(function(){

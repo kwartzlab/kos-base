@@ -176,53 +176,53 @@ return [
         ['header' => 'NAVIGATION'],
         [
             'text' => 'Dashboard',
-            'url'  => '/',
+            'url' => '/',
             'icon' => 'fas fa-tachometer-alt fa-fw',
         ],
         [
             'text' => 'Member Directory',
-            'url'  => '/members',
+            'url' => '/members',
             'icon' => 'fas fa-user fa-fw',
         ],
         [
             'text' => 'Teams',
-            'url'  => '/teams',
+            'url' => '/teams',
             'icon' => 'fas fa-user-friends fa-fw',
         ],
         [
             'text' => 'Tools',
-            'url'  => '/gatekeepers/tools',
+            'url' => '/gatekeepers/tools',
             'icon' => 'fas fa-tools fa-fw',
         ],
-/*        [
+        /*        [
             'text' => 'Request Training',
             'url'  => '/teams/training',
             'icon' => 'fas fa-graduation-cap fa-fw',
         ], */
-        [              
+        [
             'text' => 'COVID-19 Agreement',
-            'url'  => '/forms/2',
+            'url' => '/forms/2',
             'icon' => 'fas fa-edit fa-fw',
         ],
-        [              
+        [
             'text' => 'Membership Application',
-            'url'  => '/users/create',
+            'url' => '/users/create',
             'icon' => 'fas fa-edit fa-fw',
         ],
         ['header' => 'ADMINISTRATION', 'can' => 'does-admin'],
         [
             'text' => 'Member Register',
-            'url'  => '/users',
+            'url' => '/users',
             'icon' => 'fas fa-users fa-fw',
-            'can' => 'manage-users-keys'
+            'can' => 'manage-users-keys',
         ],
         [
             'text' => 'Gatekeepers',
-            'url'  => '/gatekeepers',
+            'url' => '/gatekeepers',
             'icon' => 'fas fa-door-open fa-fw',
-            'can' => 'manage-gatekeepers'
+            'can' => 'manage-gatekeepers',
         ],
-/*        [
+        /*        [
             'text' => 'Forms',
             'url'  => '/forms',
             'icon' => 'fas fa-file-alt fa-fw',
@@ -230,21 +230,21 @@ return [
         ], */
         [
             'text' => 'Manage Teams',
-            'url'  => '/teams/manage',
+            'url' => '/teams/manage',
             'icon' => 'fas fa-users-cog fa-fw',
-            'can' => 'manage-teams'
+            'can' => 'manage-teams',
         ],
         [
             'text' => 'User Roles',
-            'url'  => '/roles',
+            'url' => '/roles',
             'icon' => 'fas fa-user-tag fa-fw',
-            'can' => 'manage-roles'
+            'can' => 'manage-roles',
         ],
         [
             'text' => 'Reports',
-            'url'  => '/reports',
+            'url' => '/reports',
             'icon' => 'fas fa-chart-pie fa-fw',
-            'can' => 'manage-reports'
+            'can' => 'manage-reports',
 
         ],
 
@@ -328,7 +328,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '//unpkg.com/chart.js@^2.9.3/dist/Chart.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//unpkg.com/@chartisan/chartjs@^2.1.0/dist/chartisan_chartjs.umd.js',
                 ],
             ],
         ],

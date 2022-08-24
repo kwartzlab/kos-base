@@ -38,7 +38,7 @@
 
 @endif
 
-<?php if (!isset($skip_fields)) { $skip_fields = array(); } ?>
+<?php if (!isset($skip_fields)) { $skip_fields = []; } ?>
 <div class="card card-warning card-outline">
    <div class="card-header">
       <h3 class="card-title small">{{ $submission->form_name }}</h3>

@@ -1,8 +1,8 @@
 <?php
 
 use App\User;
-use Illuminate\Database\Eloquent\Factory;
 use Faker\Generator;
+use Illuminate\Database\Eloquent\Factory;
 
 /** @var Factory $factory */
 $factory->define(App\UserStatus::class, function (Generator $faker, array $attributes) {

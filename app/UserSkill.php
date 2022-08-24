@@ -8,25 +8,23 @@ class UserSkill extends Model
 {
     //
 
-    protected $fillable = ['user_id','skill'];
+    protected $fillable = ['user_id', 'skill'];
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->hasOne(\App\User::class);
     }
 
     // return users matching skill name
-    public function users() {
-
+    public function users()
+    {
         $user_ids = \App\UserSkill::where(['skill' => $this->skill])->pluck('user_id')->toArray();
-        if (count($user_ids)>0) {
-            $result = \App\User::where('status','active')->orderby('first_preferred')->find($user_ids);
+        if (count($user_ids) > 0) {
+            $result = \App\User::where('status', 'active')->orderby('first_preferred')->find($user_ids);
+
             return $result;
         } else {
-            return NULL;
+            return null;
         }
-
     }
-
-
 }

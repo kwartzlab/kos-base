@@ -19,11 +19,9 @@ return [
         'users' => ['manage'],
         'gatekeepers' => ['manage'],
         'teams' => ['manage'],
-        'reports' => ['manage', 'all','keys', 'users', 'gatekeepers', 'teams'],
+        'reports' => ['manage', 'all', 'keys', 'users', 'gatekeepers', 'teams'],
         'roles' => ['manage'],
-        'forms' => ['manage']
-    ]
+        'forms' => ['manage'],
+    ],
 
 ];
-
-

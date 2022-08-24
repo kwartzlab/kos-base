@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class MembersController extends Controller
 {
@@ -14,23 +13,25 @@ class MembersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($view = 'default') {
+    public function index($view = 'default')
+    {
         $users = \App\User::where('status', 'active')->orwhere('status', 'hiatus')->orderby('first_preferred')->get();
 
-        $page_title = 'Member Directory (' . count($users) . ')';
-        return view('members.index', compact('page_title','users'));
+        $page_title = 'Member Directory ('.count($users).')';
+
+        return view('members.index', compact('page_title', 'users'));
     }
 
     // lists users with specific skill set
-    public function skill($skill_id) {
-        
+    public function skill($skill_id)
+    {
         $skill = \App\UserSkill::find($skill_id);
-        if ($skill == NULL) {
+        if ($skill == null) {
             return redirect('/members/')->with('info', 'Unknown Skill.');
         }
+
         return view('members.skill', compact('skill'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -84,14 +85,14 @@ class MembersController extends Controller
         $skill_data = \App\UserSkill::orderby('skill')->get();
         $ex_skills = $skill_data->unique('skill');
 
-        $existing_skills = array();
-        if ($ex_skills->count()>0) {
+        $existing_skills = [];
+        if ($ex_skills->count() > 0) {
             foreach ($ex_skills as $skill) {
                 $existing_skills[(string) Str::uuid()] = $skill->skill;
             }
         }
 
-        $user_skills = array();
+        $user_skills = [];
         if (old('skills')) {
             $skills = old('skills');
             foreach ($skills as $key => $skill) {
@@ -105,40 +106,39 @@ class MembersController extends Controller
         }
 
         // build social array to match the form input
-        $user_socials = array();
+        $user_socials = [];
         if (old('socials')) {
             $user_socials = old('socials');
         } else {
-            $socials =  $user->socials()->get();
-            if (count($socials)>0) {
+            $socials = $user->socials()->get();
+            if (count($socials) > 0) {
                 foreach ($socials as $social) {
                     $user_socials[(string) Str::uuid()] = [
                         'service' => $social['service'],
-                        'profile' => $social['profile']
+                        'profile' => $social['profile'],
                     ];
                 }
             }
         }
 
         // build social array to match the form input
-        $user_certs = array();
+        $user_certs = [];
         if (old('certs')) {
             $user_certs = old('certs');
         } else {
-            $certs =  $user->certs()->get();
-            if (count($certs)>0) {
+            $certs = $user->certs()->get();
+            if (count($certs) > 0) {
                 foreach ($certs as $cert) {
                     $user_certs[(string) Str::uuid()] = [
                         'type' => $cert['type'],
                         'name' => $cert['name'],
-                        'expiry_date' => $cert['expiry_date']
+                        'expiry_date' => $cert['expiry_date'],
                     ];
                 }
             }
         }
 
-
-        return view('members.edit', compact('page_title','user','existing_skills','user_socials','user_certs','user_skills'));
+        return view('members.edit', compact('page_title', 'user', 'existing_skills', 'user_socials', 'user_certs', 'user_skills'));
     }
 
     /**
@@ -150,18 +150,16 @@ class MembersController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $user = \App\User::find($id);
 
         $request->validate([
-             'email' => 'required|unique:users,email,' . $user->id,
-             'address' => 'required',
-             'city' => 'required',
-             'province' => 'required',
-             'postal' => 'required',
-             'password' => 'confirmed'
-             ]);
-
+            'email' => 'required|unique:users,email,'.$user->id,
+            'address' => 'required',
+            'city' => 'required',
+            'province' => 'required',
+            'postal' => 'required',
+            'password' => 'confirmed',
+        ]);
 
         // ensure we're only editing our own profiles...
         if ($user->id == \Auth::user()->id) {
@@ -169,13 +167,13 @@ class MembersController extends Controller
             // compile socials
             if ($request->input('socials')) {
                 // remove existing records
-                \App\UserSocial::where('user_id',$id)->delete();
+                \App\UserSocial::where('user_id', $id)->delete();
                 // add form records
                 foreach ($request->input('socials') as $key => $social) {
-                    if ($social['profile'] != NULL) {
+                    if ($social['profile'] != null) {
                         $social_rec = new \App\UserSocial([
                             'service' => $social['service'],
-                            'profile' => $social['profile']
+                            'profile' => $social['profile'],
                         ]);
                         $user->socials()->save($social_rec);
                     }
@@ -185,7 +183,7 @@ class MembersController extends Controller
             // compile skills
             if ($request->input('skills')) {
                 // remove existing records
-                \App\UserSkill::where('user_id',$id)->delete();
+                \App\UserSkill::where('user_id', $id)->delete();
                 // add form records
                 foreach ($request->input('skills') as $key => $skill) {
                     $skill_rec = new \App\UserSkill(['skill' => $skill]);
@@ -196,13 +194,13 @@ class MembersController extends Controller
             // compile certs
             if ($request->input('certs')) {
                 // remove existing records
-                \App\UserCert::where('user_id',$id)->delete();
+                \App\UserCert::where('user_id', $id)->delete();
                 // add form records
                 foreach ($request->input('certs') as $key => $cert) {
                     $cert_rec = new \App\UserCert([
                         'type' => $cert['type'],
                         'name' => $cert['name'],
-                        'expiry_date' => $cert['expiry_date']
+                        'expiry_date' => $cert['expiry_date'],
                     ]);
                     $user->certs()->save($cert_rec);
                 }
@@ -217,20 +215,20 @@ class MembersController extends Controller
 
             if ($request->input('password')) {
                 $user->password = Hash::make($request->input('password'));
-
             }
 
             $user->save();
-            $message = "Profile updated successfully.";
-            if ($request->input('password')) { $message .= ' Password changed.'; }
+            $message = 'Profile updated successfully.';
+            if ($request->input('password')) {
+                $message .= ' Password changed.';
+            }
 
-            return redirect('/members/' . $user->id . '/profile')->with('success', $message);
-
+            return redirect('/members/'.$user->id.'/profile')->with('success', $message);
         } else {
-            $message = "You do not have access to that resource.";
-            return redirect('/')->with('error',$message);
-        }
+            $message = 'You do not have access to that resource.';
 
+            return redirect('/')->with('error', $message);
+        }
     }
 
     /**
