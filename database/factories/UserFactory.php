@@ -1,15 +1,24 @@
 <?php
 
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\User;
 use Faker\Generator;
-use Illuminate\Database\Eloquent\Factory;
 
-/** @var Factory $factory */
-$factory->define(App\User::class, function (Generator $faker) {
-    static $password;
+class UserFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        static $password;
 
-    $firstName = $faker->firstName;
-    $lastName = $faker->lastName;
+    $firstName = $this->faker->firstName;
+    $lastName = $this->faker->lastName;
 
     return [
         'first_name' => $firstName,
@@ -26,25 +35,25 @@ $factory->define(App\User::class, function (Generator $faker) {
         'date_hiatus_start' => null,
         'date_hiatus_end' => null,
         'date_withdrawn' => null,
-        'phone' => $faker->e164PhoneNumber,
-        'address' => $faker->streetAddress,
+        'phone' => $this->faker->e164PhoneNumber,
+        'address' => $this->faker->streetAddress,
         'city' => 'Kitchener',
         'province' => 'ON',
-        'postal' => $faker->regexify('/[A-Z]\d[A-Z]\d[A-Z]\d/'),
+        'postal' => $this->faker->regexify('/[A-Z]\d[A-Z]\d[A-Z]\d/'),
         'google_account' => '',
         'photo' => '',
-        'notes' => $faker->paragraph,
-        'remember_token' => $faker->lexify('???????????????'),
+        'notes' => $this->faker->paragraph,
+        'remember_token' => $this->faker->lexify('???????????????'),
     ];
-});
+    }
 
-$factory->state(User::class, 'applied', [
-    'status' => 'inactive',
-    'date_applied' => now()->subDays(7),
-    'date_admitted' => null,
-]);
+    public function applied()
+    {
+        return $this->state(['status' => 'inactive', 'date_applied' => now()->subDays(7), 'date_admitted' => null]);
+    }
 
-$factory->state(User::class, 'hiatus', [
-    'status' => 'hiatus',
-    'date_hiatus_start' => now()->subDays(7),
-]);
+    public function hiatus()
+    {
+        return $this->state(['status' => 'hiatus', 'date_hiatus_start' => now()->subDays(7)]);
+    }
+}
