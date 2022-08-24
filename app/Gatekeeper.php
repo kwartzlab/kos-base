@@ -7,8 +7,9 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Gatekeeper extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
-
-    protected $dates = ['last_seen'];
+    protected $casts = [
+        'last_seen' => 'datetime',
+    ];
 
     // returns active trainers
     public function trainers($with_status = null)

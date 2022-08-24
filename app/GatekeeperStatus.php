@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class GatekeeperStatus extends Model
 {
-    protected $dates = ['lock_in', 'last_seen'];
+    protected $casts = [
+        'lock_in' => 'datetime',
+        'last_seen' => 'datetime',
+    ];
 
     public function gatekeeper()
     {
