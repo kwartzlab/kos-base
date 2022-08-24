@@ -70,7 +70,7 @@ class ImageController extends Controller
                         break;
                     case 'gatekeepers':
                         // make sure user has permission to modify the gatekeeper photo
-                        $gatekeeper = \App\Gatekeeper::find($request->input('id'));
+                        $gatekeeper = \App\Models\Gatekeeper::find($request->input('id'));
                         if ($gatekeeper != null) {
                             $team = \App\Models\Team::find($gatekeeper->team_id);
                             if ($team != null) {

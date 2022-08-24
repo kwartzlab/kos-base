@@ -33,7 +33,7 @@ class Trainers extends Model implements Auditable
     // returns the name of the gatekeeper the training record is for
     public function gatekeeper()
     {
-        $result = \App\Gatekeeper::where('id', $this->gatekeeper_id)->get();
+        $result = \App\Models\Gatekeeper::where('id', $this->gatekeeper_id)->get();
 
         return $result->pluck('name');
     }

@@ -16,7 +16,7 @@ class GatekeepersController extends Controller
     public function index()
     {
         if (\Gate::allows('manage-gatekeepers')) {
-            $gatekeepers = \App\Gatekeeper::orderby('name')->get();
+            $gatekeepers = \App\Models\Gatekeeper::orderby('name')->get();
 
             return view('gatekeeper.index', compact('gatekeepers'));
         } else {
@@ -61,7 +61,7 @@ class GatekeepersController extends Controller
             }
 
             // grab list of gatekeepers (for shared auth field)
-            $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'is_default' => '0'])->where('type', '!=', 'training')->orderby('name')->get();
+            $gatekeepers = \App\Models\Gatekeeper::where(['status' => 'enabled', 'is_default' => '0'])->where('type', '!=', 'training')->orderby('name')->get();
             if (old('shared_auth')) {
                 $shared_auth = old('shared_auth');
             } else {
@@ -98,7 +98,7 @@ class GatekeepersController extends Controller
                 $is_default = 0;
             }
 
-            \App\Gatekeeper::create([
+            \App\Models\Gatekeeper::create([
                 'name' => $request->input('name'),
                 'status' => $request->input('status'),
                 'type' => $request->input('type'),
@@ -126,7 +126,7 @@ class GatekeepersController extends Controller
      */
     public function show($id)
     {
-        $gatekeeper = \App\Gatekeeper::find($id);
+        $gatekeeper = \App\Models\Gatekeeper::find($id);
 
         if ($gatekeeper != null) {
             return view('gatekeeper.show', compact('gatekeeper'));
@@ -142,7 +142,7 @@ class GatekeepersController extends Controller
     public function edit($id)
     {
         if (\Gate::allows('manage-gatekeepers')) {
-            $gatekeeper = \App\Gatekeeper::find($id);
+            $gatekeeper = \App\Models\Gatekeeper::find($id);
 
             // get all users who are not yet authorized
             $user_ids = [];
@@ -161,7 +161,7 @@ class GatekeepersController extends Controller
             }
 
             // grab list of gatekeepers (for shared auth field)
-            $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'is_default' => '0'])->where('type', '!=', 'training')->where('id', '!=', $gatekeeper->id)->orderby('name')->get();
+            $gatekeepers = \App\Models\Gatekeeper::where(['status' => 'enabled', 'is_default' => '0'])->where('type', '!=', 'training')->where('id', '!=', $gatekeeper->id)->orderby('name')->get();
             if (old('shared_auth')) {
                 $shared_auth = old('shared_auth');
             } else {
@@ -196,7 +196,7 @@ class GatekeepersController extends Controller
                 $is_default = 0;
             }
 
-            $gatekeeper = \App\Gatekeeper::find($id);
+            $gatekeeper = \App\Models\Gatekeeper::find($id);
 
             // if team was changed, update gatekeeper-specific team assignments
             if ($gatekeeper->team_id != $request->input('team_id')) {
@@ -249,14 +249,14 @@ class GatekeepersController extends Controller
                 'confirm' => 'required',
             ]);
 
-            $gatekeeper = \App\Gatekeeper::find($id);
+            $gatekeeper = \App\Models\Gatekeeper::find($id);
             $gatekeeper->delete();
 
             // remove all authorizations for this gatekeeper as well
-            $result = \App\Authorization::where('gatekeeper_id', $id)->delete();
+            $result = \App\Models\Authorization::where('gatekeeper_id', $id)->delete();
 
             // remove all authentication history
-            $result = \App\Authentication::where('gatekeeper_id', $id)->delete();
+            $result = \App\Models\Authentication::where('gatekeeper_id', $id)->delete();
 
             // remove any gatekeeper-specific team assignments (eg trainers, maintainers)
             $result = \App\Models\TeamAssignment::where('gatekeeper_id', $id)->delete();
@@ -308,7 +308,7 @@ class GatekeepersController extends Controller
     {
 
         // get gatekeeper ID from request
-        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
+        $gatekeeper = \App\Models\Gatekeeper::find($gatekeeper_id);
 
         $team = $gatekeeper->team()->first();
         if ($team == null) {
@@ -347,7 +347,7 @@ class GatekeepersController extends Controller
     {
 
         // get gatekeeper ID from request
-        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
+        $gatekeeper = \App\Models\Gatekeeper::find($gatekeeper_id);
 
         $team = $gatekeeper->team()->first();
         if ($team == null) {
@@ -372,7 +372,7 @@ class GatekeepersController extends Controller
     {
 
         // get gatekeeper ID from request
-        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
+        $gatekeeper = \App\Models\Gatekeeper::find($gatekeeper_id);
 
         $team = $gatekeeper->team()->first();
         if ($team == null) {
@@ -410,7 +410,7 @@ class GatekeepersController extends Controller
     {
 
         // get gatekeeper ID from request
-        $gatekeeper = \App\Gatekeeper::find($gatekeeper_id);
+        $gatekeeper = \App\Models\Gatekeeper::find($gatekeeper_id);
 
         $team = $gatekeeper->team()->first();
         if ($team == null) {
@@ -434,7 +434,7 @@ class GatekeepersController extends Controller
     /* Open to gatekeeper managers and team members the gatekeeper is assigned to */
     public function dashboard($id)
     {
-        $gatekeeper = \App\Gatekeeper::find($id);
+        $gatekeeper = \App\Models\Gatekeeper::find($id);
 
         if ($gatekeeper != null) {
             $team = $gatekeeper->team()->first();
@@ -446,7 +446,7 @@ class GatekeepersController extends Controller
             }
 
             if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_member()))) {
-                $authorizations = \App\Authorization::where('gatekeeper_id', $gatekeeper->id)->get();
+                $authorizations = \App\Models\Authorization::where('gatekeeper_id', $gatekeeper->id)->get();
 
                 // compile user list array with additional info for dropdowns
                 $all_users = [];
@@ -481,7 +481,7 @@ class GatekeepersController extends Controller
     // shows tool lockouts with usage information (for general users)
     public function tool_list()
     {
-        $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->get();
+        $gatekeepers = \App\Models\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->get();
 
         return view('gatekeeper.tools', compact('gatekeepers'));
     }
@@ -491,7 +491,7 @@ class GatekeepersController extends Controller
     {
 
         // get gatekeeper ID from request
-        $gatekeeper = \App\Gatekeeper::find($request->input('gatekeeper_id'));
+        $gatekeeper = \App\Models\Gatekeeper::find($request->input('gatekeeper_id'));
 
         $team = $gatekeeper->team()->first();
         if ($team == null) {
@@ -504,13 +504,13 @@ class GatekeepersController extends Controller
         if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_member()))) {
 
             // make sure authorization isn't already in there
-            $authorization = \App\Authorization::where(['gatekeeper_id' => $gatekeeper->id, 'user_id' => request('user_id')])->get();
+            $authorization = \App\Models\Authorization::where(['gatekeeper_id' => $gatekeeper->id, 'user_id' => request('user_id')])->get();
 
             if (count($authorization) > 0) {
                 $message = 'Authorization already exists for this gatekeeper.';
                 $message_type = 'info';
             } else {
-                $authorization = \App\Authorization::create([
+                $authorization = \App\Models\Authorization::create([
                     'user_id' => request('user_id'),
                     'gatekeeper_id' => $gatekeeper->id,
                 ]);
@@ -526,7 +526,7 @@ class GatekeepersController extends Controller
     // de-authorizes a user from a gatekeeper
     public function revoke_auth($auth_id)
     {
-        $auth_record = \App\Authorization::find($auth_id);
+        $auth_record = \App\Models\Authorization::find($auth_id);
         $gatekeeper = $auth_record->gatekeeper()->first();
 
         $team = $gatekeeper->team()->first();

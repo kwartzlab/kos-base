@@ -357,7 +357,7 @@ class UsersController extends Controller
             'rfid' => 'required',
         ]);
 
-        $user = \App\Key::create([
+        $user = \App\Models\Key::create([
             'user_id' => $user_id,
             'rfid' => md5($request->input('rfid')),
             'description' => $request->input('description'),
@@ -371,7 +371,7 @@ class UsersController extends Controller
     // delete single key
     public function destroy_key($user_id, $key_id)
     {
-        $key = \App\Key::find($key_id);
+        $key = \App\Models\Key::find($key_id);
         $key->delete();
 
         $message = 'Key deleted successfully.';

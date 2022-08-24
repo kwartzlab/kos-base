@@ -259,7 +259,7 @@
                   </table>
                </div>
             @else
-               <h5>This tool is using authorizations from <a href="/gatekeepers/{{ \App\Gatekeeper::find($gatekeeper->shared_auth)->id }}/dashboard" title="View Tool"><span class="badge badge-info badge-large">{{ \App\Gatekeeper::find($gatekeeper->shared_auth)->name }}</span></a></h5>
+               <h5>This tool is using authorizations from <a href="/gatekeepers/{{ \App\Models\Gatekeeper::find($gatekeeper->shared_auth)->id }}/dashboard" title="View Tool"><span class="badge badge-info badge-large">{{ \App\Models\Gatekeeper::find($gatekeeper->shared_auth)->name }}</span></a></h5>
             @endif
             </div>
          </div>

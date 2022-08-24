@@ -46,7 +46,7 @@ class SendActiveMembersEmail extends Command
         // find authentications from the past month, if more than 3 add them to the list
         $email_data['member_list'] = [];
         foreach ($users as $user) {
-            $recs = \App\Authentication::where('user_id', $user['id'])->where('gatekeeper_id', '11')->where('created_at', '>=', Carbon::now()->subMonth()->toDateTimeString())->get();
+            $recs = \App\Models\Authentication::where('user_id', $user['id'])->where('gatekeeper_id', '11')->where('created_at', '>=', Carbon::now()->subMonth()->toDateTimeString())->get();
             if (count($recs) >= 3) {
                 $email_data['member_list'][] = $user['first_name'].' '.$user['last_name'];
             }

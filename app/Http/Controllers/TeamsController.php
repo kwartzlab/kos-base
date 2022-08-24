@@ -64,7 +64,7 @@ class TeamsController extends Controller
      */
     public function training()
     {
-        $gatekeepers = \App\Gatekeeper::where('status', 'enabled')->orderby('name')->get();
+        $gatekeepers = \App\Models\Gatekeeper::where('status', 'enabled')->orderby('name')->get();
         $request_status = config('kwartzlabos.team_request_status');
 
         return view('teams.training', compact('gatekeepers', 'request_status'));
@@ -77,7 +77,7 @@ class TeamsController extends Controller
      */
     public function training_request($gatekeeper)
     {
-        $gatekeeper_requested = \App\Gatekeeper::where(['status' => 'enabled', 'id' => $gatekeeper])->first();
+        $gatekeeper_requested = \App\Models\Gatekeeper::where(['status' => 'enabled', 'id' => $gatekeeper])->first();
         if (! $gatekeeper_requested == null) {
             $team = $gatekeeper_requested->team()->first();
             // check if request has already been submitted
@@ -134,9 +134,9 @@ class TeamsController extends Controller
             $gatekeeper = $training_request->gatekeeper()->first();
 
             // Authorize user for gatekeepers
-            $authorization = \App\Authorization::where(['gatekeeper_id' => $gatekeeper->id, 'user_id' => $training_request->user_id])->get();
+            $authorization = \App\Models\Authorization::where(['gatekeeper_id' => $gatekeeper->id, 'user_id' => $training_request->user_id])->get();
             if (count($authorization) == 0) {
-                $authorization = \App\Authorization::create([
+                $authorization = \App\Models\Authorization::create([
                     'user_id' => $training_request->user_id,
                     'gatekeeper_id' => $gatekeeper->id,
                 ]);

@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $latest_applicants = \App\Models\User::where(['status' => 'applicant'])->orderby('date_applied', 'desc')->orderby('first_preferred')->limit(5)->get();
 
         // get active gatekeepers that user is authorized for
-        $gatekeepers = \App\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->orderby('name')->get();
+        $gatekeepers = \App\Models\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->orderby('name')->get();
 
         /* EVENTS CALENDAR */
         $events = Event::get(Carbon::now(), Carbon::now()->addDay(14));

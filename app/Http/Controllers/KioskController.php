@@ -33,7 +33,7 @@ class KioskController extends Controller
     public function authenticate(Request $request)
     {
         $rfid = md5($request->input('rfid'));
-        $key = \App\Key::where('rfid', $rfid)->first();
+        $key = \App\Models\Key::where('rfid', $rfid)->first();
 
         if ($key != null) {
             // check user
@@ -110,7 +110,7 @@ class KioskController extends Controller
             }
 
             // check if the key is already in the database
-            $key = \App\Key::where('rfid', md5($request->input('rfid')))->first();
+            $key = \App\Models\Key::where('rfid', md5($request->input('rfid')))->first();
             if ($key != null) {
                 // if we haven't confirmed to reassign key yet, ask
                 if (! $request->has('reassign')) {
@@ -197,7 +197,7 @@ class KioskController extends Controller
         // only proceed if user had confirmed, otherwise bail
         if ($request->has('yes')) {
             $rfid = md5($request->input('rfid'));
-            $key = \App\Key::where('rfid', $rfid)->first();
+            $key = \App\Models\Key::where('rfid', $rfid)->first();
 
             // if key already exists in db, delete it
             if ($key != null) {
@@ -206,7 +206,7 @@ class KioskController extends Controller
             // just to be on the safe side ;)
             unset($key);
 
-            $key = \App\Key::create([
+            $key = \App\Models\Key::create([
                 'user_id' => $request->input('user_id'),
                 'rfid' => $rfid,
                 'description' => 'Added via kiosk by '.\Auth::user()->get_name(),

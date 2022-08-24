@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -22,7 +22,7 @@ class Authorization extends Model implements Auditable
     // returns the name of the gatekeeper this authorization is for
     public function name()
     {
-        $result = \App\Gatekeeper::where('id', $this->gatekeeper_id)->get();
+        $result = \App\Models\Gatekeeper::where('id', $this->gatekeeper_id)->get();
 
         return $result->pluck('name');
     }

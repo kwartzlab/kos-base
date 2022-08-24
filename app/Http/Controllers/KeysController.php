@@ -63,7 +63,7 @@ class KeysController extends Controller
     private function process_auth($auth_key, $status_json, $ip_address)
     {
         if ($auth_key != null) {
-            $gatekeeper = \App\Gatekeeper::where('auth_key', $auth_key)->where('status', 'enabled')->first();
+            $gatekeeper = \App\Models\Gatekeeper::where('auth_key', $auth_key)->where('status', 'enabled')->first();
             if ($gatekeeper != null) {
                 $gatekeeper->last_seen = now();
                 $gatekeeper->ip_address = $ip_address;
@@ -84,7 +84,7 @@ class KeysController extends Controller
                     if ($new_status->status == 'inuse') {
                         if ((isset($new_status->user_lock_in)) && (isset($new_status->user_rfid))) {
                             // convert key into user id
-                            $user_key = \App\Key::where('rfid', $new_status->user_rfid)->first();
+                            $user_key = \App\Models\Key::where('rfid', $new_status->user_rfid)->first();
 
                             if ($user_key == null) {
                                 // unknown user key - should not happen so return 403
@@ -183,7 +183,7 @@ class KeysController extends Controller
         foreach ($payload as $row) {
             // find key in database
 
-            $key = \App\Key::where('rfid', $row['rfid'])->first();
+            $key = \App\Models\Key::where('rfid', $row['rfid'])->first();
 
             if ($key != null) {
                 $key_id = $key->id;
@@ -193,7 +193,7 @@ class KeysController extends Controller
                 $user_id = 0;
             }
 
-            $authentication = new \App\Authentication([
+            $authentication = new \App\Models\Authentication([
                 'gatekeeper_id' => $gatekeeper->id,
                 'rfid' => $row['rfid'],
                 'result' => $row['result'],

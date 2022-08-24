@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -66,7 +66,7 @@ class Gatekeeper extends Model implements Auditable
             $user_id = \Auth::user()->id;
         }
         if ($this->shared_auth > 0) {
-            $result = \App\Authorization::where(['user_id' => $user_id, 'gatekeeper_id' => $this->shared_auth])->first();
+            $result = \App\Models\Authorization::where(['user_id' => $user_id, 'gatekeeper_id' => $this->shared_auth])->first();
         } else {
             $result = $this->hasOne(Authorization::class)->where(['user_id' => $user_id]);
         }
@@ -85,7 +85,7 @@ class Gatekeeper extends Model implements Auditable
             return null;
         }
 
-        $result = \App\Gatekeeper::where('auth_key', $auth_key)->where('status', 'enabled')->get()->first();
+        $result = \App\Models\Gatekeeper::where('auth_key', $auth_key)->where('status', 'enabled')->get()->first();
 
         if (count($result) > 0) {
             return $result;
@@ -98,9 +98,9 @@ class Gatekeeper extends Model implements Auditable
     public function count_authorizations()
     {
         if ($this->shared_auth != 0) {
-            $result = \App\Authorization::where('gatekeeper_id', $this->shared_auth)->count();
+            $result = \App\Models\Authorization::where('gatekeeper_id', $this->shared_auth)->count();
         } else {
-            $result = \App\Authorization::where('gatekeeper_id', $this->id)->count();
+            $result = \App\Models\Authorization::where('gatekeeper_id', $this->id)->count();
         }
 
         return $result;

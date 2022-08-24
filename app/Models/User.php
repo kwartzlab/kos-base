@@ -162,7 +162,7 @@ class User extends Authenticatable implements Auditable
     // returns true or false if user is authorized for specified gatekeeper
     public function is_authorized($gatekeeper_id)
     {
-        $result = \App\Authorization::where('user_id', $this->id)->where('gatekeeper_id', $gatekeeper_id)->get();
+        $result = \App\Models\Authorization::where('user_id', $this->id)->where('gatekeeper_id', $gatekeeper_id)->get();
         if ($result->count() === 0) {
             return false;
         } else {
@@ -205,7 +205,7 @@ class User extends Authenticatable implements Auditable
 
     public function add_authorization($gatekeeper_id)
     {
-        \App\Authorization::create([
+        \App\Models\Authorization::create([
             'user_id' => $this->id,
             'gatekeeper_id' => $gatekeeper_id,
         ]);
@@ -214,7 +214,7 @@ class User extends Authenticatable implements Auditable
     // clears specific authorization for a user
     public function delete_authorization($gatekeeper_id)
     {
-        $result = \App\Authorization::where(['user_id', $this->id], ['gatekeeper_id', $gatekeeper_id])->delete();
+        $result = \App\Models\Authorization::where(['user_id', $this->id], ['gatekeeper_id', $gatekeeper_id])->delete();
 
         return true;
     }
@@ -222,7 +222,7 @@ class User extends Authenticatable implements Auditable
     // clears all authorizations for a user
     public function clear_authorizations()
     {
-        $result = \App\Authorization::where('user_id', $this->id)->delete();
+        $result = \App\Models\Authorization::where('user_id', $this->id)->delete();
 
         return true;
     }

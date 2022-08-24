@@ -72,7 +72,7 @@ class RegenerateThumbnails extends Command
                     $recs = \App\Models\Team::where('photo', '!=', null)->get();
                     break;
                 case 'gatekeepers':
-                    $recs = \App\Gatekeeper::where('photo', '!=', null)->get();
+                    $recs = \App\Models\Gatekeeper::where('photo', '!=', null)->get();
                     break;
             }
             $this->comment('Processing images for '.$image_type);
