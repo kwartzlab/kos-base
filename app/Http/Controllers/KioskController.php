@@ -148,7 +148,7 @@ class KioskController extends Controller
             // if we don't have a user id yet, show user selection
             if (! $request->has('user_id')) {
                 // select user to assign key to
-                $users = \App\User::orderby('first_preferred')->where('status', 'active')->get();
+                $users = \App\Models\User::orderby('first_preferred')->where('status', 'active')->get();
                 $page = [
                     'title' => 'Assign Key',
                     'refresh' => 60,
@@ -164,7 +164,7 @@ class KioskController extends Controller
                 return view('kiosk.select_user', compact('page', 'users'));
             } else {
                 // confirm user to assign key to
-                $keyuser = \App\User::find($request->input('user_id'));
+                $keyuser = \App\Models\User::find($request->input('user_id'));
                 if ($keyuser != null) {
                     $page = [
                         'title' => 'Confirm Assignment',

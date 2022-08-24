@@ -49,13 +49,13 @@ class GenerateUserStatus extends Command
         }
 
         // get all users
-        $users = \App\User::all();
+        $users = \App\Models\User::all();
 
         foreach ($users as $user) {
             $this->info('Processing '.$user->get_name());
 
             if ($user->date_applied != null) {
-                $rec = new \App\UserStatus([
+                $rec = new \App\Models\UserStatus([
                     'user_id' => $user->id,
                     'status' => 'applicant',
                     'updated_by' => 0,
@@ -68,7 +68,7 @@ class GenerateUserStatus extends Command
             }
 
             if ($user->date_admitted != null) {
-                $rec = new \App\UserStatus([
+                $rec = new \App\Models\UserStatus([
                     'user_id' => $user->id,
                     'status' => 'active',
                     'updated_by' => 0,
@@ -85,7 +85,7 @@ class GenerateUserStatus extends Command
             }
 
             if ($user->date_withdrawn != null) {
-                $rec = new \App\UserStatus([
+                $rec = new \App\Models\UserStatus([
                     'user_id' => $user->id,
                     'status' => 'inactive',
                     'updated_by' => 0,
@@ -98,7 +98,7 @@ class GenerateUserStatus extends Command
             }
 
             if (($user->date_hiatus_start != null) && ($user->date_hiatus_end != null)) {
-                $rec = new \App\UserStatus([
+                $rec = new \App\Models\UserStatus([
                     'user_id' => $user->id,
                     'status' => 'hiatus',
                     'updated_by' => 0,
@@ -108,7 +108,7 @@ class GenerateUserStatus extends Command
 
                 $rec->save(['timestamps' => false]);
 
-                $rec = new \App\UserStatus([
+                $rec = new \App\Models\UserStatus([
                     'user_id' => $user->id,
                     'status' => 'active',
                     'updated_by' => 0,

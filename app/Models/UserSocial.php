@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +11,6 @@ class UserSocial extends Model
 
     public function user()
     {
-        return $this->hasOne(\App\User::class);
+        return $this->hasOne(\App\Models\User::class);
     }
 }

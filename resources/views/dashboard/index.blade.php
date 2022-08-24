@@ -9,7 +9,7 @@
 @section('content')
 @include('shared.alerts')
 
-<?php $user = \App\User::where('id', \Auth::user()->id)->first(); ?>
+<?php $user = \App\Models\User::where('id', \Auth::user()->id)->first(); ?>
 @if ($user->flags->contains('flag', 'keys_disabled'))
 <div class="alert alert-warning">
    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	

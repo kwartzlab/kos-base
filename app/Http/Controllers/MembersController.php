@@ -15,7 +15,7 @@ class MembersController extends Controller
      */
     public function index($view = 'default')
     {
-        $users = \App\User::where('status', 'active')->orwhere('status', 'hiatus')->orderby('first_preferred')->get();
+        $users = \App\Models\User::where('status', 'active')->orwhere('status', 'hiatus')->orderby('first_preferred')->get();
 
         $page_title = 'Member Directory ('.count($users).')';
 
@@ -25,7 +25,7 @@ class MembersController extends Controller
     // lists users with specific skill set
     public function skill($skill_id)
     {
-        $skill = \App\UserSkill::find($skill_id);
+        $skill = \App\Models\UserSkill::find($skill_id);
         if ($skill == null) {
             return redirect('/members/')->with('info', 'Unknown Skill.');
         }
@@ -73,7 +73,7 @@ class MembersController extends Controller
      */
     public function edit($id)
     {
-        $user = \App\User::find($id);
+        $user = \App\Models\User::find($id);
 
         if ($id == \Auth::user()->id) {
             $page_title = 'My Profile';
@@ -82,7 +82,7 @@ class MembersController extends Controller
         }
 
         // build existing skills list
-        $skill_data = \App\UserSkill::orderby('skill')->get();
+        $skill_data = \App\Models\UserSkill::orderby('skill')->get();
         $ex_skills = $skill_data->unique('skill');
 
         $existing_skills = [];
@@ -150,7 +150,7 @@ class MembersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = \App\User::find($id);
+        $user = \App\Models\User::find($id);
 
         $request->validate([
             'email' => 'required|unique:users,email,'.$user->id,
@@ -167,11 +167,11 @@ class MembersController extends Controller
             // compile socials
             if ($request->input('socials')) {
                 // remove existing records
-                \App\UserSocial::where('user_id', $id)->delete();
+                \App\Models\UserSocial::where('user_id', $id)->delete();
                 // add form records
                 foreach ($request->input('socials') as $key => $social) {
                     if ($social['profile'] != null) {
-                        $social_rec = new \App\UserSocial([
+                        $social_rec = new \App\Models\UserSocial([
                             'service' => $social['service'],
                             'profile' => $social['profile'],
                         ]);
@@ -183,10 +183,10 @@ class MembersController extends Controller
             // compile skills
             if ($request->input('skills')) {
                 // remove existing records
-                \App\UserSkill::where('user_id', $id)->delete();
+                \App\Models\UserSkill::where('user_id', $id)->delete();
                 // add form records
                 foreach ($request->input('skills') as $key => $skill) {
-                    $skill_rec = new \App\UserSkill(['skill' => $skill]);
+                    $skill_rec = new \App\Models\UserSkill(['skill' => $skill]);
                     $user->skills()->save($skill_rec);
                 }
             }
@@ -194,10 +194,10 @@ class MembersController extends Controller
             // compile certs
             if ($request->input('certs')) {
                 // remove existing records
-                \App\UserCert::where('user_id', $id)->delete();
+                \App\Models\UserCert::where('user_id', $id)->delete();
                 // add form records
                 foreach ($request->input('certs') as $key => $cert) {
-                    $cert_rec = new \App\UserCert([
+                    $cert_rec = new \App\Models\UserCert([
                         'type' => $cert['type'],
                         'name' => $cert['name'],
                         'expiry_date' => $cert['expiry_date'],

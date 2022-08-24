@@ -16,7 +16,7 @@ class FormsController extends Controller
     public function index()
     {
         if (\Gate::allows('manage-forms')) {
-            $forms = \App\Form::orderby('name')->get();
+            $forms = \App\Models\Form::orderby('name')->get();
 
             return view('forms.index', compact('forms'));
         } else {
@@ -163,7 +163,7 @@ class FormsController extends Controller
                 }
             }
 
-            $form = \App\Form::create([
+            $form = \App\Models\Form::create([
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'status' => $request->input('status'),
@@ -189,7 +189,7 @@ class FormsController extends Controller
      */
     public function show($id)
     {
-        $form = \App\Form::find($id);
+        $form = \App\Models\Form::find($id);
         \Session::flash('skip_individual_errors', 1);
 
         if ($form != null) {
@@ -248,7 +248,7 @@ class FormsController extends Controller
         // clean up last photo upload filename (dont need it at this point)
         session(['last_image_upload' => null]);
 
-        $form = \App\Form::find($request->input('form_id'));
+        $form = \App\Models\Form::find($request->input('form_id'));
 
         if ($form != null) {
             $form_fields = json_decode($form->fields);
@@ -360,7 +360,7 @@ class FormsController extends Controller
                     switch ($form_action->action) {
                         // remove a user flag from form submitter
                         case 'userflag_remove':
-                            $user = \App\User::where('id', \Auth::user()->id)->first();
+                            $user = \App\Models\User::where('id', \Auth::user()->id)->first();
                             if ($user->flags->contains('flag', $form_action->value)) {
                                 $user->flags()->where('flag', $form_action->value)->delete();
                                 $append_message .= ' '.$form_action->text;
@@ -396,7 +396,7 @@ class FormsController extends Controller
                     }
 
                     // create the applicant user
-                    $user = \App\User::create([
+                    $user = \App\Models\User::create([
                         'first_name' => $request->input('first_name'),
                         'last_name' => $request->input('last_name'),
                         'first_preferred' => $first_preferred,
@@ -415,7 +415,7 @@ class FormsController extends Controller
                     ]);
 
                     // create user's initial status record
-                    $user_status = \App\UserStatus::create([
+                    $user_status = \App\Models\UserStatus::create([
                         'status' => 'applicant',
                         'user_id' => $user->id,
                         'updated_by' => 0,
@@ -449,7 +449,7 @@ class FormsController extends Controller
             }
 
             // save the form submission
-            $form_submission = \App\FormSubmission::create([
+            $form_submission = \App\Models\FormSubmission::create([
                 'form_id' => $form->id,
                 'form_name' => $form_name,
                 'special_form' => $form->special_form,
@@ -472,7 +472,7 @@ class FormsController extends Controller
     // displays a form submission
     public function submission($id)
     {
-        $submission = \App\FormSubmission::find($id);
+        $submission = \App\Models\FormSubmission::find($id);
         if ($submission != null) {
             if ($submission->canview()) {
                 $skip_fields = [];
