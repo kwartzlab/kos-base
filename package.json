@@ -10,7 +10,7 @@
         "prod": "npm run production"
     },
     "devDependencies": {
-        "axios": "^0.15.3",
+        "axios": "^0.25",
         "bootstrap-sass": "^3.3.7",
         "jquery": "^3.1.1",
         "laravel-mix": "^6.0.12",
