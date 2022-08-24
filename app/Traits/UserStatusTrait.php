@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
-   /*
-      Takes care of member status changes when they need to happen
-      Used in membership register and nightly taskss
-   */
+/*
+   Takes care of member status changes when they need to happen
+   Used in membership register and nightly taskss
+*/
 
 trait UserStatusTrait
 {
@@ -21,7 +21,7 @@ trait UserStatusTrait
     {
         // exit interview, slack removal, etc
 
-      // honor send_notifications from config file
+        // honor send_notifications from config file
     }
 
     // checks a user's current status to see if it needs to be modified from a user status change
@@ -29,7 +29,7 @@ trait UserStatusTrait
     {
         if ($user != null) {
 
-         // grab status that would be in effect now
+            // grab status that would be in effect now
             $current_status = $user->current_status()->get()->first();
 
             // update user if status field is inconsistent with computed current_status

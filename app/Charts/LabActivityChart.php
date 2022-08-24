@@ -1,20 +1,18 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Charts;
 
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Chartisan\PHP\Chartisan;
 use ConsoleTVs\Charts\BaseChart;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
-
 
 class LabActivityChart extends BaseChart
 {
-
     public ?array $middlewares = ['auth'];
 
     /**
@@ -52,7 +50,6 @@ class LabActivityChart extends BaseChart
 
         return Chartisan::build()
             ->labels($chart_labels)
-            ->dataset("Visiting Members", array_values($chart_data));
-
-        }
+            ->dataset('Visiting Members', array_values($chart_data));
+    }
 }

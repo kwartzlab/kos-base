@@ -22,7 +22,7 @@ class LoginControllerTest extends TestCase
 
     public function testItLogsInAValidUser(): void
     {
-        $user = factory(User::class)
+        $user = User::factory()
             ->create(['email' => 'geralt@rivia.of', 'password' => Hash::make('winds_howling')]);
 
         $this->post('/login', ['email' => 'geralt@rivia.of', 'password' => 'winds_howling'])
@@ -33,7 +33,7 @@ class LoginControllerTest extends TestCase
 
     public function testItRedirectsAnInvalidUserBackToLogin(): void
     {
-        factory(User::class)
+        User::factory()
             ->create(['email' => 'geralt@rivia.of', 'password' => Hash::make('winds_howling')]);
 
         $this->post('/login', ['email' => 'yennefer@vengerberg.of', 'password' => 'damn_a_storm'])

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -9,6 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class User extends Authenticatable implements Auditable
 {
+    use HasFactory;
     use Notifiable;
     use \OwenIt\Auditing\Auditable;
 
@@ -21,19 +23,12 @@ class User extends Authenticatable implements Auditable
         'first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'password', 'status', 'acl', 'member_id', 'phone', 'address', 'city', 'province', 'postal', 'photo', 'notes',
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'date_applied',
-        'date_admitted',
-        'date_hiatus_start',
-        'date_hiatus_end',
-        'date_withdrawn',
+    protected $casts = [
+        'date_applied' => 'datetime',
+        'date_admitted' => 'datetime',
+        'date_hiatus_start' => 'datetime',
+        'date_hiatus_end' => 'datetime',
+        'date_withdrawn' => 'datetime',
     ];
 
     /**

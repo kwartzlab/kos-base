@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use ConsoleTVs\Charts\Registrar as Charts;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         $charts->register([
-            \App\Charts\LabActivityChart::class
+            \App\Charts\LabActivityChart::class,
         ]);
     }
 

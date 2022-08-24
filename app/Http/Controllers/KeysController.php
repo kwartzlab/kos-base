@@ -33,10 +33,13 @@ class KeysController extends Controller
 
             $response = null;
             switch ($endpoint) {
-            case 'get_keys':$response = $this->getkeys($payload, $gatekeeper); break;
-            case 'send_auths':$response = $this->sendauths($payload, $gatekeeper); break;
-            case 'ping':$response = $this->sendping(); break;
-         }
+                case 'get_keys':$response = $this->getkeys($payload, $gatekeeper);
+                    break;
+                case 'send_auths':$response = $this->sendauths($payload, $gatekeeper);
+                    break;
+                case 'ping':$response = $this->sendping();
+                    break;
+            }
 
             if ($response != null) {
                 return response()->json($response);

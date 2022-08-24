@@ -159,7 +159,7 @@ class FormsController extends Controller
                                 'required' => $field_required,
                             ];
                             break;
-                        }
+                    }
                 }
             }
 
@@ -212,7 +212,7 @@ class FormsController extends Controller
                                 return redirect('/')->with('error', $message);
                             }
                             break;
-                        // user must have a speciifc status to continue
+                            // user must have a speciifc status to continue
                         case 'user_status':
                             if (\Auth::user()->status != $form_condition->value) {
                                 $message .= ' '.$form_condition->text.' ['.$form->name.']';
@@ -423,7 +423,7 @@ class FormsController extends Controller
                         'updated_at' => date('Y-m-d'),
                     ]);
 
-                      // build array for email use
+                    // build array for email use
                     $email_data = [
                         'name' => $user->get_name(),
                         'photo' => \URL::to('/storage/images/users/'.$user->photo.'.jpeg'),
@@ -440,7 +440,7 @@ class FormsController extends Controller
                     $user_id = $user->id;
                     $message = 'Application created & sent successfully.';
                     $form_name = $form->name.' - '.$user->get_name();
-                break;
+                    break;
 
                 default:
                     $user_id = 0;

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
-use Illuminate\Support\Facades\DB;
 use Spatie\GoogleCalendar\Event;
 
 class DashboardController extends Controller
