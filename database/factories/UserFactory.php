@@ -16,8 +16,8 @@ class UserFactory extends Factory
     {
         static $password;
 
-        $firstName = $this->faker->firstName;
-        $lastName = $this->faker->lastName;
+        $firstName = $this->faker->firstName();
+        $lastName = $this->faker->lastName();
 
         return [
             'first_name' => $firstName,
@@ -34,14 +34,14 @@ class UserFactory extends Factory
             'date_hiatus_start' => null,
             'date_hiatus_end' => null,
             'date_withdrawn' => null,
-            'phone' => $this->faker->e164PhoneNumber,
-            'address' => $this->faker->streetAddress,
+            'phone' => $this->faker->e164PhoneNumber(),
+            'address' => $this->faker->streetAddress(),
             'city' => 'Kitchener',
             'province' => 'ON',
             'postal' => $this->faker->regexify('/[A-Z]\d[A-Z]\d[A-Z]\d/'),
             'google_account' => '',
             'photo' => '',
-            'notes' => $this->faker->paragraph,
+            'notes' => $this->faker->paragraph(),
             'remember_token' => $this->faker->lexify('???????????????'),
         ];
     }

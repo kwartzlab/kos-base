@@ -19,7 +19,7 @@ class UserStatusFactory extends Factory
                 ? $attributes['user_id']
                 : User::factory()->create()->id,
             'status' => 'active',
-            'note' => $this->faker->paragraph,
+            'note' => $this->faker->paragraph(),
             'updated_by' => array_key_exists('updated_by', $attributes)
                 ? $attributes['updated_by']
                 : User::factory()->create()->id,
