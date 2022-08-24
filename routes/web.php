@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\HelpdeskController;
-use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\GatekeepersController;
+use App\Http\Controllers\HelpdeskController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\KeysController;
 use App\Http\Controllers\KioskController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\MembersController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
