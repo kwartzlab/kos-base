@@ -12,6 +12,16 @@ class Gatekeeper extends Model implements Auditable
         'last_seen' => 'datetime',
     ];
 
+
+    /**
+     * Attributes to exclude from the Audit.
+     *
+     * @var array
+     */
+    protected $auditExclude = [
+        'last_seen',
+    ];
+
     // returns active trainers
     public function trainers($with_status = null)
     {

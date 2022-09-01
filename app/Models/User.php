@@ -32,6 +32,15 @@ class User extends Authenticatable implements Auditable
     ];
 
     /**
+     * Attributes to exclude from the Audit.
+     *
+     * @var array
+     */
+    protected $auditExclude = [
+        'remember_token',
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
