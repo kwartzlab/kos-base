@@ -32,6 +32,9 @@
             <div class="form-group col-md-6">
               <label for="last_preferred">Preferred Last Name <span class="text-danger">*</span></label><input type="text" class="form-control" name="last_preferred" id="last_preferred" value="@if(!old('last_preferred')){{$user->last_preferred}}@endif{{ old('last_preferred') }}">
             </div>
+            <div class="form-group col-md-6">
+              <label for="pronouns">Preferred Pronouns (leave blank if no preference)</label><input type="text" class="form-control" name="pronouns" id="pronouns" value="@if(!old('pronouns')){{$user->pronouns}}@endif{{ old('pronouns') }}">
+            </div>
           </div>
 
         <h3 class="form-heading">Contact Info</h3>

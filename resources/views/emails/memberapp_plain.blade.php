@@ -1,6 +1,6 @@
 {{ config('kwartzlabos.org_name') }}
 
-New Member Application - {{ $name }}
+New Member Application - {{ $name }} (@if($form_data['pronouns']['value'] != NULL){{ $form_data['pronouns']['value'] }}@endif)
 
 @switch ($destination)
 @case('admin')
@@ -15,6 +15,7 @@ If for any reason you believe they should not be accepted, leave a -1. If you're
 
 Email: {{ $form_data['email']['value'] }}
 @if($destination == 'admin')
+Legal Name: {{ $form_data['first_name']['value'] }} {{ $form_data['last_name']['value'] }}
 Phone: {{ $form_data['phone']['value'] }}
 Address: {{ $form_data['address']['value'] }}, {{ $form_data['city']['value'] }}, {{ $form_data['province']['value'] }}  {{ $form_data['postal']['value'] }}
 @endif

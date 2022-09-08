@@ -23,7 +23,13 @@
          </div>
       </div>
       <p><i>Leave Preferred Name blank if same as above</i></p>
-      
+      <div class="row">
+         <div class="form-group col-md-6"  style="margin-bottom:15px">
+            <label for="first_preferred">Preferred Pronouns (leave blank if no preference)</label>
+            <input type="text" class="form-control @if($errors->has('pronouns')) is-invalid @endif" name="pronouns" id="pronouns" value="{{ old('pronouns') }}">
+         </div>
+      </div>      
+
       <div class="row">
          <div class="form-group col-md-3">
          <label for="email">Email Address <span class="text-danger">*</span></label>

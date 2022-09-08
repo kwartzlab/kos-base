@@ -379,6 +379,7 @@ class FormsController extends Controller
                     $responses['last_name'] = ['label' => 'Last Name', 'value' => $request->input('last_name'), 'type' => 'input'];
                     $responses['first_preferred'] = ['label' => 'Preferred First Name', 'value' => $request->input('first_preferred'), 'type' => 'input'];
                     $responses['last_preferred'] = ['label' => 'Preferred Last Name', 'value' => $request->input('last_preferred'), 'type' => 'input'];
+                    $responses['pronouns'] = ['label' => 'Preferred Pronouns', 'value' => $request->input('pronouns'), 'type' => 'input'];
                     $responses['email'] = ['label' => 'Email Address', 'value' => $request->input('email'), 'type' => 'input'];
                     $responses['phone'] = ['label' => 'Phone Number', 'value' => $request->input('phone'), 'type' => 'input'];
                     $responses['address'] = ['label' => 'Street Address', 'value' => $request->input('address'), 'type' => 'input'];
@@ -401,6 +402,7 @@ class FormsController extends Controller
                         'last_name' => $request->input('last_name'),
                         'first_preferred' => $first_preferred,
                         'last_preferred' => $last_preferred,
+                        'pronouns' => $request->input('pronouns'),
                         'email' => $request->input('email'),
                         'status' => 'applicant',
                         'date_applied' => date('Y-m-d'),
@@ -427,7 +429,7 @@ class FormsController extends Controller
                     $email_data = [
                         'name' => $user->get_name(),
                         'photo' => \URL::to('/storage/images/users/'.$user->photo.'.jpeg'),
-                        'skip_fields' => ['first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'phone', 'address', 'city', 'province', 'postal', 'photo'],
+                        'skip_fields' => ['first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'phone', 'address', 'city', 'province', 'postal', 'photo', 'pronouns'],
                         'form_data' => $responses,
                     ];
 
@@ -479,7 +481,7 @@ class FormsController extends Controller
                 // if we should skip any fields for display, set them
                 switch ($submission->special_form) {
                     case 'new_user_app':
-                        $skip_fields = ['first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'phone', 'address', 'city', 'province', 'postal', 'photo'];
+                        $skip_fields = ['first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'phone', 'address', 'city', 'province', 'postal', 'photo','pronouns'];
                         break;
                 }
 

@@ -206,6 +206,7 @@ class MembersController extends Controller
                 }
             }
 
+            $user->pronouns = $request->input('pronouns');
             $user->email = $request->input('email');
             $user->phone = $request->input('phone');
             $user->address = $request->input('address');

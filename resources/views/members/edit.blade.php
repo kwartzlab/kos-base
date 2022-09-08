@@ -24,6 +24,13 @@
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
 
+        <div class="row">
+            <div class="form-group col-md-6">
+            <label for="pronouns">Preferred Pronouns (leave blank if no preference)</label>
+            <input type="text" class="form-control" name="pronouns" id="pronouns" value="@if(!old('pronouns')){{$user->pronouns}}@endif{{ old('pronouns') }}">
+            </div>
+        </div>
+
         <h3 class="form-heading">Edit Contact Info</h3>
         <p><em>Up to date contact information is required for the Membership Register.</em></p>
 

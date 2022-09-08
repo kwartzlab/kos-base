@@ -14,7 +14,7 @@
 
       <div class="row">
          <div class="col-md-8">
-            <h2>{{ $user->get_name() }}</h2>
+            <h2>{{ $user->get_name() }} @if($user->pronouns != NULL)<span style="color:gray;font-size:55%;">{{ $user->pronouns }}</span>@endif</h2>
 
             @switch($user->status)
                @case('active')

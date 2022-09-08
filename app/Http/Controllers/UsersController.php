@@ -67,8 +67,6 @@ class UsersController extends Controller
             return view('forms.show', compact('form', 'form_fields'));
         } else {
             $page_title = 'Membership Application';
-
-            return view('users.create', compact('page_title'));
         }
     }
 
@@ -252,6 +250,7 @@ class UsersController extends Controller
             $user->last_name = $request->input('last_name');
             $user->first_preferred = $request->input('first_preferred');
             $user->last_preferred = $request->input('last_preferred');
+            $user->pronouns = $request->input('pronouns');
             $user->email = $request->input('email');
             $user->phone = $request->input('phone');
             $user->address = $request->input('address');
