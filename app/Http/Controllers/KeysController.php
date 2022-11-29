@@ -156,7 +156,7 @@ class KeysController extends Controller
                     $gatekeeper_id = $gatekeeper->id;
                 }
 
-                if (($user->is_authorized($gatekeeper_id)) && (! $user->flags->contains('flag', 'keys_disabled')) && ($user->flags->contains('flag', 'covid_vaccine'))) {
+                if (($user->is_authorized($gatekeeper_id)) && (! $user->flags->contains('flag', 'keys_disabled'))) {
                     foreach ($user->keys as $key) {
                         $key_list[] = $key->rfid;
                     }
@@ -165,7 +165,7 @@ class KeysController extends Controller
         } else {
             // default gatekeeper - get all active users and their keys
             foreach (\App\Models\User::where('status', 'active')->get() as $user) {
-                if (! $user->flags->contains('flag', 'keys_disabled') && ($user->flags->contains('flag', 'covid_vaccine'))) {
+                if (! $user->flags->contains('flag', 'keys_disabled')) {
                     foreach ($user->keys as $key) {
                         $key_list[] = $key->rfid;
                     }
