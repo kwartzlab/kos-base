@@ -21,6 +21,8 @@ class MemberApp extends Mailable implements ShouldQueue
 
     public $skip_fields;
 
+    public $recipient;
+
     /**
      * Create a new message instance.
      *
@@ -34,6 +36,7 @@ class MemberApp extends Mailable implements ShouldQueue
         $this->photo = $email_data['photo'];
         $this->destination = $destination;
         $this->skip_fields = $email_data['skip_fields'];
+        $this->recipient = $email_data['recipient'];
     }
 
     /**
@@ -45,24 +48,38 @@ class MemberApp extends Mailable implements ShouldQueue
     {
         switch ($this->destination) {
             case 'admin':
-                $this->to(config('kwartzlabos.membership_app.admin.to'));
-                $this->subject(config('kwartzlabos.membership_app.admin.subject').' - '.$this->name);
-                if (config('kwartzlabos.membership_app.admin.cc') != null) {
-                    $this->cc(config('kwartzlabos.membership_app.admin.cc'));
+
+                if ($this->recipient == NULL) {
+                    $this->to(config('kwartzlabos.membership_app.admin.to'));
+                    $this->subject(config('kwartzlabos.membership_app.admin.subject').' - '.$this->name);
+                    if (config('kwartzlabos.membership_app.admin.cc') != null) {
+                        $this->cc(config('kwartzlabos.membership_app.admin.cc'));
+                    }
+                    if (config('kwartzlabos.membership_app.admin.replyto') != null) {
+                        $this->replyto(config('kwartzlabos.membership_app.admin.replyto'));
+                    }
+                } else {
+                    $this->to($this->recipient);
+                    $this->subject(config('kwartzlabos.membership_app.admin.subject').' - '.$this->name);
                 }
-                if (config('kwartzlabos.membership_app.admin.replyto') != null) {
-                    $this->replyto(config('kwartzlabos.membership_app.admin.replyto'));
-                }
+
                 break;
             case 'members':
-                $this->to(config('kwartzlabos.membership_app.members.to'));
-                $this->subject(config('kwartzlabos.membership_app.members.subject').' - '.$this->name);
-                if (config('kwartzlabos.membership_app.members.cc') != null) {
-                    $this->cc(config('kwartzlabos.membership_app.members.cc'));
+
+                if ($this->recipient == NULL) {
+                    $this->to(config('kwartzlabos.membership_app.members.to'));
+                    $this->subject(config('kwartzlabos.membership_app.members.subject').' - '.$this->name);
+                    if (config('kwartzlabos.membership_app.members.cc') != null) {
+                        $this->cc(config('kwartzlabos.membership_app.members.cc'));
+                    }
+                    if (config('kwartzlabos.membership_app.members.replyto') != null) {
+                        $this->replyto(config('kwartzlabos.membership_app.members.replyto'));
+                    }
+                } else {
+                    $this->to($this->recipient);
+                    $this->subject(config('kwartzlabos.membership_app.members.subject').' - '.$this->name);
                 }
-                if (config('kwartzlabos.membership_app.members.replyto') != null) {
-                    $this->replyto(config('kwartzlabos.membership_app.members.replyto'));
-                }
+
                 break;
         }
 
