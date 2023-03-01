@@ -36,7 +36,11 @@ class MemberApp extends Mailable implements ShouldQueue
         $this->photo = $email_data['photo'];
         $this->destination = $destination;
         $this->skip_fields = $email_data['skip_fields'];
-        $this->recipient = $email_data['recipient'];
+        if (isset($email_data['recipient'])) {
+            $this->recipient = $email_data['recipient'];
+        } else {
+            $this->recipient = NULL;
+        }
     }
 
     /**
