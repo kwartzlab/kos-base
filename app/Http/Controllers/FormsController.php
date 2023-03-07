@@ -374,6 +374,7 @@ class FormsController extends Controller
             switch ($form->special_form) {
                 case 'new_user_app':
 
+
                     // add hard-coded responses from new user form
                     $responses['first_name'] = ['label' => 'First Name', 'value' => $request->input('first_name'), 'type' => 'input'];
                     $responses['last_name'] = ['label' => 'Last Name', 'value' => $request->input('last_name'), 'type' => 'input'];
@@ -396,25 +397,52 @@ class FormsController extends Controller
                         $last_preferred = $request->input('last_preferred');
                     }
 
-                    // create the applicant user
-                    $user = \App\Models\User::create([
-                        'first_name' => $request->input('first_name'),
-                        'last_name' => $request->input('last_name'),
-                        'first_preferred' => $first_preferred,
-                        'last_preferred' => $last_preferred,
-                        'pronouns' => $request->input('pronouns'),
-                        'email' => $request->input('email'),
-                        'status' => 'applicant',
-                        'date_applied' => date('Y-m-d'),
-                        'phone' => $request->input('phone'),
-                        'address' => $request->input('address'),
-                        'city' => $request->input('city'),
-                        'province' => $request->input('province'),
-                        'postal' => $request->input('postal'),
-                        'password' => Hash::make($this->generate_random_password()),
-                        'member_id' => rand(1000, 9999),
-                        'photo' => $request->input('photo'),
-                    ]);
+                    // returning user
+                    if ($user_id > 0) {
+
+                        // load up the previous user and update fields
+                        $user = \App\Models\User::find($user_id);
+
+                        $user->first_name = $request->input('first_name');
+                        $user->last_name = $request->input('last_name');
+                        $user->first_preferred = $first_preferred;
+                        $user->last_preferred = $last_preferred;
+                        $user->pronouns = $request->input('pronouns');
+                        $user->status = 'applicant';
+                        $user->phone = $request->input('phone');
+                        $user->address = $request->input('address');
+                        $user->city = $request->input('city');
+                        $user->province = $request->input('province');
+                        $user->postal = $request->input('postal');
+                        $user->password = Hash::make($this->generate_random_password());
+                        $user->photo = $request->input('photo');
+                        $user->date_applied = date('Y-m-d');
+
+                        $user->save();
+
+                    } else {
+
+                        // create the applicant user
+                        $user = \App\Models\User::create([
+                            'first_name' => $request->input('first_name'),
+                            'last_name' => $request->input('last_name'),
+                            'first_preferred' => $first_preferred,
+                            'last_preferred' => $last_preferred,
+                            'pronouns' => $request->input('pronouns'),
+                            'email' => $request->input('email'),
+                            'status' => 'applicant',
+                            'date_applied' => date('Y-m-d'),
+                            'phone' => $request->input('phone'),
+                            'address' => $request->input('address'),
+                            'city' => $request->input('city'),
+                            'province' => $request->input('province'),
+                            'postal' => $request->input('postal'),
+                            'password' => Hash::make($this->generate_random_password()),
+                            'member_id' => rand(1000, 9999),
+                            'photo' => $request->input('photo'),
+                        ]);
+
+                    }
 
                     // create user's initial status record
                     $user_status = \App\Models\UserStatus::create([
@@ -424,6 +452,7 @@ class FormsController extends Controller
                         'created_at' => date('Y-m-d'),
                         'updated_at' => date('Y-m-d'),
                     ]);
+
 
                     // build array for email use
                     $email_data = [
