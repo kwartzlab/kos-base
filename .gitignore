@@ -30,3 +30,6 @@ backups
 
 # PHPUnit
 .phpunit.result.cache
+
+# Local Development
+tink.php
