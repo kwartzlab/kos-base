@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\LabActivityChart;
 use Carbon\Carbon;
 use Spatie\GoogleCalendar\Event;
 
@@ -20,16 +21,25 @@ class DashboardController extends Controller
         $gatekeepers = \App\Models\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->orderby('name')->get();
 
         /* EVENTS CALENDAR */
-        $events = Event::get(Carbon::now(), Carbon::now()->addDay(14));
-        $events = $events->groupby((function ($val) {
-            if ($val->start->date == null) {
-                return Carbon::parse($val->startDateTime)->format('Y-m-d');
-            } else {
-                return Carbon::parse($val->startDate)->format('Y-m-d');
-            }
-        }));
-        $events = $events->slice(0, 9);
+//        $events = Event::get(Carbon::now(), Carbon::now()->addDay(14));
+//        $events = $events->groupby((function ($val) {
+//            if ($val->start->date == null) {
+//                return Carbon::parse($val->startDateTime)->format('Y-m-d');
+//            } else {
+//                return Carbon::parse($val->startDate)->format('Y-m-d');
+//            }
+//        }));
+//        $events = $events->slice(0, 9);
+        $events = [];
 
-        return view('dashboard.index', compact('latest_members', 'latest_applicants', 'gatekeepers', 'events'));
+        $lab_activity_chart = new LabActivityChart();
+
+        return view('dashboard.index', compact(
+            'latest_members',
+            'latest_applicants',
+            'gatekeepers',
+            'events',
+            'lab_activity_chart'
+        ));
     }
 }

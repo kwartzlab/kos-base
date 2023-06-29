@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
 //        $charts->register([
-//            \App\Charts\LabActivityChart::class,
+//            \App\Charts\LabActivityChartOld::class,
 //        ]);
     }
 

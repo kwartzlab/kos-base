@@ -27,7 +27,9 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="line-chart" id="lab-activity-chart" style="height:300px;max-height:300px;"></div>
+            <div class="line-chart" id="lab-activity-chart" style="height:300px;max-height:300px;">
+                {!! $lab_activity_chart->container() !!}
+            </div>
           </div>
         </div>
 
@@ -128,6 +130,7 @@
 
               </tbody>
             </table>
+            </ul>
   
             <!-- /.users-list -->
           </div>
@@ -166,6 +169,7 @@
 
               </tbody>
             </table>
+            </ul>
   
             <!-- /.users-list -->
           </div>
@@ -188,19 +192,7 @@
 
 @section('plugins.Chartjs', true)
 @section('js')
-
-  <script>
-    const chart = new Chartisan({
-      el: '#lab-activity-chart',
-      url: "@chart('lab_activity_chart')",
-      hooks: new ChartisanHooks()
-        .colors(['#3C8DBC'])
-        .datasets('line')
-        .legend(false)
-        .beginAtZero(true)
-    });
-  </script>
-
+  {!! $lab_activity_chart->script() !!}
   <script>
     $(document).ready(function(){
       $('[data-toggle="tooltip"]').tooltip({
@@ -210,6 +202,4 @@
       });
     });
   </script>
-
-
 @stop
