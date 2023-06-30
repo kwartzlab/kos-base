@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\LabActivityChart;
 use Carbon\Carbon;
 use Spatie\GoogleCalendar\Event;
 
@@ -30,6 +31,14 @@ class DashboardController extends Controller
         }));
         $events = $events->slice(0, 9);
 
-        return view('dashboard.index', compact('latest_members', 'latest_applicants', 'gatekeepers', 'events'));
+        $lab_activity_chart = new LabActivityChart();
+
+        return view('dashboard.index', compact(
+            'latest_members',
+            'latest_applicants',
+            'gatekeepers',
+            'events',
+            'lab_activity_chart'
+        ));
     }
 }

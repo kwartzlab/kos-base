@@ -1,29 +1,18 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Charts;
 
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Chartisan\PHP\Chartisan;
-use ConsoleTVs\Charts\BaseChart;
-use Illuminate\Http\Request;
+use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 use Illuminate\Support\Facades\DB;
 
-class LabActivityChart extends BaseChart
+class LabActivityChart extends Chart
 {
-    public ?array $middlewares = ['auth'];
-
-    /**
-     * Handles the HTTP request for the given chart.
-     * It must always return an instance of Chartisan
-     * and never a string or an array.
-     */
-    public function handler(Request $request): Chartisan
+    public function __construct()
     {
+        parent::__construct();
 
-        // generate date range
         $dates = CarbonPeriod::create(Carbon::now()->subMonth(), Carbon::now())->toArray();
         $chart_data = [];
         $chart_labels = [];
@@ -32,24 +21,54 @@ class LabActivityChart extends BaseChart
             $chart_labels[] = $date->format('M j');
         }
 
-        // get attendance records
         $attendance = DB::table('authentications')
-                        ->where('created_at', '>=', Carbon::now()->subMonth())
-                        ->where('user_id', '>', 0)
-                        ->wherein('gatekeeper_id', config('kwartzlabos.entrance_gatekeepers'))
-                        ->get()
-                        ->groupby((function ($val) {
-                            return Carbon::parse($val->created_at)->format('Y-m-d');
-                        }));
+            ->where('created_at', '>=', Carbon::now()->subMonth())
+            ->where('user_id', '>', 0)
+            ->wherein('gatekeeper_id', config('kwartzlabos.entrance_gatekeepers'))
+            ->get()
+            ->groupby((function ($val) {
+                return Carbon::parse($val->created_at)->format('Y-m-d');
+            }));
 
-        // compile daily attendance count
-        $daily_attendance = [];
         foreach ($attendance as $key => $daily) {
             $chart_data[$key] = $daily->unique('user_id')->count();
         }
 
-        return Chartisan::build()
-            ->labels($chart_labels)
-            ->dataset('Visiting Members', array_values($chart_data));
+        return $this->labels($chart_labels)
+            ->options([
+                'responsive' => true,
+                'tooltips' => [
+                    'enabled' => true,
+                ],
+                'maintainAspectRatio' => false,
+                'legend' => ['display' => false],
+                'scales' => [
+                    'xAxes' => [[
+                        'scaleLabel' => [
+                            'display' => false,
+                            'fontSize' => 14,
+                        ],
+                        'gridLines' => [
+                            'display' => false,
+                        ],
+                    ]],
+                    'yAxes' => [[
+                        'scaleLabel' => [
+                            'display' => false,
+                            'fontSize' => 14,
+                        ],
+                        'gridLines' => [
+                            'display' => false,
+                        ],
+                    ]],
+                ],
+                'datasets' => [
+                    'line' => [
+                        'backgroundColor' => '#3C8DBC',
+                        'borderColor' => '#367FA9',
+                    ],
+                ],
+            ])
+            ->dataset('Visiting Members', 'line', array_values($chart_data));
     }
 }
