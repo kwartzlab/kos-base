@@ -41,4 +41,7 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'slack' => [
+        'oauth_token' => env('SLACK_OAUTH_TOKEN'),
+    ],
 ];
