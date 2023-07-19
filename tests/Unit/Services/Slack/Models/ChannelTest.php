@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class ChannelTest extends TestCase
 {
-    public function testItCanBeConstructedWithAnId()
+    public function testItCanBeConstructedWithAnId(): void
     {
         $channel = new Channel('GeraltOfRivia');
         $this->assertEquals('GeraltOfRivia', $channel->getId());
