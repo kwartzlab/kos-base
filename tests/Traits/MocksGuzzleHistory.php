@@ -42,7 +42,7 @@ trait MocksGuzzleHistory
         $stack = HandlerStack::create($this->guzzleHandler);
         $stack->push($history);
         $this->guzzleClient = new Client(array_merge(['handler' => $stack], $config));
-        $this->app->bind(Client::class, function () {
+        app()->bind(Client::class, function () {
             return $this->guzzleClient;
         });
         return $container;
