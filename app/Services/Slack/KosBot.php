@@ -5,8 +5,6 @@ namespace App\Services\Slack;
 use App\Models\User;
 use App\Services\Slack\Models\Channel;
 use App\Services\Slack\Models\Message;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
 
 class KosBot
 {
