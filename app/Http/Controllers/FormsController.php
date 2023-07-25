@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Slack\KosBot;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -467,6 +468,8 @@ class FormsController extends Controller
 
                     // send email to admins (full contact info)
                     \Mail::send(new \App\Mail\MemberApp($email_data, 'admin'));
+
+                    app(KosBot::class)->postNewAppplicantMessage($user);
 
                     $user_id = $user->id;
                     $message = 'Application created & sent successfully.';
