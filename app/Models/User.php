@@ -6,13 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
-use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
-class User extends Authenticatable implements Auditable
+class User extends Authenticatable implements AuditableContract
 {
     use HasFactory;
     use Notifiable;
-    use \OwenIt\Auditing\Auditable;
+    use AuditableTrait;
+
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_SUSPENDED = 'suspended';
+    public const STATUS_TERMINATED = 'terminated';
+    public const STATUS_INACTIVE_ABANDONED = 'inactive-abandoned';
+    public const STATUS_HIATUS = 'hiatus';
+    public const STATUS_APPLICANT_ABANDONED = 'abandoned';
+    public const STATUS_APPLICANT_DENIED = 'applicant-denied';
+    public const STATUS_APPLICANT = 'applicant';
 
     /**
      * The attributes that are mass assignable.

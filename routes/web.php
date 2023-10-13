@@ -10,6 +10,7 @@ use App\Http\Controllers\KioskController;
 use App\Http\Controllers\MembersController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SlackInviteController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UsersController;
@@ -135,3 +136,6 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::resource('helpdesk', HelpdeskController::class);
 });
+
+// Slack route
+Route::get('/slack/invite', SlackInviteController::class);
