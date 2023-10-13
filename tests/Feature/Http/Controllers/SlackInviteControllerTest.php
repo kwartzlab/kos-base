@@ -60,7 +60,7 @@ class SlackInviteControllerTest extends TestCase
     {
         config(['services.slack.auto_invite.enabled' => true]);
         $user = User::factory()->create(['status' => $status]);
-        $token = Crypt::encrypt($user->member_id);
+        $token = Crypt::encrypt($user->id);
 
         $this->get("/slack/invite?t={$token}")->assertStatus(Response::HTTP_FORBIDDEN);
     }
@@ -72,7 +72,7 @@ class SlackInviteControllerTest extends TestCase
         config(['services.slack.auto_invite.enabled' => true]);
 
         $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
-        $token = Crypt::encrypt($user->member_id);
+        $token = Crypt::encrypt($user->id);
 
         $this->get("/slack/invite?t={$token}")->assertRedirect($redirectUrl);
     }

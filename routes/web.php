@@ -14,6 +14,8 @@ use App\Http\Controllers\SlackInviteController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UsersController;
+use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -138,4 +140,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Slack route
-Route::get('/slack/invite', SlackInviteController::class);
+Route::get('/slack/invite', SlackInviteController::class)->name('slack.invite');

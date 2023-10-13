@@ -7,12 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
+    public function definition(): array
     {
         static $password;
 
@@ -44,6 +39,11 @@ class UserFactory extends Factory
             'notes' => $this->faker->paragraph(),
             'remember_token' => $this->faker->lexify('???????????????'),
         ];
+    }
+
+    public function active()
+    {
+        return $this->state(['status' => 'active', 'date_applied' => now()->subDays(7), 'date_admitted' => now()->subDays(3)]);
     }
 
     public function applied()
