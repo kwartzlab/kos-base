@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Crypt;
@@ -44,14 +45,14 @@ class SlackInviteControllerTest extends TestCase
     public function provideNonActiveMemberStatuses(): array
     {
         return [
-            User::STATUS_INACTIVE => ['status' => User::STATUS_INACTIVE],
-            User::STATUS_SUSPENDED => ['status' => User::STATUS_SUSPENDED],
-            User::STATUS_TERMINATED => ['status' => User::STATUS_TERMINATED],
-            User::STATUS_INACTIVE_ABANDONED => ['status' => User::STATUS_INACTIVE_ABANDONED],
-            User::STATUS_HIATUS => ['status' => User::STATUS_HIATUS],
-            User::STATUS_APPLICANT_ABANDONED => ['status' => User::STATUS_APPLICANT_ABANDONED],
-            User::STATUS_APPLICANT_DENIED => ['status' => User::STATUS_APPLICANT_DENIED],
-            User::STATUS_APPLICANT => ['status' => User::STATUS_APPLICANT],
+            UserStatus::STATUS_INACTIVE => ['status' => UserStatus::STATUS_INACTIVE],
+            UserStatus::STATUS_SUSPENDED => ['status' => UserStatus::STATUS_SUSPENDED],
+            UserStatus::STATUS_TERMINATED => ['status' => UserStatus::STATUS_TERMINATED],
+            UserStatus::STATUS_INACTIVE_ABANDONED => ['status' => UserStatus::STATUS_INACTIVE_ABANDONED],
+            UserStatus::STATUS_HIATUS => ['status' => UserStatus::STATUS_HIATUS],
+            UserStatus::STATUS_APPLICANT_ABANDONED => ['status' => UserStatus::STATUS_APPLICANT_ABANDONED],
+            UserStatus::STATUS_APPLICANT_DENIED => ['status' => UserStatus::STATUS_APPLICANT_DENIED],
+            UserStatus::STATUS_APPLICANT => ['status' => UserStatus::STATUS_APPLICANT],
         ];
     }
 
@@ -71,7 +72,7 @@ class SlackInviteControllerTest extends TestCase
         config(['services.slack.auto_invite.url' => $redirectUrl]);
         config(['services.slack.auto_invite.enabled' => true]);
 
-        $user = User::factory()->create(['status' => User::STATUS_ACTIVE]);
+        $user = User::factory()->create(['status' => UserStatus::STATUS_ACTIVE]);
         $token = Crypt::encrypt($user->id);
 
         $this->get("/slack/invite?t={$token}")->assertRedirect($redirectUrl);

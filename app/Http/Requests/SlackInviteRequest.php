@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Models\UserStatus;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
@@ -55,7 +56,7 @@ class SlackInviteRequest extends FormRequest
     public function abortIfUserNotActive(): void
     {
         $user = User::query()->find(Crypt::decrypt($this->input('t')));
-        if ($user->status !== User::STATUS_ACTIVE) {
+        if ($user->status !== UserStatus::STATUS_ACTIVE) {
             abort(Response::HTTP_FORBIDDEN);
         }
     }
