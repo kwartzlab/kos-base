@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SlackInvite;
+use App\Models\UserStatus;
 use App\Traits\UserStatusTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {
@@ -148,6 +151,7 @@ class UsersController extends Controller
             if (! $request->has('status_type')) {
                 return view('errors.403', null, 403);
             }
+
             // create new status update
             $status = new \App\Models\UserStatus([
                 'user_id' => $user->id,
@@ -161,8 +165,15 @@ class UsersController extends Controller
 
             switch ($request->input('status_type')) {
                 case 'active':
+                    $oldStatus = $user->status;
+
                     $status->status = 'active';
                     $status->save();
+
+                    if (in_array($oldStatus, UserStatus::STATUSES_TO_ACTIVE_SEND_SLACK_INVITE)) {
+                        Mail::send(new SlackInvite($user));
+                    }
+
                     break;
                 case 'inactive':
                     $status->status = 'inactive';

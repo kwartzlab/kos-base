@@ -46,5 +46,9 @@ return [
         'channels' => [
             'applicants' => env('SLACK_APPLICANTS_CHANNEL_ID'),
         ],
+        'auto_invite' => [
+            'enabled' => env('SLACK_AUTO_INVITE_ENABLED', false),
+            'url' => env('SLACK_INVITE_URL'),
+        ],
     ],
 ];
