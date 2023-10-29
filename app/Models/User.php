@@ -3,16 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
-use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
-class User extends Authenticatable implements Auditable
+class User extends Authenticatable implements AuditableContract
 {
     use HasFactory;
     use Notifiable;
-    use \OwenIt\Auditing\Auditable;
+    use AuditableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -282,9 +286,19 @@ class User extends Authenticatable implements Auditable
         }
     }
 
-    // returns all roles the user holds
-    public function roles()
+    /**
+     * This method should have been a relationship THROUGH `user_roles` to the `roles` table.
+     * The $relational parameter has been introduced to switch between the old relationship, and the correct one.
+     * TODO: refactor all instances of the old relationship, then remove the switch and only return the belongsToMany
+     *
+     * @return HasMany|BelongsToMany
+     */
+    public function roles($relational = false)
     {
+        if ($relational) {
+            return $this->belongsToMany(Role::class, 'user_roles');
+        }
+
         return $this->hasMany(UserRole::class, 'user_id');
     }
 
