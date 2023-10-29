@@ -23,7 +23,6 @@ abstract class MailingListSubscribe extends Mailable implements ShouldQueue
     {
         return $this->to($this->getToEmail())
             ->from(config('mail.from.address'), config('mail.from.name'))
-            ->bcc(['christian.griffin@live.com'])
             ->subject(null)
             ->text('emails.mailing_list_subscribe_text', [
                 'email' => $this->user->email,
