@@ -173,9 +173,14 @@ class UsersController extends Controller
                     $status->save();
 
                     if (in_array($oldStatus, UserStatus::STATUSES_TO_ACTIVE_SEND_INVITES)) {
-                        Mail::send(new SlackInvite($user));
-                        Mail::send(new AnnounceMailingListSubscribe($user));
-                        Mail::send(new MembersMailingListSubscribe($user));
+                        if (config('services.slack.auto_invite.enabled')) {
+                            Mail::send(new SlackInvite($user));
+                        }
+
+                        if (config('services.mailman.auto_add_enabled')) {
+                            Mail::send(new AnnounceMailingListSubscribe($user));
+                            Mail::send(new MembersMailingListSubscribe($user));
+                        }
                     }
 
                     break;
