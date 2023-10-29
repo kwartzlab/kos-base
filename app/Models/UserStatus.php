@@ -21,7 +21,7 @@ class UserStatus extends Model implements Auditable
     public const STATUS_APPLICANT_DENIED = 'applicant-denied';
     public const STATUS_APPLICANT = 'applicant';
 
-    public const STATUSES_TO_ACTIVE_SEND_SLACK_INVITE = [
+    public const STATUSES_TO_ACTIVE_SEND_INVITES = [
         self::STATUS_INACTIVE,
         self::STATUS_TERMINATED,
         self::STATUS_INACTIVE_ABANDONED,

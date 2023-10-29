@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AnnounceMailingListSubscribe;
+use App\Mail\MembersMailingListSubscribe;
 use App\Mail\SlackInvite;
 use App\Models\UserStatus;
 use App\Traits\UserStatusTrait;
@@ -170,8 +172,10 @@ class UsersController extends Controller
                     $status->status = 'active';
                     $status->save();
 
-                    if (in_array($oldStatus, UserStatus::STATUSES_TO_ACTIVE_SEND_SLACK_INVITE)) {
+                    if (in_array($oldStatus, UserStatus::STATUSES_TO_ACTIVE_SEND_INVITES)) {
                         Mail::send(new SlackInvite($user));
+                        Mail::send(new AnnounceMailingListSubscribe($user));
+                        Mail::send(new MembersMailingListSubscribe($user));
                     }
 
                     break;

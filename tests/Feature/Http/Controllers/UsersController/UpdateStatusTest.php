@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers\UsersController;
 
+use App\Mail\AnnounceMailingListSubscribe;
+use App\Mail\MembersMailingListSubscribe;
 use App\Mail\SlackInvite;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -15,7 +17,7 @@ class UpdateStatusTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function provideValidSlackInviteEmailStatuses(): array
+    public function provideValidInviteStatuses(): array
     {
         return [
             UserStatus::STATUS_INACTIVE => [
@@ -58,7 +60,7 @@ class UpdateStatusTest extends TestCase
     }
 
     /**
-     * @dataProvider provideValidSlackInviteEmailStatuses
+     * @dataProvider provideValidInviteStatuses
      * @runInSeparateProcess
      */
     public function testItQueuesSlackInviteEmailWhenUserIsMovedFromValidStatusToActive(
@@ -97,5 +99,53 @@ class UpdateStatusTest extends TestCase
         }
 
         Mail::assertNotQueued(SlackInvite::class);
+    }
+
+    /**
+     * @dataProvider provideValidInviteStatuses
+     * @runInSeparateProcess
+     */
+    public function testItQueuesMailingListEmailsWhenUserIsMovedFromValidStatusToActive(
+        string $status,
+        bool $shouldSend
+    ): void
+    {
+        Mail::fake();
+
+        $role = Role::query()->create(['name' => 'test-admin', 'description' => '']);
+        RolePermission::query()->create([
+            'role_id' => $role->id,
+            'object' => 'users',
+            'operation' => 'manage',
+        ]);
+        /** @var User $adminUser */
+        $adminUser = User::factory()->create(['status' => UserStatus::STATUS_ACTIVE]);
+        $adminUser->roles(true)->attach($role);
+
+        $user = User::factory()->create(['status' => $status]);
+
+        $response = $this->actingAs($adminUser)
+            ->post("/users/{$user->id}/status", [
+                'status_type' => UserStatus::STATUS_ACTIVE,
+                'effective_date' => now()->format('Y-m-d'),
+                'effective_date_ending' => now()->format('Y-m-d')
+            ]);
+
+        $response->assertOk();
+
+        if ($shouldSend) {
+            Mail::assertQueued(
+                AnnounceMailingListSubscribe::class,
+                fn (AnnounceMailingListSubscribe $mail) => $user->id === $mail->user->id,
+            );
+            Mail::assertQueued(
+                MembersMailingListSubscribe::class,
+                fn (MembersMailingListSubscribe $mail) => $user->id === $mail->user->id,
+            );
+            return;
+        }
+
+        Mail::assertNotQueued(AnnounceMailingListSubscribe::class);
+        Mail::assertNotQueued(MembersMailingListSubscribe::class);
     }
 }
