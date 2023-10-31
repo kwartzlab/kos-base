@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers\UsersController;
 
+use App\Mail\AnnounceMailingListSubscribe;
+use App\Mail\MembersMailingListSubscribe;
 use App\Mail\SlackInvite;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -15,7 +17,22 @@ class UpdateStatusTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function provideValidSlackInviteEmailStatuses(): array
+    private User $adminUser;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $role = Role::query()->create(['name' => 'test-admin', 'description' => '']);
+        RolePermission::query()->create([
+            'role_id' => $role->id,
+            'object' => 'users',
+            'operation' => 'manage',
+        ]);
+        $this->adminUser = User::factory()->create(['status' => UserStatus::STATUS_ACTIVE]);
+        $this->adminUser->roles(true)->attach($role);
+    }
+
+    public function provideValidInviteStatuses(): array
     {
         return [
             UserStatus::STATUS_INACTIVE => [
@@ -58,7 +75,7 @@ class UpdateStatusTest extends TestCase
     }
 
     /**
-     * @dataProvider provideValidSlackInviteEmailStatuses
+     * @dataProvider provideValidInviteStatuses
      * @runInSeparateProcess
      */
     public function testItQueuesSlackInviteEmailWhenUserIsMovedFromValidStatusToActive(
@@ -67,20 +84,10 @@ class UpdateStatusTest extends TestCase
     ): void
     {
         Mail::fake();
-
-        $role = Role::query()->create(['name' => 'test-admin', 'description' => '']);
-        RolePermission::query()->create([
-            'role_id' => $role->id,
-            'object' => 'users',
-            'operation' => 'manage',
-        ]);
-        /** @var User $adminUser */
-        $adminUser = User::factory()->create(['status' => UserStatus::STATUS_ACTIVE]);
-        $adminUser->roles(true)->attach($role);
+        config(['services.slack.auto_invite.enabled' => true]);
 
         $user = User::factory()->create(['status' => $status]);
-
-        $response = $this->actingAs($adminUser)
+        $response = $this->actingAs($this->adminUser)
             ->post("/users/{$user->id}/status", [
                 'status_type' => UserStatus::STATUS_ACTIVE,
                 'effective_date' => now()->format('Y-m-d'),
@@ -97,5 +104,90 @@ class UpdateStatusTest extends TestCase
         }
 
         Mail::assertNotQueued(SlackInvite::class);
+    }
+
+    /**
+     * @dataProvider provideValidInviteStatuses
+     * @runInSeparateProcess
+     */
+    public function testItDoesNotQueueSlackInviteEmailWhenUserIsMovedFromValidStatusToActiveWhenNotEnabled(
+        string $status
+    ): void
+    {
+        Mail::fake();
+        config(['services.slack.auto_invite.enabled' => false]);
+
+        $user = User::factory()->create(['status' => $status]);
+        $response = $this->actingAs($this->adminUser)
+            ->post("/users/{$user->id}/status", [
+                'status_type' => UserStatus::STATUS_ACTIVE,
+                'effective_date' => now()->format('Y-m-d'),
+                'effective_date_ending' => now()->format('Y-m-d')
+            ]);
+
+        $response->assertOk();
+        Mail::assertNotQueued(SlackInvite::class);
+    }
+
+    /**
+     * @dataProvider provideValidInviteStatuses
+     * @runInSeparateProcess
+     */
+    public function testItQueuesMailingListEmailsWhenUserIsMovedFromValidStatusToActive(
+        string $status,
+        bool $shouldSend
+    ): void
+    {
+        Mail::fake();
+        config(['services.mailman.auto_add_enabled' => true]);
+
+        $user = User::factory()->create(['status' => $status]);
+        $response = $this->actingAs($this->adminUser)
+            ->post("/users/{$user->id}/status", [
+                'status_type' => UserStatus::STATUS_ACTIVE,
+                'effective_date' => now()->format('Y-m-d'),
+                'effective_date_ending' => now()->format('Y-m-d')
+            ]);
+
+        $response->assertOk();
+
+        if ($shouldSend) {
+            Mail::assertQueued(
+                AnnounceMailingListSubscribe::class,
+                fn (AnnounceMailingListSubscribe $mail) => $user->id === $mail->user->id,
+            );
+            Mail::assertQueued(
+                MembersMailingListSubscribe::class,
+                fn (MembersMailingListSubscribe $mail) => $user->id === $mail->user->id,
+            );
+            return;
+        }
+
+        Mail::assertNotQueued(AnnounceMailingListSubscribe::class);
+        Mail::assertNotQueued(MembersMailingListSubscribe::class);
+    }
+
+    /**
+     * @dataProvider provideValidInviteStatuses
+     * @runInSeparateProcess
+     */
+    public function testItDoesNotQueueMailingListEmailsWhenUserIsMovedFromValidStatusToActiveWhenNotEnabled(
+        string $status
+    ): void
+    {
+        Mail::fake();
+        config(['services.mailman.auto_add_enabled' => false]);
+
+        $user = User::factory()->create(['status' => $status]);
+        $response = $this->actingAs($this->adminUser)
+            ->post("/users/{$user->id}/status", [
+                'status_type' => UserStatus::STATUS_ACTIVE,
+                'effective_date' => now()->format('Y-m-d'),
+                'effective_date_ending' => now()->format('Y-m-d')
+            ]);
+
+        $response->assertOk();
+        Mail::assertNotQueued(AnnounceMailingListSubscribe::class);
+        Mail::assertNotQueued(MembersMailingListSubscribe::class);
     }
 }

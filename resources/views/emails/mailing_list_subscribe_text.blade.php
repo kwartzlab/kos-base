@@ -1,0 +1,1 @@
+subscribe {{ $password }} nodigest address={{ $email }}

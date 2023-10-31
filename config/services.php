@@ -51,4 +51,16 @@ return [
             'url' => env('SLACK_INVITE_URL'),
         ],
     ],
+
+    'mailman' => [
+        'auto_add_enabled' => env('MAILING_LIST_AUTO_INVITE_ENABLED', false),
+        'announce' => [
+            'request_address' => env('ANNOUNCE_MAILING_LIST_REQUEST_ADDRESS'),
+            'password' => env('ANNOUNCE_MAILING_LIST_PASSWORD'),
+        ],
+        'members' => [
+            'request_address' => env('MEMBERS_MAILING_LIST_REQUEST_ADDRESS'),
+            'password' => env('MEMBERS_MAILING_LIST_PASSWORD'),
+        ],
+    ],
 ];
