@@ -5,8 +5,10 @@ namespace Database\Seeders;
 use App\Models\Role;
 use App\Models\RolePermission;
 use App\Models\User;
+use App\Models\UserSkill;
 use App\Models\UserStatus;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->seedRolesTable();
         $this->seedUsersTable();
+        $this->seedUserSkillsTable();
     }
 
     private function seedRolesTable(): void
@@ -86,5 +89,36 @@ class DatabaseSeeder extends Seeder
     private function createUsers(string $status, int $count = 1): void
     {
         User::factory()->count($count)->status($status)->create();
+    }
+
+    private function seedUserSkillsTable(): void
+    {
+        $skills = [
+            'Woodworking',
+            '3D Printing',
+            'Programming',
+            'Welding',
+            'Acting',
+            'Electronics',
+            'Painting',
+            'Sewing',
+            'Machining',
+            'Dancing',
+            'Slaying Monsters',
+            'Sorcery',
+            'Potion Mixing'
+        ];
+
+        User::all()->each(function (User $user) use ($skills) {
+            if(random_int(0, 10) >= 2) {
+                return;
+            }
+
+            $skillNumWeights = [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3];
+            $numberOfSkills = $skillNumWeights[array_rand($skillNumWeights)];
+
+            collect(Arr::only($skills, array_rand($skills, $numberOfSkills)))
+                ->each(fn (string $skill) => UserSkill::query()->create(['user_id' => $user->id, 'skill' => $skill]));
+        });
     }
 }
