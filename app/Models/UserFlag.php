@@ -9,6 +9,9 @@ class UserFlag extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
+    public const FLAG_COVID_VACCINE = 'covid_vaccine';
+    public const FLAG_KEYS_DISABLED = 'keys_disabled';
+
     protected $fillable = ['user_id', 'flag'];
 
     public function user()

@@ -21,8 +21,8 @@ class UserFactory extends Factory
         return [
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'first_preferred' => $firstName,
-            'last_preferred' => $lastName,
+            'first_preferred' => null,
+            'last_preferred' => null,
             'email' => "$firstName.$lastName@example.com",
             'password' => $password ?: $password = bcrypt('secret'),
             'status' => 'active',
