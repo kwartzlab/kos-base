@@ -8,11 +8,14 @@ use App\Services\Slack\Models\Channel;
 use App\Services\Slack\Models\Message;
 use App\Services\Slack\Slack;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 class KosBotTest extends TestCase
 {
+    use RefreshDatabase;
+
     private MockObject|Slack $slack;
     private KosBot $kosBot;
 

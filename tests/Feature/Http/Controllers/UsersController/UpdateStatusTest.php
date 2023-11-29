@@ -74,10 +74,7 @@ class UpdateStatusTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideValidInviteStatuses
-     * @runInSeparateProcess
-     */
+    /** @dataProvider provideValidInviteStatuses */
     public function testItQueuesSlackInviteEmailWhenUserIsMovedFromValidStatusToActive(
         string $status,
         bool $shouldSend
@@ -106,10 +103,7 @@ class UpdateStatusTest extends TestCase
         Mail::assertNotQueued(SlackInvite::class);
     }
 
-    /**
-     * @dataProvider provideValidInviteStatuses
-     * @runInSeparateProcess
-     */
+    /** @dataProvider provideValidInviteStatuses */
     public function testItDoesNotQueueSlackInviteEmailWhenUserIsMovedFromValidStatusToActiveWhenNotEnabled(
         string $status
     ): void
@@ -129,10 +123,7 @@ class UpdateStatusTest extends TestCase
         Mail::assertNotQueued(SlackInvite::class);
     }
 
-    /**
-     * @dataProvider provideValidInviteStatuses
-     * @runInSeparateProcess
-     */
+    /** @dataProvider provideValidInviteStatuses */
     public function testItQueuesMailingListEmailsWhenUserIsMovedFromValidStatusToActive(
         string $status,
         bool $shouldSend
@@ -167,10 +158,7 @@ class UpdateStatusTest extends TestCase
         Mail::assertNotQueued(MembersMailingListSubscribe::class);
     }
 
-    /**
-     * @dataProvider provideValidInviteStatuses
-     * @runInSeparateProcess
-     */
+    /** @dataProvider provideValidInviteStatuses */
     public function testItDoesNotQueueMailingListEmailsWhenUserIsMovedFromValidStatusToActiveWhenNotEnabled(
         string $status
     ): void

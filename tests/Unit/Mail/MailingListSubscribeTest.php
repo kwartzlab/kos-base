@@ -4,10 +4,13 @@ namespace Tests\Unit\Mail;
 
 use App\Mail\MailingListSubscribe;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 abstract class MailingListSubscribeTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function testItBuildsWithExpectedRecipientAndContent()
     {
         config([$this->getToAddressConfigPath() => 'geralt@rivia.of']);

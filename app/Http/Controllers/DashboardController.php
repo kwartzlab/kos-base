@@ -10,7 +10,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
         // compile latest new members
         $latest_members = \App\Models\User::where(['status' => 'active'])->orderby('date_admitted', 'desc')->orderby('first_preferred')->limit(5)->get();
 
@@ -21,7 +20,10 @@ class DashboardController extends Controller
         $gatekeepers = \App\Models\Gatekeeper::where(['status' => 'enabled', 'type' => 'lockout'])->orderby('name')->get();
 
         /* EVENTS CALENDAR */
-        $events = Event::get(Carbon::now(), Carbon::now()->addDay(14));
+        $events = config('app.env') === 'production'
+            ? app(Event::class)::get(Carbon::now(), Carbon::now()->addDay(14))
+            : collect();
+
         $events = $events->groupby((function ($val) {
             if ($val->start->date == null) {
                 return Carbon::parse($val->startDateTime)->format('Y-m-d');
