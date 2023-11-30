@@ -14,7 +14,7 @@ Begin by navigating to the directory where you want to clone kOS in your termina
 git clone https://github.com/kwartzlab/kos-base.git
 ```
 
-This will clone the repository from Github. Once cloned, navigate into the new directory:
+This will clone the repository from GitHub. Once cloned, navigate into the new directory:
 
 ```shell
 cd kos-base
@@ -79,11 +79,11 @@ This will run every test in the application. To run specific tests, you can filt
 ### User Features ###
 
 * **kOS Dashboard** - Allows members to log in to view use space information such as member traffic, real-time tool use, upcoming events and more
-* **Member Profiles** - Allows members to share interests, social media links and relevant certifications for volunteer roles (CPR, etc)
+* **Member Profiles** - Allows members to share interests, social media links and relevant certifications for volunteer roles (CPR, etc.)
 
 ## Features In Progress ##
 
-* **Training System** - Allows members to sign up for training courses for specific tools or general training (eg. Health & Safety). Courses will appear as a skill tree to show pre-requisites. Instructors will be able to Approve/Deny access to related tools as needed.
+* **Training System** - Allows members to sign up for training courses for specific tools or general training (e.g. Health & Safety). Courses will appear as a skill tree to show pre-requisites. Instructors will be able to Approve/Deny access to related tools as needed.
 * **Maintenance Requests** - Provides a centralized way to handle tool maintenance and other technical requests
 * **Custom Reports** - Provides a robust, customizable way to generate reports for anything from member attendance, tool use, door statistics, team organization, training & maintenance requests
 
@@ -91,4 +91,4 @@ This will run every test in the application. To run specific tests, you can filt
 
 * **kOS Gatekeeper Project** - Raspberry Pi-based lockout with a custom PCB & enclosures designed for NFC-based key access and tool lockout modes. Two-way communication allows for remote status updates, tool lockout (for maintenance) and door unlock events. Enclosures are 3D printed and PCB is designed with through-hole components for easy assembly.
 
-Communication & key synchronizaion with kOS is done via a SSL-encrypted API allowing for unlimited custom hardware possibilities.
+Communication & key synchronization with kOS is done via an SSL-encrypted API allowing for unlimited custom hardware possibilities.
