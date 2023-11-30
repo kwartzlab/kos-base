@@ -12,7 +12,7 @@ kOS requires PHP version 8.0 or higher, a MySQL server running 5.6 or higher, an
 
 1. php 8.0 or higher https://www.php.net/manual/en/install.php
 
-2. enable php extensions mbstring xml curl mysql sqlite3
+2. enable php extensions `mbstring xml curl mysql sqlite3`
 
    - \*nix - install packages 
 
@@ -20,7 +20,7 @@ kOS requires PHP version 8.0 or higher, a MySQL server running 5.6 or higher, an
 
    - windows - modify php.ini file
      - find php.ini file: `php -r "phpinfo();" | grep php.ini`
-     - uncomment `extension=mbstring`
+     - uncomment the extensions ie. `extension=mbstring`
 
 3. mysql 5.6 or higher https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/
 
@@ -59,7 +59,7 @@ This will install everything needed to run the application.
 > note: if install fails it\'s most likely due to incorrect dependencies.
 > Check the dependency section to see if anything was missed.
 
-##### 3. Create database and mysql user
+##### 3. Create mysql database and user
 
 Start mysql as the root user (`sudo mysql` in \*nix).
 In the mysql prompt execute the following commands:
