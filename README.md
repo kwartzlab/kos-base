@@ -14,7 +14,7 @@ kOS requires PHP version 8.0 or higher, a MySQL server running 5.6 or higher, an
 
 2. enable php extensions `mbstring xml curl mysql sqlite3`
 
-   - \*nix - install packages (only tested on ubuntu, your millage may very)
+   - \*nix - install packages (only tested on ubuntu, your mileage may very)
 
            sudo apt-get install php-mbstring php-xml php-curl php-mysql php-sqlite3
 
