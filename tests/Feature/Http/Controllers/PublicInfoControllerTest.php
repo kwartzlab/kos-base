@@ -10,29 +10,38 @@ class PublicInfoControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testItReturnsActiveNumberOfUsers()
+    /**
+     * @dataProvider publicUserCountData
+     */
+    public function testPublicUserCount(int $activeUsers, int $expectedUserCount, int $hiatusUsers = 0): void
     {
-        // return 0 if no active users
-        $this->get('/api/public-info')
-            ->assertStatus(200)
-            ->assertJson([
-                'number_of_active_users' => 0,
-            ]);
+        User::factory($activeUsers)->active()->create();
+        User::factory($hiatusUsers)->hiatus()->create();
 
-        // return count if active users exist
-        User::factory()->active()->create();
         $this->get('/api/public-info')
             ->assertStatus(200)
             ->assertJson([
-                'number_of_active_users' => 1,
+                'number_of_active_users' => $expectedUserCount,
             ]);
+    }
 
-        // do not count non-active users
-        User::factory()->hiatus()->create();
-        $this->get('/api/public-info')
-            ->assertStatus(200)
-            ->assertJson([
-                'number_of_active_users' => 1,
-            ]);
+    /**
+     * @return int[][]
+     */
+    public function publicUserCountData(): array
+    {
+        return [
+            // [activeUsers, expectedUserCount, hiatusUsers = 0]
+
+            // does not fail when there are 0 users
+            [0, 0],
+
+            // rolls over to the next multiple of ten when the count is greater by 5
+            [14, 0],
+            [15, 10],
+
+            // hiatus members don't affect count
+            [15, 10, 10],
+        ];
     }
 }
