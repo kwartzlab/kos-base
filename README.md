@@ -8,15 +8,19 @@ KwartzlabOS (kOS for short) is a member management and access control system ori
 
 #### Install Dependencies ####
 
-kOS requires PHP version 8.0 or higher, a MySQL server running 5.6 or higher, and composer.
+kOS requires the following external dependencies:
+
+>  note: this has only been tested on ubuntu, your millage may very
 
 1. php 8.0 or higher https://www.php.net/manual/en/install.php
+
+        sudo apt install php
 
 2. enable php extensions `mbstring xml curl mysql sqlite3`
 
    - \*nix - install packages (only tested on ubuntu, your mileage may very)
 
-           sudo apt-get install php-mbstring php-xml php-curl php-mysql php-sqlite3
+            sudo apt install php-mbstring php-xml php-curl php-mysql php-sqlite3
 
    - windows - modify php.ini file
      - find php.ini file: `php -r "phpinfo();" | grep php.ini`
@@ -24,11 +28,15 @@ kOS requires PHP version 8.0 or higher, a MySQL server running 5.6 or higher, an
 
 3. mysql 5.6 or higher https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/
 
+        sudo apt install mysql
+
    1. consider running secure install if this is your first time installing
 
           sudo mysql_secure_installation utility
 
 4. sqlite3 https://www.sqlite.org/download.html
+
+        sudo apt install sqlite3
 
 5. composer https://getcomposer.org/doc/00-intro.md
 
@@ -65,30 +73,40 @@ Start mysql as the root user (`sudo mysql` in \*nix).
 In the mysql prompt execute the following commands:
 
 ```sql
-create database homestead
+create database homestead;
 CREATE USER 'homestead'@'localhost' IDENTIFIED BY 'secret';
 GRANT all on `homestead`.* TO 'homestead'@'localhost';
 ```
 
 ##### 4. create copy of .env file
-Next, copy and paste the `.env.example` file to a new `.env` file. This will contain all the environment information your application needs, such as database credentials. You will need to determine what these values need to be for your local setup yourself. Once you have everything filled in, run the following command:
+Next, copy and paste the `.env.example` file to a new `.env` file.
+This will contain all the environment information your application needs, such as database credentials.
+You will need to determine what these values need to be for your local setup yourself.
 
 ##### 5. generate local keys
 ```shell
 php artisan key:generate
 ```
 
-This will generate an application encryption key, which is required for the application to run.
+##### 6. Migarte Database
 
-### Database Seeding ###
+You should now have a database without tables.
+The following command adds tables from the migrations up until now.
 
-You now have everything you need for the application to run, but your database is woefully empty. You will need users, forms, etc. for the application to reasonably be used and tested locally. Run the following command:
+```shell
+php artisan migrate
+```
+
+##### 7. Seed Database
+
+You now have everything you need for the application to run, but your database is woefully empty.
+You will need users, forms, etc. for the application to reasonably be used and tested locally.
+This will seed everything you need for the application to run locally, such as test users and submission forms.
+Run the following command:
 
 ```shell
 php artisan db:seed
 ```
-
-This will seed everything you need for the application to run locally, such as test users and submission forms.
 
 One user of every role will be created. (see Test Users section)
 
