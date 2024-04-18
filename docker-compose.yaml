@@ -1,0 +1,42 @@
+services:
+  # Kos application container
+  app:
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - "./:/app/"
+      - /app/vendor # Use dependencies installed by composer during image building.
+                    # Remove the above line to use the local `vendor` directory.
+    networks:
+      - data-network
+
+  # MySQL database container
+  db:
+    image: mysql
+    environment:
+      # Users and databases are created automatically on initialization
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      # Set login details per Laravel config
+      MYSQL_DATABASE: "$DB_DATABASE"
+      MYSQL_USER: "$DB_USERNAME"
+      MYSQL_PASSWORD: "$DB_PASSWORD"
+    networks:
+      - data-network
+
+  # MySQL visualization tool useful for debugging
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8001:80
+    environment:
+      PMA_HOST: "$DB_HOST"
+      PMA_PORT: "$DB_PORT"
+      PMA_USER: "$DB_USERNAME"
+      PMA_PASSWORD: "$DB_PASSWORD"
+      UPLOAD_LIMIT: 100M
+    networks:
+      - data-network
+
+networks:
+  data-network: {}

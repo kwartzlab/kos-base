@@ -4,7 +4,68 @@ KwartzlabOS (kOS for short) is a member management and access control system ori
 
 ## Local Development ##
 
-### Application Installation ###
+### Docker setup ###
+
+#### 0. Pre-requisite: Install Docker
+
+Installation of Docker is required for the Docker setup development path. Please make sure both the `docker` and `docker compose` commands are available as they are used throughout setup.
+
+NOTE: Different installation methods of Docker provide Docker Compose under different names. The following instructions reference Docker Compose as `docker compose`. If however your environment uses `docker-compose`, use that instead.
+
+#### 1. Clone
+Begin by navigating to the directory where you want to clone kOS in your terminal, then run the following:
+
+```shell
+git clone https://github.com/kwartzlab/kos-base.git
+```
+
+This will clone the repository from GitHub. Once cloned, navigate into the new directory:
+
+```shell
+cd kos-base
+```
+
+#### 2. Build Docker image
+Files provided in the repository are pre-configured to build Kos from the application source code previously cloned in the last step. The Kos Docker image is built in steps. Once each step completes, it's stored in a cache for later to speed up following builds.
+
+To build the application image, run:
+```shell
+docker compose build
+```
+
+#### 3. Run Kos
+With the application image built, we can now stand up Kos with necessary dependencies. To run Kos, run:
+```shell
+docker compose up
+```
+When Kos is ready, you should see a message in your console like this:
+> INFO  Server running on [http://0.0.0.0:8000].
+
+Open your browser and navigate to [http://localhost:8000/](http://localhost:8000/). You should be presented with the login page. See details below to login.
+
+To shut down Kos, go back to your terminal and press Control+C. You can remove resources once shut down with:
+```shell
+docker compose down
+```
+
+Once you've tested running Kos for the first time, you can optionally run Kos in the background instead. To run Kos in the background, run:
+```shell
+docker compose up -d
+```
+
+#### Next steps
+
+##### Unit Testing
+
+`phpunit` is available within the container to test the built image. To unit test the image, run the following command in another terminal with the Kos container running.
+```shell
+docker compose exec app ./vendor/bin/phpunit
+```
+
+##### phpMyAdmin
+phpMyAdmin is a PHP based web interface for MySQL databases. phpMyAdmin has been pre-configured to connect to and manage the Kos database for local debugging. To access the interface, navigate to [http://localhost:8001/](http://localhost:8001/) with Kos running.
+
+### Application Installation (Manual) ###
 
 #### Install Dependencies ####
 
