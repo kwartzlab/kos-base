@@ -4,6 +4,10 @@ services:
     build: .
     ports:
       - 8000:8000
+    volumes:
+      - "./:/app/"
+      - /app/vendor # Use dependencies installed by composer during image building.
+                    # Remove the above line to use the local `vendor` directory.
     networks:
       - data-network
 
