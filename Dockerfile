@@ -1,13 +1,7 @@
 FROM ubuntu:latest
 
-# Set `apt-get` to non-interactive mode.
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Update package listings
-RUN apt-get update
-
 # Install core packages.
-RUN apt-get install -yq \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
       php \
       php-mbstring \
       php-xml \
@@ -18,9 +12,6 @@ RUN apt-get install -yq \
       git-core \
       zip \
       mysql-client
-
-# Clean up extra package manager files to reduce image size.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer.
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
