@@ -143,9 +143,13 @@ class User extends Authenticatable implements AuditableContract
     {
         if ($this->first_preferred == null) {
             $first_name = $this->first_name;
-            $last_name = $this->last_name;
         } else {
             $first_name = $this->first_preferred;
+        }
+
+        if ($this->last_preferred == null) {
+            $last_name = $this->last_name;
+        } else {
             $last_name = $this->last_preferred;
         }
 
