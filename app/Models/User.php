@@ -141,13 +141,8 @@ class User extends Authenticatable implements AuditableContract
     // return user's full name
     public function get_name($piece = null)
     {
-        if ($this->first_preferred == null) {
-            $first_name = $this->first_name;
-            $last_name = $this->last_name;
-        } else {
-            $first_name = $this->first_preferred;
-            $last_name = $this->last_preferred;
-        }
+        $first_name = $this->first_preferred ?? $this->first_name;
+        $last_name = $this->last_preferred ?? $this->last_name;
 
         switch ($piece) {
             case 'first':

@@ -29,6 +29,9 @@ backups
 .vscode
 .idea
 
+# vim
+*.swp
+
 # PHPUnit
 .phpunit.result.cache
 
