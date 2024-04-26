@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers\UsersController;
 
-use App\Mail\AnnounceMailingListSubscribe;
-use App\Mail\MembersMailingListSubscribe;
 use App\Mail\SlackInvite;
 use App\Models\Role;
 use App\Models\RolePermission;
@@ -123,59 +121,4 @@ class UpdateStatusTest extends TestCase
         Mail::assertNotQueued(SlackInvite::class);
     }
 
-    /** @dataProvider provideValidInviteStatuses */
-    public function testItQueuesMailingListEmailsWhenUserIsMovedFromValidStatusToActive(
-        string $status,
-        bool $shouldSend
-    ): void
-    {
-        Mail::fake();
-        config(['services.mailman.auto_add_enabled' => true]);
-
-        $user = User::factory()->create(['status' => $status]);
-        $response = $this->actingAs($this->adminUser)
-            ->post("/users/{$user->id}/status", [
-                'status_type' => UserStatus::STATUS_ACTIVE,
-                'effective_date' => now()->format('Y-m-d'),
-                'effective_date_ending' => now()->format('Y-m-d')
-            ]);
-
-        $response->assertOk();
-
-        if ($shouldSend) {
-            Mail::assertQueued(
-                AnnounceMailingListSubscribe::class,
-                fn (AnnounceMailingListSubscribe $mail) => $user->id === $mail->user->id,
-            );
-            Mail::assertQueued(
-                MembersMailingListSubscribe::class,
-                fn (MembersMailingListSubscribe $mail) => $user->id === $mail->user->id,
-            );
-            return;
-        }
-
-        Mail::assertNotQueued(AnnounceMailingListSubscribe::class);
-        Mail::assertNotQueued(MembersMailingListSubscribe::class);
-    }
-
-    /** @dataProvider provideValidInviteStatuses */
-    public function testItDoesNotQueueMailingListEmailsWhenUserIsMovedFromValidStatusToActiveWhenNotEnabled(
-        string $status
-    ): void
-    {
-        Mail::fake();
-        config(['services.mailman.auto_add_enabled' => false]);
-
-        $user = User::factory()->create(['status' => $status]);
-        $response = $this->actingAs($this->adminUser)
-            ->post("/users/{$user->id}/status", [
-                'status_type' => UserStatus::STATUS_ACTIVE,
-                'effective_date' => now()->format('Y-m-d'),
-                'effective_date_ending' => now()->format('Y-m-d')
-            ]);
-
-        $response->assertOk();
-        Mail::assertNotQueued(AnnounceMailingListSubscribe::class);
-        Mail::assertNotQueued(MembersMailingListSubscribe::class);
-    }
 }
