@@ -19,8 +19,8 @@ return [
 
     'membership_app' => [                       // membership app email configuration for admin and members mailings
         'admin' => [
-            'to' => 'membership@kwartzlab.ca',
-            'cc' => 'bod@kwartzlab.ca',
+            'to' => 'bod@kwartzlab.ca',
+            'cc' => null,
             'replyto' => null,
             'subject' => 'New Member App [BoD Version]',
         ],
