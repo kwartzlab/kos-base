@@ -81,7 +81,7 @@ kOS requires the following external dependencies:
 
    - \*nix - install packages (only tested on ubuntu, your mileage may very)
 
-            sudo apt install php-mbstring php-xml php-curl php-mysql php-sqlite3 php-gd
+            sudo apt install php-mbstring php-xml php-curl php-mysql php-sqlite3
 
    - windows - modify php.ini file
      - find php.ini file: `php -r "phpinfo();" | grep php.ini`
