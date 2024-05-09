@@ -81,7 +81,7 @@ kOS requires the following external dependencies:
 
    - \*nix - install packages (only tested on ubuntu, your mileage may very)
 
-            sudo apt install php-mbstring php-xml php-curl php-mysql php-sqlite3
+            sudo apt install php-mbstring php-xml php-curl php-mysql php-sqlite3 php-gd
 
    - windows - modify php.ini file
      - find php.ini file: `php -r "phpinfo();" | grep php.ini`
@@ -201,6 +201,15 @@ The following users are created for each role:
 * `bookkeeper-dev@kwartzlab.ca` (Bookkeeper role)
 
 Every user is created with the password `secret`.
+
+#### Test Email ####
+1. Sign up for mailtrap.io
+2. put the smtp credentials in the .env file
+
+Use the following to send the new member email to a specific address:
+```
+php artisan email:memberapp --email=<members email> --recipient=<your email>
+```
 
 ## Current Features ##
 
