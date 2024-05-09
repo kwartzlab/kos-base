@@ -9,6 +9,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
       php-mysql \
       php-sqlite3 \
       php-zip \
+      php-gd \
       git-core \
       zip \
       mysql-client

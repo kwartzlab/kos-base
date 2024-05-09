@@ -89,6 +89,10 @@ class ImageController extends Controller
             $path = public_path().'/storage/images/';
         }
 
+        if (!file_exists($path)) {
+            mkdir($path, permissions: 0777, recursive: true);
+        }
+
         $path_filename = $path.$image_name.'.png';
 
         // save file
