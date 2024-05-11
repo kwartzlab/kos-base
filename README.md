@@ -202,6 +202,19 @@ The following users are created for each role:
 
 Every user is created with the password `secret`.
 
+#### Test Email ####
+Set up a free development SMTP server. No emails will actually be sent!
+
+1. Sign up for mailtrap.io and follow the prompts to create a mailbox
+2. Put the smtp credentials in the .env file
+3. View emails sent to mailtrap.io here: https://mailtrap.io/inboxes
+
+Use the following to send the new member email to a specific address.
+Can be used in the production instance too.
+```
+php artisan email:memberapp --email=<members email> --recipient=<your email>
+```
+
 ## Current Features ##
 
 ### Management Features ###
