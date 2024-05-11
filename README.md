@@ -1,6 +1,7 @@
 # kOS
 
 KwartzlabOS (kOS for short) is a member management and access control system originally designed for Kwartzlab Makerspace in Kitchener, Ontario.
+
 ## Local Development ##
 
 ### Docker setup ###
