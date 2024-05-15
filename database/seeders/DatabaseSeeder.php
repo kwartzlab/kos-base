@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             UserSocialsTableSeeder::class,
             UsersStatusesTableSeeder::class,
             UserCertsTableSeeder::class,
+            KeysTableSeeder::class,
             FormsTableSeeder::class,
         ]);
     }
