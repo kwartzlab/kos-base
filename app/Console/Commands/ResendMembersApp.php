@@ -44,7 +44,7 @@ class ResendMembersApp extends Command
 
             // retrieve latest membership application for this email address
             $form = $user->memberapp()->latest()->first();
-            
+
             $responses = json_decode($form->data, TRUE);
 
             // build array for email use
@@ -55,6 +55,14 @@ class ResendMembersApp extends Command
                 'recipient' => $recipient,
                 'form_data' => $responses,
             ];
+            
+            // send the applicant email to the applicant
+            $applicant_email_data = array_merge($email_data, [
+              'recipient' => $recipient ?? $user->email
+            ]);
+
+            // send email to applicant
+            \Mail::send(new \App\Mail\MemberApp($applicant_email_data, 'applicant'));
 
             // send email to members (limited contact info)
             \Mail::send(new \App\Mail\MemberApp($email_data, 'members'));

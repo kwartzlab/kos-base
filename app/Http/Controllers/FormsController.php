@@ -463,6 +463,14 @@ class FormsController extends Controller
                         'form_data' => $responses,
                     ];
 
+                    // send the applicant email to the applicant
+                    $applicant_email_data = array_merge($email_data, [
+                      'recipient' => $user->email
+                    ]);
+
+                    // send email to applicant
+                    \Mail::send(new \App\Mail\MemberApp($applicant_email_data, 'applicant'));
+
                     // send email to members (limited contact info)
                     \Mail::send(new \App\Mail\MemberApp($email_data, 'members'));
 

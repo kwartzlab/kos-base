@@ -32,6 +32,12 @@ return [
             'subject' => 'New Member Application',
         ],
 
+        'applicant' => [
+            'cc' => null,
+            'replyto' => 'bod@kwartzlab.ca',
+            'subject' => 'New Member Application',
+        ],
+
     ],
     'special_forms' => [
         'new_user_app' => [

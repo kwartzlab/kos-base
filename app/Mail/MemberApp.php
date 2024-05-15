@@ -50,41 +50,24 @@ class MemberApp extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        switch ($this->destination) {
-            case 'admin':
+        $destinations = ['admin', 'members', 'applicant'];
 
-                if ($this->recipient == NULL) {
-                    $this->to(config('kwartzlabos.membership_app.admin.to'));
-                    $this->subject(config('kwartzlabos.membership_app.admin.subject').' - '.$this->name);
-                    if (config('kwartzlabos.membership_app.admin.cc') != null) {
-                        $this->cc(config('kwartzlabos.membership_app.admin.cc'));
-                    }
-                    if (config('kwartzlabos.membership_app.admin.replyto') != null) {
-                        $this->replyto(config('kwartzlabos.membership_app.admin.replyto'));
-                    }
-                } else {
-                    $this->to($this->recipient);
-                    $this->subject(config('kwartzlabos.membership_app.admin.subject').' - '.$this->name);
-                }
+        if (in_array($this->destination, $destinations)) {
 
-                break;
-            case 'members':
+            if ($this->recipient) {
+                $this->to($this->recipient);
+            }
+            else {
+                $this->to(config('kwartzlabos.membership_app.'.$this->destination.'.to'));
+            }
 
-                if ($this->recipient == NULL) {
-                    $this->to(config('kwartzlabos.membership_app.members.to'));
-                    $this->subject(config('kwartzlabos.membership_app.members.subject').' - '.$this->name);
-                    if (config('kwartzlabos.membership_app.members.cc') != null) {
-                        $this->cc(config('kwartzlabos.membership_app.members.cc'));
-                    }
-                    if (config('kwartzlabos.membership_app.members.replyto') != null) {
-                        $this->replyto(config('kwartzlabos.membership_app.members.replyto'));
-                    }
-                } else {
-                    $this->to($this->recipient);
-                    $this->subject(config('kwartzlabos.membership_app.members.subject').' - '.$this->name);
-                }
-
-                break;
+            $this->subject(config('kwartzlabos.membership_app.'.$this->destination.'.subject').' - '.$this->name);
+            if (config('kwartzlabos.membership_app.'.$this->destination.'.cc') != null) {
+                $this->cc(config('kwartzlabos.membership_app.'.$this->destination.'.cc'));
+            }
+            if (config('kwartzlabos.membership_app.'.$this->destination.'.replyto') != null) {
+                $this->replyto(config('kwartzlabos.membership_app.'.$this->destination.'.replyto'));
+            }
         }
 
         // only send the message if there is a valid email address from the config, otherwise skip
