@@ -39,7 +39,9 @@
                         @if (count($trainers)>0)
                            <h5 style="margin-bottom:0px;">Trainers</h5>   
                            @foreach($trainers as $trainer)
-                              <a href="/members/{{ $trainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $trainer->user()->first()->get_name() }}</span></a>&nbsp;
+                              @if ($trainer->user()->first()->status == 'active') 
+                                 <a href="/members/{{ $trainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $trainer->user()->first()->get_name() }}</span></a>&nbsp;
+                              @endif
                            @endforeach
                         @endif
                         @php ($maintainers = $gatekeeper->maintainers()->get())
