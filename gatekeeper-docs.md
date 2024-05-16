@@ -96,3 +96,38 @@ curl \
   ]
 }
 ```
+
+Send local authentications up to kOS.
+
+```shell
+export AUTH_KEY="<enter key visible upon creation of a new gatekeeper>"
+export KOS_HOST="localhost:8000"
+export ENDPOINT="send_auths"
+export PAYLOAD=$(cat <<EOF
+[
+  {
+    "rfid": "b20721d9faa590fb63f8dda796e751ba",
+    "result": "allow",
+    "metadata": "",
+    "lock_in": "2024-5-14",
+    "lock_out": "2024-5-14",
+    "created_at": "2024-5-14"
+  }
+]
+EOF
+)
+
+curl \
+    -d "auth_key=${AUTH_KEY}" \
+    -d "endpoint=${ENDPOINT}" \
+    -d "payload=${PAYLOAD}" \
+    "http://${KOS_HOST}/keys/"
+```
+
+```json
+{
+  "code": "0",
+  "text": "OK",
+  "timestamp": "2024-05-15 23:00:00"
+}
+```
