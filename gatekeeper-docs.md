@@ -131,3 +131,25 @@ curl \
   "timestamp": "2024-05-15 23:00:00"
 }
 ```
+
+
+
+```shell
+export AUTH_KEY="<enter key visible upon creation of a new gatekeeper>"
+export KOS_HOST="localhost:8000"
+export ENDPOINT="get_keys"
+export STATUS=$(cat <<EOF
+{
+  "status": "online",
+  "user_rfid": "0",
+  "user_lock_in": ""
+}
+EOF
+)
+
+curl \
+    -d "auth_key=${AUTH_KEY}" \
+    -d "endpoint=${ENDPOINT}" \
+    -d "status=${STATUS}" \
+    "http://${KOS_HOST}/keys/"
+```
