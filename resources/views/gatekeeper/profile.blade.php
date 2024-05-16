@@ -35,13 +35,11 @@
                   </div>
                   <div class="row">
                      <div class="col">
-                        @php ($trainers = $gatekeeper->trainers()->get())
+                        @php ($trainers = $gatekeeper->trainers()->whereHas('user', function($query) { $query->where('status', 'active'); })->get())
                         @if (count($trainers)>0)
                            <h5 style="margin-bottom:0px;">Trainers</h5>   
                            @foreach($trainers as $trainer)
-                              @if ($trainer->user()->first()->status == 'active') 
                                  <a href="/members/{{ $trainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $trainer->user()->first()->get_name() }}</span></a>&nbsp;
-                              @endif
                            @endforeach
                         @endif
                         @php ($maintainers = $gatekeeper->maintainers()->get())
