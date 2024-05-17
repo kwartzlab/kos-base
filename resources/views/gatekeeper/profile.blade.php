@@ -35,7 +35,7 @@
                   </div>
                   <div class="row">
                      <div class="col">
-                        @php ($trainers = $gatekeeper->trainers()->get())
+                        @php ($trainers = $gatekeeper->trainers()->whereRelation('user', 'status', 'active')->get())
                         @if (count($trainers)>0)
                            <h5 style="margin-bottom:0px;">Trainers</h5>   
                            @foreach($trainers as $trainer)
