@@ -62,7 +62,7 @@ class FormsControllerTest extends TestCase
         $response = $this->submitApplication($submittingUser, [
             'first_name' => 'first',
             'last_name' => 'last',
-            'email' => 'new@user2.com',
+            'email' => 'new@user.com',
         ]);
 
         $newUser = User::where('email', 'new@user.com')->first();
