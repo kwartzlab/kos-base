@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Mail\MemberAppConfirmation;
+use App\Mail\MemberAppInterviewConfirmation;
 use App\Models\User;
 use Database\Seeders\FormsTableSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -69,7 +69,7 @@ class FormsControllerTest extends TestCase
 
         $response->assertStatus(302);
 
-        Mail::assertSent(MemberAppConfirmation::class, function (MemberAppConfirmation $mail) use ($newUser) {
+        Mail::assertSent(MemberAppInterviewConfirmation::class, function (MemberAppInterviewConfirmation $mail) use ($newUser) {
             Mail::swap($this->mailerOriginal);
             $mail->assertTo($newUser->email);
             $mail->assertFrom('membership@kwartzlab.ca');

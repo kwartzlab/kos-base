@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\MemberAppConfirmation;
+use App\Mail\MemberAppInterviewConfirmation;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -60,7 +60,7 @@ class ResendMembersAppConfirmation extends Command
                 'form_data' => $responses,
             ];
 
-            Mail::send(new MemberAppConfirmation($email_data));
+            Mail::send(new MemberAppInterviewConfirmation($email_data));
 
             $this->info('Membership Application Confirmation emails for ' . $user->get_name() . ' sent.');
         } else {
