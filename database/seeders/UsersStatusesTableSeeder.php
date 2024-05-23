@@ -58,7 +58,7 @@ class UsersStatusesTableSeeder extends Seeder
                         ->where('status', UserStatus::STATUS_APPLICANT)
                         ->first()
                         ->created_at
-                        ->addDays(random_int(5, 7))
+                        ->addDays(random_int(5, 7)),
                 ]);
             });
     }
@@ -76,7 +76,7 @@ class UsersStatusesTableSeeder extends Seeder
                         ->where('status', UserStatus::STATUS_APPLICANT)
                         ->first()
                         ->created_at
-                        ->addDays(random_int(7, 60))
+                        ->addDays(random_int(7, 60)),
                 ]);
             });
     }
@@ -100,7 +100,7 @@ class UsersStatusesTableSeeder extends Seeder
                         ->where('status', UserStatus::STATUS_APPLICANT)
                         ->first()
                         ->created_at
-                        ->addDays(random_int(5, 7))
+                        ->addDays(random_int(5, 7)),
                 ]);
             });
     }

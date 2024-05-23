@@ -22,7 +22,7 @@ class UserSkillsTableSeeder extends Seeder
         'Dancing',
         'Slaying Monsters',
         'Sorcery',
-        'Potion Mixing'
+        'Potion Mixing',
     ];
 
     public function run()
@@ -36,7 +36,7 @@ class UserSkillsTableSeeder extends Seeder
             $numberOfSkills = $skillNumWeights[array_rand($skillNumWeights)];
 
             collect(Arr::only($this->skills, array_rand($this->skills, $numberOfSkills)))
-                ->each(fn(string $skill) => UserSkill::query()->create(['user_id' => $user->id, 'skill' => $skill]));
+                ->each(fn (string $skill) => UserSkill::query()->create(['user_id' => $user->id, 'skill' => $skill]));
         });
     }
 }

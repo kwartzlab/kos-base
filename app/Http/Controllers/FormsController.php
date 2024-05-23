@@ -55,7 +55,6 @@ class FormsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -376,7 +375,6 @@ class FormsController extends Controller
             switch ($form->special_form) {
                 case 'new_user_app':
 
-
                     // add hard-coded responses from new user form
                     $responses['first_name'] = ['label' => 'First Name', 'value' => $request->input('first_name'), 'type' => 'input'];
                     $responses['last_name'] = ['label' => 'Last Name', 'value' => $request->input('last_name'), 'type' => 'input'];
@@ -455,7 +453,6 @@ class FormsController extends Controller
                         'updated_at' => date('Y-m-d'),
                     ]);
 
-
                     // build array for email use
                     $email_data = [
                         'name' => $user->get_name(),
@@ -516,7 +513,7 @@ class FormsController extends Controller
                 // if we should skip any fields for display, set them
                 switch ($submission->special_form) {
                     case 'new_user_app':
-                        $skip_fields = ['first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'phone', 'address', 'city', 'province', 'postal', 'photo','pronouns'];
+                        $skip_fields = ['first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'phone', 'address', 'city', 'province', 'postal', 'photo', 'pronouns'];
                         break;
                 }
 
@@ -539,7 +536,6 @@ class FormsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

@@ -26,8 +26,6 @@ class ResendMembersAppConfirmation extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -43,13 +41,13 @@ class ResendMembersAppConfirmation extends Command
             if ($this->option('recipient')) {
                 $recipient = $this->option('recipient');
             } else {
-                $recipient = NULL;
+                $recipient = null;
             }
 
             // retrieve latest membership application for this email address
             $form = $user->memberapp()->latest()->first();
 
-            $responses = json_decode($form->data, TRUE);
+            $responses = json_decode($form->data, true);
 
             // build array for email use
             $email_data = [
@@ -62,7 +60,7 @@ class ResendMembersAppConfirmation extends Command
 
             Mail::send(new MemberAppInterviewConfirmation($email_data));
 
-            $this->info('Membership Application Confirmation emails for ' . $user->get_name() . ' sent.');
+            $this->info('Membership Application Confirmation emails for '.$user->get_name().' sent.');
         } else {
             $this->error('No member email address specified.');
         }

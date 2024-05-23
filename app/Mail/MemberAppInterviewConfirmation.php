@@ -12,7 +12,9 @@ class MemberAppInterviewConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public $email_data){}
+    public function __construct(public $email_data)
+    {
+    }
 
     public function envelope(): Envelope
     {
@@ -23,7 +25,7 @@ class MemberAppInterviewConfirmation extends Mailable
         );
     }
 
-    public function content() : Content
+    public function content(): Content
     {
         return new Content(
             markdown: 'emails.member-app.confirmation',

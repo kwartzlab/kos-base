@@ -15,7 +15,6 @@ use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 
 /*

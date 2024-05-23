@@ -39,13 +39,13 @@ class ResendMembersApp extends Command
             if ($this->option('recipient')) {
                 $recipient = $this->option('recipient');
             } else {
-                $recipient = NULL;
+                $recipient = null;
             }
 
             // retrieve latest membership application for this email address
             $form = $user->memberapp()->latest()->first();
-            
-            $responses = json_decode($form->data, TRUE);
+
+            $responses = json_decode($form->data, true);
 
             // build array for email use
             $email_data = [
@@ -62,7 +62,7 @@ class ResendMembersApp extends Command
             // send email to admins (full contact info)
             \Mail::send(new \App\Mail\MemberApp($email_data, 'admin'));
 
-            $this->info('Membership Application emails for ' . $user->get_name() . ' sent.');
+            $this->info('Membership Application emails for '.$user->get_name().' sent.');
 
         } else {
             $this->error('No member email address specified.');

@@ -11,6 +11,7 @@ class Event
     public static function get(): Collection
     {
         self::$callCount += 1;
+
         return collect();
     }
 }

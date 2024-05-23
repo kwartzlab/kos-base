@@ -45,6 +45,7 @@ trait MocksGuzzleHistory
         app()->bind(Client::class, function () {
             return $this->guzzleClient;
         });
+
         return $container;
     }
 
@@ -60,11 +61,12 @@ trait MocksGuzzleHistory
                 ->contains(function (array $requestContainer) use ($url) {
                     /** @var Request $request */
                     $request = $requestContainer['request'];
+
                     return $request->getUri()->getScheme()
-                        . '://'
-                        . $request->getUri()->getHost()
-                        . $request->getUri()->getPath()
-                        . ($request->getUri()->getQuery() ? '?'. $request->getUri()->getQuery() : '') === $url;
+                        .'://'
+                        .$request->getUri()->getHost()
+                        .$request->getUri()->getPath()
+                        .($request->getUri()->getQuery() ? '?'.$request->getUri()->getQuery() : '') === $url;
                 }),
             "Failed asserting that Guzzle history contains a request to `$url`."
         );

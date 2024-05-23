@@ -76,8 +76,7 @@ class UpdateStatusTest extends TestCase
     public function testItQueuesSlackInviteEmailWhenUserIsMovedFromValidStatusToActive(
         string $status,
         bool $shouldSend
-    ): void
-    {
+    ): void {
         Mail::fake();
         config(['services.slack.auto_invite.enabled' => true]);
 
@@ -86,7 +85,7 @@ class UpdateStatusTest extends TestCase
             ->post("/users/{$user->id}/status", [
                 'status_type' => UserStatus::STATUS_ACTIVE,
                 'effective_date' => now()->format('Y-m-d'),
-                'effective_date_ending' => now()->format('Y-m-d')
+                'effective_date_ending' => now()->format('Y-m-d'),
             ]);
 
         $response->assertOk();
@@ -95,6 +94,7 @@ class UpdateStatusTest extends TestCase
             Mail::assertQueued(SlackInvite::class, function (SlackInvite $mail) use ($user) {
                 return $user->id === $mail->user->id;
             });
+
             return;
         }
 
@@ -104,8 +104,7 @@ class UpdateStatusTest extends TestCase
     /** @dataProvider provideValidInviteStatuses */
     public function testItDoesNotQueueSlackInviteEmailWhenUserIsMovedFromValidStatusToActiveWhenNotEnabled(
         string $status
-    ): void
-    {
+    ): void {
         Mail::fake();
         config(['services.slack.auto_invite.enabled' => false]);
 
@@ -114,11 +113,10 @@ class UpdateStatusTest extends TestCase
             ->post("/users/{$user->id}/status", [
                 'status_type' => UserStatus::STATUS_ACTIVE,
                 'effective_date' => now()->format('Y-m-d'),
-                'effective_date_ending' => now()->format('Y-m-d')
+                'effective_date_ending' => now()->format('Y-m-d'),
             ]);
 
         $response->assertOk();
         Mail::assertNotQueued(SlackInvite::class);
     }
-
 }

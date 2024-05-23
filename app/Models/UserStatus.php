@@ -12,13 +12,21 @@ class UserStatus extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_INACTIVE = 'inactive';
+
     public const STATUS_SUSPENDED = 'suspended';
+
     public const STATUS_TERMINATED = 'terminated';
+
     public const STATUS_INACTIVE_ABANDONED = 'inactive-abandoned';
+
     public const STATUS_HIATUS = 'hiatus';
+
     public const STATUS_APPLICANT_ABANDONED = 'applicant-abandoned';
+
     public const STATUS_APPLICANT_DENIED = 'applicant-denied';
+
     public const STATUS_APPLICANT = 'applicant';
 
     public const STATUSES_TO_ACTIVE_SEND_INVITES = [
