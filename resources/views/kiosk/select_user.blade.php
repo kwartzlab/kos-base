@@ -53,11 +53,11 @@
 
       document.querySelector('#sort-latest').onclick = function () {
          $(".userlist").sortChildren((a, b) => b.dataset.sid > a.dataset.sid ? 1 : -1);
-      }      
+      }
 
       document.querySelector('#sort-alpha').onclick = function () {
          $(".userlist").sortChildren((a, b) => a.dataset.sname > b.dataset.sname ? 1 : -1);
-      }      
+      }
 
    });
 </script>

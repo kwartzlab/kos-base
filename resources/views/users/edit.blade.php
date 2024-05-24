@@ -106,7 +106,7 @@
           </div>
           <h3 class="form-heading" style="margin-bottom:10px;">User Note</h3>
           <p><i>This note is only visible in the membership register.</i></p>
-          
+
           <div class="row">
             <div class="form-group col-md-12">
               <textarea class="form-control" rows="5" name="notes" id="notes">@if(!old('notes')){{$user->notes}}@endif{{ old('notes') }}</textarea>
@@ -187,7 +187,7 @@
       </div>
     </div>
 </section>
-  
+
   {{-- Status Timeline --}}
   <section class="col-md-4">
     <div class="card card-outline card-primary">
@@ -206,8 +206,8 @@
 
       <div class="timeline">
 
-      <?php 
-        $first_active = TRUE; 
+      <?php
+        $first_active = TRUE;
         $current_date = NULL;
         $today_watermark = FALSE;
       ?>
@@ -313,7 +313,7 @@
                 @endforelse
 
 
-              </tbody> 
+              </tbody>
             </table>
           </div>
       </div>
@@ -476,9 +476,9 @@
         iDisplayLength: 10,
 				"language": {
 					"emptyTable": "No submitted forms."
-				}				
+				}
       });
-      
+
       // allows user flags to be toggled
       $(".user-flag").on("click", function (e) {
         var user_flag = $(this).attr('data-record-id');
@@ -493,9 +493,9 @@
             flag_checkbox.prop("checked", !flag_checkbox.prop("checked"));
             return true
           },
-        }); 
+        });
         return false
-      });      
+      });
 
       $( ".timeline-item" ).hover(
         function() {
@@ -548,7 +548,7 @@
                 success: function (data, textStatus, oHTTP) {
                   $overlayDiv.addClass('overlay-change').fadeOut(0).fadeIn('fast')
                   $overlayDiv.html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-                  window.setTimeout(function(){ 
+                  window.setTimeout(function(){
                       $modalDiv.modal('hide')
                       location.reload(true);
                   }, 1500);
@@ -560,7 +560,7 @@
             var data = $(e.relatedTarget).data();
             $('.title', this).text(data.recordTitle);
             $('.btn-ok', this).data('recordId', data.recordId);
-         });         
+         });
 
          $('#confirm-delete-update').on('click', '.btn-ok', function(e) {
             var $modalDiv = $(e.delegateTarget);
@@ -578,7 +578,7 @@
                 success: function (data, textStatus, oHTTP) {
                   $overlayDiv.addClass('overlay-change').fadeOut(0).fadeIn('fast')
                   $overlayDiv.html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-                  window.setTimeout(function(){ 
+                  window.setTimeout(function(){
                       $modalDiv.modal('hide')
                       location.reload(true);
                   }, 1500);
@@ -596,4 +596,3 @@
 
   </script>
 @stop
-

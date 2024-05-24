@@ -34,17 +34,17 @@
           <div class="form-group col-md-6">
             <label for="acl-attributes">Permissions</label>
             <select multiple class="form-control" name="acl-attributes[]" id="acl-attributes">
-            
+
               @foreach(config('acl.permissions') as $acl_object => $acl_operations)
                 @foreach($acl_operations as $acl_operation)
                     <option value="{'{{ $acl_object }}':'{{ $acl_operation }}'}" @if (array_key_exists($acl_object . ':' . $acl_operation, $permissions)) selected="selected" @endif>[{{ $acl_object }}] {{ $acl_operation }}</option>
-                @endforeach          
-              @endforeach          
+                @endforeach
+              @endforeach
 
             </select>
           </div>
         </div>
-          
+
      </div>
      <div class="card-footer">
        <button type="submit" class="btn btn-primary">Save Role</button>

@@ -65,6 +65,15 @@ docker compose exec app ./vendor/bin/phpunit
 ##### phpMyAdmin
 phpMyAdmin is a PHP based web interface for MySQL databases. phpMyAdmin has been pre-configured to connect to and manage the Kos database for local debugging. To access the interface, navigate to [http://localhost:8001/](http://localhost:8001/) with Kos running.
 
+##### Commit hooks
+Commit hooks have been installed in this repository to perform checks prior to committing code back to the main code base. These hooks are installed and maintained into your local repository based on the configration maintained in this repository.
+
+First install `pre-commit`, follow the steps outlined in the Pre-Commit docs [https://pre-commit.com/](https://pre-commit.com/). This is usually as simple as `pip install pre-commit` or `brew install pre-commit`.
+
+Then install the hooks to your local repository by running `pre-commit install` from the base directory of the repository.
+
+Once `pre-commit` is installed, every time you commit changes, you will see a sequence of checks run to verify that your changes meet our coding standards. If all checks pass, the changes will be committed. If the checks don't all pass, the commit will be cancelled and you will be prompted to refactor and resubmit. Many of the checks in the `pre-commit` configuration can and will perform automatic remediation of issues it finds. In this case, remediation is as simple as re-adding the effected files with modified changes and re-committing.
+
 ### Application Installation (Manual) ###
 
 #### Install Dependencies ####
@@ -219,8 +228,8 @@ php artisan email:memberapp --email=<members email> --recipient=<your email>
 
 ### Management Features ###
 
-* **Membership Management** - From initial application, to hiatus requests, suspensions and withdrawals. 
-* **Access Control** - Hardware lockouts that can be used for doors and tools, providing secured access for members with the ability to manage RFID keys and authorizations centrally. 
+* **Membership Management** - From initial application, to hiatus requests, suspensions and withdrawals.
+* **Access Control** - Hardware lockouts that can be used for doors and tools, providing secured access for members with the ability to manage RFID keys and authorizations centrally.
 * **Team System** - Assign members to teams which can administer tools and related training & maintenance requests
 * **Key Kiosk** - Browser-based app that facilitates adding new keys to the system and executing management tasks. Originally designed for a Raspberry Pi-based unit with touchscreen and RFID reader.
 

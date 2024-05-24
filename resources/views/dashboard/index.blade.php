@@ -12,11 +12,11 @@
 <?php $user = \App\Models\User::where('id', \Auth::user()->id)->first(); ?>
 @if ($user->flags->contains('flag', 'keys_disabled'))
 <div class="alert alert-warning">
-   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
    <h5 style="margin-bottom:0;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Notice: Your key(s) are currently disabled.</h5>
 </div>
 @endif
-                              
+
 <div class="row">
   <section class="col-md-9">
       {{-- Lab Activity Graph --}}
@@ -125,13 +125,13 @@
                         </td>
                       </tr>
                     @endif
-                    
+
                 @endforeach
 
               </tbody>
             </table>
             </ul>
-  
+
             <!-- /.users-list -->
           </div>
           <!-- /.card-body -->
@@ -170,7 +170,7 @@
               </tbody>
             </table>
             </ul>
-  
+
             <!-- /.users-list -->
           </div>
           <!-- /.card-body -->

@@ -10,7 +10,7 @@
 @include('shared.alerts')
 
 <div class="card card-primary card-outline">
-	
+
 	<div class="card-body ">
       <div class="table-responsive">
          <table class="table table-striped" id="data-table">
@@ -41,22 +41,22 @@
                            &nbsp;<a href="/teams/{{ $team->id }}" title="View Team Profile"><span class="badge badge-warning badge-team">{{ $team->name }}</span></a>
                         @endforeach
                      @endif
-        
+
                      </td>
-               
+
                      <td>
                      <a class="btn btn-primary btn-sm" href="/members/{{ $user->id }}/profile" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Profile</a>
-         
+
                      </td>
                   </tr>
-         
+
                @endforeach
             </tbody>
          </table>
       </div>
    </div>
 </div>
-	
+
 @stop
 
 @section('css')
@@ -73,7 +73,7 @@
 				iDisplayLength: 25,
 				"language": {
 					"emptyTable": "No results???"
-				}				
+				}
 			});
         });
     </script>

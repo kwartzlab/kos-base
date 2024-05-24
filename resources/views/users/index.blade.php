@@ -18,7 +18,7 @@
          @endforeach
          <a href="/users/index/all" title="All">All</a>
    </div>
-   
+
    <div class="card-body">
       <div class="table-responsive">
          <table class="table table-striped" id="data-table">
@@ -53,17 +53,17 @@
                      <td>{{ count($user->keys) }}</td>
                      <td>
                      <a class="btn btn-primary btn-sm" href="/users/{{ $user->id }}/edit" role="button"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
-         
+
                      </td>
                   </tr>
-         
+
                @endforeach
             </tbody>
          </table>
       </div>
    </div>
 </div>
-   
+
 @stop
 
 @section('css')
@@ -79,13 +79,13 @@
             iDisplayLength: 25,
             "language": {
                "emptyTable": "No results."
-            }				
+            }
          });
 
         });
 
         function modal_do_stuff_success(data) {
-            
+
         }
 
 

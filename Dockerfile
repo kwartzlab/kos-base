@@ -20,7 +20,7 @@ COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 # # Create an unprivileged user.
 RUN useradd app # No shell or home directory should be required.
 USER app
- 
+
 WORKDIR /app
 COPY --chown=app:app . /app
 
@@ -30,4 +30,3 @@ RUN composer install --prefer-dist
 RUN chown -R app:app .
 
 CMD ./docker-entrypoint.sh
-

@@ -17,13 +17,13 @@
          @endif
          </div>
       </div>
-      
+
       <div class="card-body">
 
       <div class="row">
          <div class="col-md-8">
             @if ($team->is_member(\Auth::user()->id))
-               <h5>My Roles</h5>   
+               <h5>My Roles</h5>
                <p>@foreach($team->assignments()->where('user_id', \Auth::user()->id)->get() as $assignment)
                      @if(($assignment->team_role == 'trainer') || ($assignment->team_role == 'maintainer'))
                            <span class="badge badge-primary badge-large">{{ $team_roles[$assignment->team_role]['name'] }} - {{ $assignment->gatekeeper()->first()->name }} </span>&nbsp;
@@ -33,7 +33,7 @@
                   @endforeach
                </p>
             @endif
-         </div>         
+         </div>
          <div class="col">
             &nbsp;
          </div>
@@ -41,9 +41,9 @@
             @if (($team->is_lead()) || (Auth::user()->can('manage-teams')))
                <div class="hovereffect-square">
                   @if ($team->photo != NULL)
-                     <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-team-photo.png') }}';">   
+                     <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-team-photo.png') }}';">
                   @else
-                     <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/>   
+                     <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/>
                   @endif
                   <div class="overlay">
                      <a class="img-upload" href="#" target="popup" onclick="window.open('/image-crop/teams/{{ $team->id }}','popup','width=640,height=790'); return false;"><i class="fas fa-file-upload fa-3x"></i></a>
@@ -53,7 +53,7 @@
                @if ($team->photo != NULL)
                   <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-team-photo.png') }}';">
                @else
-                  <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/> 
+                  <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/>
                @endif
             @endif
          </div>
@@ -68,7 +68,7 @@
          <div class="card-tools">
          </div>
       </div>
-      
+
       <div class="card-body">
          <div class="row">
             @php($gatekeepers = $team->gatekeepers()->get())
@@ -130,7 +130,7 @@
          <div class="card-tools">
          </div>
       </div>
-      
+
       <div class="card-body">
          <div class="row">
             @if(!$team_members->isEmpty())
@@ -186,7 +186,7 @@
          iDisplayLength: 25,
          "language": {
             "emptyTable": "No teams defined."
-         }				
+         }
       });
 
 

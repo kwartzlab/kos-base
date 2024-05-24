@@ -76,7 +76,7 @@
                               {{ $row->value }}
                            @endif
                         @endif
-                        
+
                         </td>
                      </tr>
                   @endif

@@ -47,7 +47,7 @@
          iDisplayLength: 25,
          "language": {
             "emptyTable": "No teams defined."
-         }				
+         }
       });
    });
 </script>

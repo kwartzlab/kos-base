@@ -6,7 +6,7 @@
 
 <div class="card card-outline card-info" style="margin-bottom:40px;">
          <div class="card-header">
-            <h3 class="card-title">{{ $gatekeeper->name }} 
+            <h3 class="card-title">{{ $gatekeeper->name }}
                @if (($gatekeeper->is_authorized()) || ($gatekeeper->is_default))
                   &nbsp;<i class="fas fa-check-circle text-success" title="You are authorized to use this tool"></i>
                @else
@@ -23,7 +23,7 @@
                @endif
             </div>
          </div>
-         
+
          <div class="card-body">
             <div class="row">
                <div class="col-md-8">
@@ -37,14 +37,14 @@
                      <div class="col">
                         @php ($trainers = $gatekeeper->trainers()->whereRelation('user', 'status', 'active')->get())
                         @if (count($trainers)>0)
-                           <h5 style="margin-bottom:0px;">Trainers</h5>   
+                           <h5 style="margin-bottom:0px;">Trainers</h5>
                            @foreach($trainers as $trainer)
                               <a href="/members/{{ $trainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $trainer->user()->first()->get_name() }}</span></a>&nbsp;
                            @endforeach
                         @endif
                         @php ($maintainers = $gatekeeper->maintainers()->get())
                            @if (count($maintainers)>0)
-                           <h5 style="margin-top:15px;margin-bottom:0px;">Maintainers</h5>   
+                           <h5 style="margin-top:15px;margin-bottom:0px;">Maintainers</h5>
                            @foreach($maintainers as $maintainer)
                               <a href="/members/{{ $maintainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $maintainer->user()->first()->get_name() }}</span></a>&nbsp;
                            @endforeach

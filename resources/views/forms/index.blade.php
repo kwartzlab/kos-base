@@ -18,7 +18,7 @@
 
 	    </div>
 	</div>
-	
+
 	<div class="card-body">
 		<div class="table-responsive">
 			<table class="table table-striped" id="data-table">
@@ -38,10 +38,10 @@
 							<span class="label label-danger">Disabled</span>@endif</td>
 							<td>
 							<a class="btn btn-default btn-sm" href="/form/{{ $form->id }}/edit" role="button">Edit</a>
-			
+
 							</td>
 						</tr>
-			
+
 					@endforeach
 				</tbody>
 			</table>
@@ -64,7 +64,7 @@
 				iDisplayLength: 25,
 				"language": {
 					"emptyTable": "No forms."
-				}				
+				}
 			});
         });
     </script>
