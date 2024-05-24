@@ -21,15 +21,15 @@
    @endif
 </div>
 
-@if(isset($page['heading'])) 
+@if(isset($page['heading']))
   <h2 style="margin-bottom:30px">{!! $page['heading'] !!}</h2>
 @endif
 
-@if(isset($page['subheading'])) 
+@if(isset($page['subheading']))
   <h1 style="margin-bottom:30px">{!! $page['subheading'] !!}</h1>
 @endif
 
-@if(isset($page['text'])) 
+@if(isset($page['text']))
   <h2>{!! $page['text'] !!}</h2>
 @endif
 
@@ -52,4 +52,3 @@
 
 
 @endsection
-

@@ -1,7 +1,7 @@
 {{-- Special Form: New User Application --}}
 
       <h3 class="form-heading">Contact Info</h3>
-      
+
       <div class="row">
          <div class="form-group col-md-3">
             <label for="first_name">First Name <span class="text-danger">*</span></label>
@@ -28,7 +28,7 @@
             <label for="first_preferred">Preferred Pronouns (leave blank if no preference)</label>
             <input type="text" class="form-control @if($errors->has('pronouns')) is-invalid @endif" name="pronouns" id="pronouns" value="{{ old('pronouns') }}">
          </div>
-      </div>      
+      </div>
 
       <div class="row">
          <div class="form-group col-md-3">
@@ -100,7 +100,7 @@
          <img class="profile-image img-responsive img-circle user-photo" src="" onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
          <br /><h4 style="text-align:center"><span class="user-name" style="font-weight:bold;"></span>&nbsp;&nbsp;<span class="badge user-status badge-large"></span></h4>
       </p>
-      <p>Is this user reapplying? If not, a different email address must be used.</p> 
+      <p>Is this user reapplying? If not, a different email address must be used.</p>
       @endcomponent
 
       @component('shared.modal_yesno', [
@@ -119,7 +119,7 @@
          <img class="profile-image img-responsive img-circle user-photo" src="" onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
          <br /><h4 style="text-align:center"><span class="user-name" style="font-weight:bold;"></span>&nbsp;&nbsp;<span class="badge user-status badge-large"></span></h4>
       </p>
-      <p>You cannot use an email address from an active user.</p> 
+      <p>You cannot use an email address from an active user.</p>
       @endcomponent
 
       @component('shared.modal_yesno', [
@@ -134,7 +134,7 @@
          <img class="profile-image img-responsive img-circle user-photo" src="" onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
          <br /><h4 style="text-align:center"><span class="user-name" style="font-weight:bold;"></span>&nbsp;&nbsp;<span class="badge user-status badge-large"></span></h4>
       </p>
-      <p>Is this a different person applying?</p> 
+      <p>Is this a different person applying?</p>
       @endcomponent
 
 
@@ -169,7 +169,7 @@ $(document).ready(function(){
       }, 500);
 
       return false;
-   };         
+   };
 });
 
 $(document).on('change', '#email', function(e) {
@@ -197,18 +197,18 @@ $(document).on('change', '#email', function(e) {
 
 function modal_returning_user_yes(data) {
    $('#user_id').val(data.recordId)
-}      
-   
+}
+
 
 function modal_returning_user_no(data) {
    $('#email').val(null)
    $('#user_id').val('0')
-}      
+}
 
 function modal_active_user_yes(data) {
    $('#email').val(null)
    $('#user_id').val('0')
-}      
+}
 
 $(document).on('change', '#first_name', function(e) {
    check_user_name()

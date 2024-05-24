@@ -26,7 +26,7 @@
 	  	</div>
       <div class="row">
          <div class="col-md-5 text-center">
-            <div id='default-image' class='hidden'>{{ asset('/') }}/img/image-upload.png</div>         
+            <div id='default-image' class='hidden'>{{ asset('/') }}/img/image-upload.png</div>
             <div id="upload-image" style="width:500px"></div>
          </div>
       </div>
@@ -70,7 +70,7 @@
          }
       });
 
-      $('#upload').on('change', function () { 
+      $('#upload').on('change', function () {
          var reader = new FileReader();
          $('.upload-result').removeAttr('disabled');
          reader.onload = function (e) {
@@ -96,7 +96,7 @@
                data: {"image":resp @if($photo_type != NULL),"photo_type":"{{ $photo_type }}"@endif @if($id != NULL),"id":"{{ $id }}"@endif },
                success: function (data, textStatus, oHTTP) {
                   //alert(data.filename)
-                  $('#upload-form').fadeOut('slow', function(here){ 
+                  $('#upload-form').fadeOut('slow', function(here){
                      $('#upload-form').replaceWith('<div style="top:50%;"><i class="fas fa-check-circle fa-10x" style="color:green"></i></div>');
                      setTimeout(function(){ window.close(); }, 1000);
                   });
@@ -109,4 +109,3 @@
 
 </script>
 @endsection
-

@@ -6,15 +6,15 @@
   <img class="page-icon" src="/img/rfid.png">
 </div>
 
-@if(isset($page['heading'])) 
+@if(isset($page['heading']))
   <h1>{{ $page['heading'] }}</h1>
 @endif
 
-@if(isset($page['subheading'])) 
+@if(isset($page['subheading']))
   <h3>{{ $page['subheading'] }}</h3>
 @endif
 
-@if(isset($page['text'])) 
+@if(isset($page['text']))
   <p>{{ $page['text'] }}</p>
 @endif
 

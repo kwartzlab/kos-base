@@ -8,7 +8,7 @@
         @if(\Gate::allows('manage-users'))
             &nbsp;&nbsp;<a class="btn btn-primary" style="float:right" href="/users/{{ $user->id }}/edit" role="button"><i class="fas fa-users"></i>&nbsp;&nbsp;View on Membership Register</a>
         @endif
-    </h1> 
+    </h1>
 @stop
 
 @section('content')
@@ -282,7 +282,7 @@
             orientation: 'bottom',
             autoclose: true
         });
-    });    
+    });
 
     $('#forms-table').dataTable({
         ordering: true,
@@ -291,7 +291,7 @@
         iDisplayLength: 10,
         "language": {
         "emptyTable": "No submitted forms."
-        }				
+        }
     });
 
     $("#profile-form").on('click', 'button.btn-add-social-account', function() {
@@ -314,7 +314,7 @@
       });
 
       $("#socials").on('change', '.service-type', function() {
-          
+
         if (this.value == 'twitter') {
             placeholder_text = 'Enter your Twitter username'
         } else if (this.value == 'instagram') {
@@ -326,8 +326,8 @@
         } else if (this.value == 'linkedin') {
             placeholder_text = 'Enter your LinkedIn profile ID'
         }
-          
-          $(event.target).closest('.row').find('.service-profile').attr('placeholder', placeholder_text);  
+
+          $(event.target).closest('.row').find('.service-profile').attr('placeholder', placeholder_text);
       });
 
       $("#profile-form").on('click', 'button.btn-add-certification', function() {
@@ -354,8 +354,8 @@
   });
 
     $('body').on('click','.remove-item',function (e) {
-        $(this).closest(".card").fadeOut('slow', function(here){ 
-            $(this).closest(".card").remove();                    
+        $(this).closest(".card").fadeOut('slow', function(here){
+            $(this).closest(".card").remove();
         });
     });
 

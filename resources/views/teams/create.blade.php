@@ -38,12 +38,12 @@
                 <select multiple class="form-control" name="{{ $team_role }}[]" id="{{ $team_role }}">
                   @foreach($user_list as $key => $value)
                       <option value="{{ $key }}" @if(old($team_role, null) != null) @if (in_array($key, old($team_role))) selected="selected" @endif @endif>{{ $value }}</option>
-                  @endforeach          
+                  @endforeach
                 </select>
               </div>
             </div>
           @endif
-        @endforeach          
+        @endforeach
 
 
       </div>

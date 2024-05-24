@@ -12,11 +12,11 @@
 
 <div class="card card-outline card-primary">
    <div class="card-header">
-      <h4 class="card-title">Team Assignment Requests</h4>	
+      <h4 class="card-title">Team Assignment Requests</h4>
       <div class="card-tools">
       </div>
    </div>
-   
+
    <div class="card-body">
       @if(count($team_assignments) > 0)
       <div class="table-responsive">
@@ -38,7 +38,7 @@
                         &nbsp;<button class="btn btn-danger btn-sm confirm-remove-request" data-record-id="{{ $assignment->id }}" data-toggle="modal" data-target="#confirm-remove-request"><i class="fas fa-ban"></i>&nbsp;&nbsp;Remove</button>
                      </td>
                   </tr>
-         
+
                @endforeach
             </tbody>
          </table>
@@ -52,12 +52,12 @@
 
 <div class="card card-outline card-success">
    <div class="card-header">
-      <h4 class="card-title">Team Administration</h4>	
+      <h4 class="card-title">Team Administration</h4>
       <div class="card-tools">
          <a class="btn btn-primary" href="/teams/create" role="button">New Team</a>
       </div>
    </div>
-   
+
    <div class="card-body">
       <div class="table-responsive">
          <table class="table table-striped table-responsive" id="data-table">
@@ -84,7 +84,7 @@
                         <a class="btn btn-primary btn-sm" href="/teams/{{ $team->id }}/edit" role="button"><i class="fas fa-user-check"></i>&nbsp;&nbsp;Assignments</a>
                      </td>
                   </tr>
-         
+
                @endforeach
             </tbody>
          </table>
@@ -126,7 +126,7 @@
          iDisplayLength: 10,
          "language": {
             "emptyTable": "No teams defined."
-         }				
+         }
       });
 
       $(document).on('click', '.approve_button', function(e) {
@@ -146,10 +146,10 @@
                } else if (result.status == 'error') {
                   $(button_id).replaceWith('<span class="btn btn-danger btn-sm"><i class="fas fa-ban"></i> Error</span>');
                }
-               $(row_id).fadeOut('slow', function(here){ 
-                     $(row_id).remove();                    
+               $(row_id).fadeOut('slow', function(here){
+                     $(row_id).remove();
                   });
-            }}); 
+            }});
       });
 
       $('#confirm-remove-request').on('click', '.btn-ok', function(e) {
@@ -160,10 +160,10 @@
              $modalDiv.addClass('loading');
              $.post('/gatekeepers/assignments/remove/' + id).then(function() {
                   $modalDiv.modal('hide').removeClass('loading');
-                  $(row_id).fadeOut('slow', function(here){ 
-                     $(row_id).remove();                    
+                  $(row_id).fadeOut('slow', function(here){
+                     $(row_id).remove();
                   });
-                  
+
              });
          });
 
@@ -171,7 +171,7 @@
             var data = $(e.relatedTarget).data();
             $('.title', this).text(data.recordTitle);
             $('.btn-ok', this).data('recordId', data.recordId);
-         });         
+         });
 
          $.ajaxSetup({
             headers: {

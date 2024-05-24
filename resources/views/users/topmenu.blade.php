@@ -1,9 +1,9 @@
-<?php /* 
+<?php /*
 
    User profile menu & Notifications - top right
-   Included in vendor/page.blade.php to replace default logout link 
+   Included in vendor/page.blade.php to replace default logout link
    (must be re-added if vendor assets are updated and replaced)
-   
+
 */?>
             <!-- Notifications Panel -->
 <?php /*            <li class="nav-item dropdown" id="notifications">
@@ -48,7 +48,7 @@
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <!-- The user image in the menu -->
                 <li class="user-header" style="background-color:#367fa9;color:#fff;">
-                  
+
                   @if (\Auth::user()->photo != NULL)
                     <img src="/storage/images/users/{{ Auth::user()->photo }}-256px.jpeg" class="img-circle" alt="Member Image"/>
                   @else

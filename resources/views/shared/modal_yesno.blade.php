@@ -1,7 +1,7 @@
 <?php
 
    /**
-    
+
       Generates a simple modal with ajax POST backend
 
       Parameters:
@@ -10,7 +10,7 @@
 
       slots
 
-      @slot('title') - modal title 
+      @slot('title') - modal title
 
       Result Callback functions - optional
       Callbacks run as soon as modal closes
@@ -65,18 +65,18 @@
    $('#modal-{{ $name }}').on('show.bs.modal', function(e) {
       // if there was a related target, get record ID, otherwise it needs to be assigned manually before modal is opened
       var data = $(e.relatedTarget).data();
-      if (typeof data != "undefined") { 
+      if (typeof data != "undefined") {
          $('.btn-yes', this).data('recordId', data.recordId);
          $('.btn-no', this).data('recordId', data.recordId);
       }
-   });  
+   });
 
    @if($buttons['yes'] != NULL)
    $('#modal-{{ $name }}').on('click', '.btn-yes', function(e) {
       var $modalDiv = $(e.delegateTarget)
       var id = $(this).data('recordId')
       $modalDiv.modal('hide')
-      if (typeof modal_{{ $name }}_yes === "function") { 
+      if (typeof modal_{{ $name }}_yes === "function") {
          modal_{{ $name }}_yes($(this).data())
       }
    });
@@ -88,7 +88,7 @@
       var $modalDiv = $(e.delegateTarget)
       var id = $(this).data('recordId')
       $modalDiv.modal('hide')
-      if (typeof modal_{{ $name }}_no === "function") { 
+      if (typeof modal_{{ $name }}_no === "function") {
          modal_{{ $name }}_no($(this).data())
       }
    });

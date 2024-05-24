@@ -38,20 +38,20 @@
                   <label for="{{ $team_role }}[]">{{ $team_data['plural_name'] }}</label>
                   <select multiple class="form-control" name="{{ $team_role }}[]" id="{{ $team_role }}">
                     @foreach($user_list as $key => $value)
-                        <option value="{{ $key }}" 
+                        <option value="{{ $key }}"
                         <option value="{{ $key }}" @if (array_key_exists($team_role, $team_assignments)) @if (in_array($key, $team_assignments[$team_role])) selected="selected" @endif @endif>{{ $value }}</option>
-                    @endforeach          
+                    @endforeach
                   </select>
                 </div>
               </div>
             @endif
           @endif
-        @endforeach          
-        
+        @endforeach
+
       </div>
       <div class="card-footer">
         <button type="submit" class="btn btn-primary">Save Changes</button>
-        <button type="button" class="btn btn-danger remove_button" style="float:right;" data-record-id="{{ $team->id }}" data-toggle="modal" data-target="#confirm-delete-team"><i class="fas fa-ban"></i> Delete Team</button>        
+        <button type="button" class="btn btn-danger remove_button" style="float:right;" data-record-id="{{ $team->id }}" data-toggle="modal" data-target="#confirm-delete-team"><i class="fas fa-ban"></i> Delete Team</button>
       </div>
       </form>
 
@@ -126,18 +126,18 @@
                 if (result.status == 'success') {
                     $('#delete-overlay').addClass('overlay-change').fadeOut(0).fadeIn('fast')
                     $('#delete-overlay').html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-                    window.setTimeout(function(){ 
+                    window.setTimeout(function(){
                       $modalDiv.modal('hide')
                       window.location.href = '{{ url('/teams/manage') }}'
                     }, 1500);
                 } else {
                   $('#delete-overlay').addClass('overlay-change').fadeOut(0).fadeIn('fast')
                   $('#delete-overlay').html('<i class="fas fa-8x fa-times-circle text-danger"></i>')
-                  window.setTimeout(function(){ 
+                  window.setTimeout(function(){
                       $modalDiv.modal('hide')
                     }, 1500);
                 }
-             }}); 
+             }});
 
       });
 
@@ -145,7 +145,7 @@
         var data = $(e.relatedTarget).data();
         $('.title', this).text(data.recordTitle);
         $('.btn-ok', this).data('recordId', data.recordId);
-      });   
+      });
 
       $.ajaxSetup({
           headers: {

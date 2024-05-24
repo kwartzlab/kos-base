@@ -14,7 +14,7 @@
 		<div class="card-tools">
 	    </div>
 	</div>
-	
+
 	<div class="card-body">
 		<div class="table-responsive">
 			<table class="table table-striped" id="data-table">
@@ -51,7 +51,7 @@
          <div class="card-tools">
          </div>
       </div>
-      
+
       <div class="card-body no-padding">
          <div class="table-responsive">
             <table class="table table-striped no-padding">
@@ -88,7 +88,7 @@
          <div class="card-tools">
          </div>
       </div>
-      
+
       <div class="card-body no-padding">
          <div class="table-responsive">
             <table class="table table-striped no-padding">
@@ -143,7 +143,7 @@
 			iDisplayLength: 25,
 			"language": {
 				"emptyTable": "No gatekeepers."
-			}				
+			}
 		});
 
       $('.request_button').click(function(e){
@@ -162,10 +162,10 @@
                } else if (result.status == 'error') {
                   $(button_id).replaceWith('<span class="btn btn-danger btn-sm"><i class="fas fa-ban"></i> Error</span>');
                }
-               
+
                //$(this).html('<b>Success!</b>');
-            
-            }}); 
+
+            }});
          });
 
          $('.cancel_button').click(function(e){
@@ -184,10 +184,10 @@
                } else if (result.status == 'error') {
                   $(button_id).replaceWith('<span class="btn btn-danger btn-sm"><i class="fas fa-ban"></i> Error</span>');
                }
-               
+
                //$(this).html('<b>Success!</b>');
-            
-            }}); 
+
+            }});
          });
 
 

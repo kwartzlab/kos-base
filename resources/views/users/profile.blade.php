@@ -5,7 +5,7 @@
 ?>
 @if ($user->flags->contains('flag', 'keys_disabled'))
 <div class="alert alert-warning">
-   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>	
+   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
    <h5 style="margin-bottom:0;font-weight:bold;"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Notice: Your key(s) are currently disabled.</h5>
 </div>
 @endif
@@ -102,7 +102,7 @@
                @if ($user->photo != NULL)
                   <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
                @else
-                  <img src="/img/no-user-photo.png" style="float:right; max-height:240px;" class="img-circle"/>   
+                  <img src="/img/no-user-photo.png" style="float:right; max-height:240px;" class="img-circle"/>
                @endif
                <div class="overlay">
                   <a class="img-upload" href="#" target="popup" onclick="window.open('/image-crop/users/{{ $user->id }}','popup','width=640,height=790'); return false;"><i class="fas fa-file-upload fa-3x"></i></a>
@@ -112,7 +112,7 @@
             @if ($user->photo != NULL)
                <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/users/' . $user->photo ?>-512px.jpeg"  onerror="this.onerror=null;this.src='{{ asset('img/no-user-photo.png') }}';">
             @else
-               <img src="/img/no-user-photo.png" style="float:right; max-height:240px;" class="img-circle"/> 
+               <img src="/img/no-user-photo.png" style="float:right; max-height:240px;" class="img-circle"/>
             @endif
          @endif
          </div>

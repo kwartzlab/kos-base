@@ -1,7 +1,7 @@
 <?php
 
    /**
-    
+
       Generates a simple modal with ajax POST backend
 
       Parameters:
@@ -13,7 +13,7 @@
 
       slots
 
-      @slot('title') - modal title 
+      @slot('title') - modal title
 
       Result Callback functions - optional
       Callbacks run as soon as modal closes
@@ -75,7 +75,7 @@
       var data = $(e.relatedTarget).data();
       $('.title', this).html(data.recordTitle);
       $('.btn-ok', this).data('recordId', data.recordId);
-   });  
+   });
 
    $('#modal-{{ $name }}').on('click', '.btn-ok', function(e) {
             var $modalDiv = $(e.delegateTarget)
@@ -83,7 +83,7 @@
             var $overlayIcon = $overlayDiv.find('.overlay-icon')
             var id = $(this).data('recordId')
             var url = '{{ $url }}'
-            
+
             event.preventDefault();
             $overlayDiv.removeClass('invisible')
 
@@ -101,13 +101,13 @@
                 success: function (data, textStatus, oHTTP) {
                   $overlayIcon.removeClass('fa-spin').removeClass('fa-sync')
                   $overlayIcon.addClass('fa-check-circle').addClass('text-success').fadeIn('slow')
-                  window.setTimeout(function(){ 
+                  window.setTimeout(function(){
                      $modalDiv.modal('hide')
                      $overlayDiv.addClass('invisible')
                      $overlayIcon.removeClass('fa-check-circle').removeClass('text-success')
                      $overlayIcon.addClass('fa-spin').addClass('fa-sync')
 
-                     if (typeof modal_{{ $name }}_success === "function") { 
+                     if (typeof modal_{{ $name }}_success === "function") {
                         modal_{{ $name }}_success(data)
                      }
                   }, 1250);
@@ -115,12 +115,12 @@
                 error: function (data, textStatus, oHTTP) {
                   $overlayIcon.removeClass('fa-spin').removeClass('fa-sync')
                   $overlayIcon.addClass('fa-times-circle').addClass('text-danger').fadeIn('slow')
-                  window.setTimeout(function(){ 
+                  window.setTimeout(function(){
                      $modalDiv.modal('hide')
                      $overlayDiv.addClass('invisible')
                      $overlayIcon.removeClass('fa-times-circle').removeClass('text-danger')
                      $overlayIcon.addClass('fa-spin').addClass('fa-sync')
-                     if (typeof modal_{{ $name }}_error === "function") { 
+                     if (typeof modal_{{ $name }}_error === "function") {
                         modal_{{ $name }}_error(data)
                      }
                   }, 1250);

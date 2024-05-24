@@ -61,7 +61,7 @@
                </div>
             </div>
          </div>
-   
+
       </div>
       <div class="card-footer">
         <button type="submit" class="btn btn-primary">Save Form</button>
@@ -126,7 +126,7 @@
               <label for="element[' + current_id + '][required]" style="margin-top:15px;margin-left:10px;">Required</label>\
             </div>\
           </div>');
-      });  
+      });
 
       $(".btn-add-multi").click(function () {
          current_id = create_UUID();
@@ -152,7 +152,7 @@
               <label for="element[' + current_id + '][required]" style="margin: 15px 10px 0px">Required</label>\
             </div>\
          </div>');
-      });  
+      });
 
       $(".btn-add-switch").click(function () {
           current_id = create_UUID();
@@ -178,7 +178,7 @@
               <label for="element[' + current_id + '][required]" style="margin: 15px 10px 0px">Required</label>\
             </div>\
          </div>');
-      });  
+      });
 
       $(".btn-add-dropdown").click(function () {
          current_id = create_UUID();
@@ -205,7 +205,7 @@
               </div>\
             </div>\
          </div>');
-      });  
+      });
 
       $(".btn-add-radio").click(function () {
          current_id = create_UUID();
@@ -232,7 +232,7 @@
               </div>\
             </div>\
          </div>');
-      });  
+      });
 
       $(".btn-add-checkbox").click(function () {
          current_id = create_UUID();
@@ -259,7 +259,7 @@
               </div>\
             </div>\
          </div>');
-      });  
+      });
 
       $(".btn-add-upload").click(function () {
          current_id = create_UUID();
@@ -284,7 +284,7 @@
               <label for="element[' + current_id + '][required]" style="margin-top:15px;margin-left:10px;">Required</label>\
             </div>\
           </div>');
-      });  
+      });
 
       $("#form-elements").on('click', 'button.btn-add-input-option', function() {
           // get id of target element

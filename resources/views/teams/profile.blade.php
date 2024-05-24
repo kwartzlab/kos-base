@@ -7,14 +7,14 @@
             @endif
             </div>
          </div>
-         
+
          <div class="card-body">
 
             @if($team->is_member())
                <div class="row">
                <div class="col-md-6">
                   @if ($team->is_member(\Auth::user()->id))
-                     <h5>My Roles</h5>   
+                     <h5>My Roles</h5>
                      <p>@foreach($team->assignments()->where('user_id', \Auth::user()->id)->get() as $assignment)
                            @if(($assignment->team_role == 'trainer') || ($assignment->team_role == 'maintainer'))
                                  <span class="badge badge-primary badge-large">{{ $team_roles[$assignment->team_role]['name'] }} - {{ $assignment->gatekeeper()->first()->name }} </span>&nbsp;
@@ -24,7 +24,7 @@
                         @endforeach
                      </p>
                   @endif
-               </div>         
+               </div>
                <div class="col-md-3">
                   @php($maintenance_requests = $team->requests()->where('request_type','maintenance')->count())
                   <div class="small-box @if($maintenance_requests == 0) bg-success @elseif($maintenance_requests>4) bg-danger @else bg-warning @endif">
@@ -40,7 +40,7 @@
                </div>
                <div class="col-md-3">
                   @php($training_requests = $team->requests()->where(['request_type' =>'training','status' => 'new'])->count())
-                  
+
                   <div class="small-box @if($training_requests == 0) bg-success @elseif($training_requests>4) bg-danger @else bg-warning @endif">
                      <div class="inner">
                         <h3>{{ $training_requests }}</h3>
@@ -109,17 +109,17 @@
 
                <div class="row">
                   <div class="col-md-8">
-                     <h5>Team Lead(s)</h5>   
+                     <h5>Team Lead(s)</h5>
                      @foreach($team->leads()->get() as $lead)
                         <a href="/members/{{ $lead->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $lead->get_name() }}</span></a>&nbsp;
                      @endforeach
-                     <h5 style="margin-top:15px;">Members</h5>   
+                     <h5 style="margin-top:15px;">Members</h5>
                      @foreach($team->members()->get()->unique() as $member)
                         @if (!$team->is_lead($member->id))
                         <a href="/members/{{ $member->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $member->get_name() }}</span></a>&nbsp;
                         @endif
                      @endforeach
-                     <h5 style="margin-top:25px;">Managed Tools</h5>   
+                     <h5 style="margin-top:25px;">Managed Tools</h5>
                      @foreach($team->gatekeepers()->get() as $gatekeeper)
                         <a href="/gatekeepers/{{ $gatekeeper->id }}" title="View Tool"><span class="badge badge-info badge-large">{{ $gatekeeper->name }}</span></a>&nbsp;
                      @endforeach
@@ -131,7 +131,7 @@
                      @if ($team->photo != NULL)
                         <img class="profile-image img-responsive" style="" src="<?php echo '/storage/images/teams/' . $team->photo ?>-512px.jpeg" onerror="this.onerror=null;this.src='{{ asset('img/no-team-photo.png') }}';">
                      @else
-                        <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/> 
+                        <img src="/img/no-team-photo.png" style="float:right; max-height:240px;" class="img-square"/>
                      @endif
                   </div>
                </div>

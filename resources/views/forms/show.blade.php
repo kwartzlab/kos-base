@@ -22,7 +22,7 @@
          @endif
 
          @foreach($form_fields as $field_uuid => $form_field)
-            
+
             @if($form_field->label != NULL)
                <?php
                   if ($form_field->name == NULL) {
@@ -75,7 +75,7 @@
                               @foreach($form_field->options as $field_uuid => $field_option)
                                  <pre><?php print_r($field_option->value); ?></pre>
                                  <pre><?php print_r($element_value); ?></pre>
-                                 <option value="@if($field_option->value == NULL){{ $field_option->name }}@else{{ $field_option->value }}@endif" @if ($element_value == $field_option->value) selected="selected" @endif>{{ $field_option->name }}</option> 
+                                 <option value="@if($field_option->value == NULL){{ $field_option->name }}@else{{ $field_option->value }}@endif" @if ($element_value == $field_option->value) selected="selected" @endif>{{ $field_option->name }}</option>
                               @endforeach
                            </select>
                         </div>
@@ -85,8 +85,8 @@
                            <label class="@if($errors->has($element_name)) is-invalid @endif">{{ $form_field->label }} @if($form_field->required) <span class="text-danger">*</span> @endif</label>
                               @foreach($form_field->options as $field_uuid => $field_option)
                                  <div class="form-check" style="margin-left:10px;">
-                                    <?php 
-                                       if ($field_option->value == NULL) { $field_value = $field_option->name; } else { $field_value = $field_option->value; } 
+                                    <?php
+                                       if ($field_option->value == NULL) { $field_value = $field_option->name; } else { $field_value = $field_option->value; }
                                     ?>
                                     <input type="radio" class="form-check-input" name="{{ $element_name }}" id="{{ $element_name }}[{{ $loop->iteration }}]" value="{{ $field_value }}" @if($element_value == $field_option->value) checked @endif @if($form_field->required) required @endif>
                                     <label for="{{ $element_name }}[{{ $loop->iteration }}]" class="form-check-label">{{ $field_option->name }}</label>
@@ -99,8 +99,8 @@
                            <label class="@if($errors->has($element_name)) is-invalid @endif">{{ $form_field->label }} @if($form_field->required) <span class="text-danger">*</span> @endif</label>
                               @foreach($form_field->options as $field_uuid => $field_option)
                                  <div class="form-check" style="margin-left:10px;">
-                                    <?php 
-                                       if ($field_option->value == NULL) { $field_value = $field_option->name; } else { $field_value = $field_option->value; } 
+                                    <?php
+                                       if ($field_option->value == NULL) { $field_value = $field_option->name; } else { $field_value = $field_option->value; }
                                     ?>
                                     <input type="checkbox" class="form-check-input" name="{{ $element_name }}[{{ $loop->iteration }}]" id="{{ $element_name }}-{{ $loop->iteration }}" value="{{ $field_value }}" @if( is_array($element_value) && in_array($field_value, $element_value)) checked @endif @if($form_field->required) required @endif>
                                     <label for="{{ $element_name }}[{{ $loop->iteration }}]" class="form-check-label">{{ $field_option->name }}</label>
@@ -162,7 +162,7 @@
 $(document).ready(function(){
 
    bsCustomFileInput.init()
-   
+
    document.querySelector('#btnsubmit').onclick = function () {
       // make sure we have all the required fields filled out before disabling the button
       var allRequired = true;

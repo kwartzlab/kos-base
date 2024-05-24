@@ -20,7 +20,7 @@
                @if ($gatekeeper->is_default == 1) &nbsp;&nbsp;&nbsp;<span class="badge badge-warning badge-large">Default</span>@endif
             </div>
          </div>
-         
+
          <div class="card-body">
 
             <div class="row">
@@ -40,7 +40,7 @@
                               <span class="info-box-text">Last Seen</span>
                               <span class="info-box-number">@if ($gatekeeper->last_seen != NULL) {{ $gatekeeper->last_seen->diffForHumans() }} @else Never @endif</span>
                            </div>
-                        </div>            
+                        </div>
                      </div>
                      <div class="col-md-6">
                            <div class="info-box bg-warning">
@@ -49,9 +49,9 @@
                                  <span class="info-box-text">IP Address</span>
                                  <span class="info-box-number">@if($status != NULL)@if($status->ip_address == NULL)Unknown @else{{ $status->ip_address }}@endif @else Unknown @endif</span>
                               </div>
-                           </div>            
+                           </div>
                         </div>
-                        
+
                   @endif
                   </div>
 
@@ -202,12 +202,12 @@
             <div class="card-tools">
             </div>
          </div>
-         
+
          <div class="card-body">
          @if($gatekeeper->shared_auth == 0)
                @if($gatekeeper->is_trainer())
                <form method="POST" action="/gatekeepers/authorize">
-               
+
                <input name="gatekeeper_id" type="hidden" value="{{ $gatekeeper->id }}">
                {{ csrf_field() }}
 
@@ -424,7 +424,7 @@
          iDisplayLength: 25,
          "language": {
             "emptyTable": "No authorizations."
-         }				
+         }
       });
 
          $('#confirm-add-trainer').on('click', '.btn-ok', function(e) {
@@ -433,13 +433,13 @@
             var user_id = $("#trainer_id_select").val()
 
             event.preventDefault();
-            
+
             $overlayDiv.removeClass('invisible')
-            
+
             $.post('/gatekeepers/{{ $gatekeeper->id }}/add_trainer/' + user_id).then(function() {
                $overlayDiv.addClass('overlay-change').fadeOut(0).fadeIn('fast')
                $overlayDiv.html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-               window.setTimeout(function(){ 
+               window.setTimeout(function(){
                   $modalDiv.modal('hide')
                   location.reload(true);
                }, 1500);
@@ -450,7 +450,7 @@
             var data = $(e.relatedTarget).data();
             $('.title', this).text(data.recordTitle);
             $('.btn-ok', this).data('recordId', data.recordId);
-         });         
+         });
 
 
          $('#confirm-delete-trainer').on('click', '.btn-ok', function(e) {
@@ -464,14 +464,14 @@
             $.post('/gatekeepers/{{ $gatekeeper->id }}/remove_trainer/' + id).then(function() {
                $overlayDiv.addClass('overlay-change').fadeOut(0).fadeIn('fast')
                $overlayDiv.html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-               window.setTimeout(function(){ 
+               window.setTimeout(function(){
                   $modalDiv.modal('hide')
-                  $(row_id).fadeOut('slow', function(here){ 
-                     $(row_id).remove();                    
+                  $(row_id).fadeOut('slow', function(here){
+                     $(row_id).remove();
                   });
                }, 1500);
 
-               
+
             });
          });
 
@@ -479,7 +479,7 @@
             var data = $(e.relatedTarget).data();
             $('.title', this).text(data.recordTitle);
             $('.btn-ok', this).data('recordId', data.recordId);
-         });         
+         });
 
 
          $('#confirm-add-maintainer').on('click', '.btn-ok', function(e) {
@@ -493,7 +493,7 @@
             $.post('/gatekeepers/{{ $gatekeeper->id }}/add_maintainer/' + user_id).then(function() {
                $overlayDiv.addClass('overlay-change').fadeOut(0).fadeIn('fast')
                $overlayDiv.html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-               window.setTimeout(function(){ 
+               window.setTimeout(function(){
                   $modalDiv.modal('hide')
                   location.reload(true);
                }, 1500);
@@ -504,7 +504,7 @@
             var data = $(e.relatedTarget).data();
             $('.title', this).text(data.recordTitle);
             $('.btn-ok', this).data('recordId', data.recordId);
-         });         
+         });
 
          $('#confirm-delete-maintainer').on('click', '.btn-ok', function(e) {
             var $modalDiv = $(e.delegateTarget);
@@ -517,10 +517,10 @@
             $.post('/gatekeepers/{{ $gatekeeper->id }}/remove_maintainer/' + id).then(function() {
                $overlayDiv.addClass('overlay-change').fadeOut(0).fadeIn('fast')
                $overlayDiv.html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-               window.setTimeout(function(){ 
+               window.setTimeout(function(){
                   $modalDiv.modal('hide')
-                  $(row_id).fadeOut('slow', function(here){ 
-                     $(row_id).remove();                    
+                  $(row_id).fadeOut('slow', function(here){
+                     $(row_id).remove();
                   });
                }, 1500);
              });
@@ -530,7 +530,7 @@
             var data = $(e.relatedTarget).data();
             $('.title', this).text(data.recordTitle);
             $('.btn-ok', this).data('recordId', data.recordId);
-         });         
+         });
 
          $('#confirm-delete-authorization').on('click', '.btn-ok', function(e) {
             var $modalDiv = $(e.delegateTarget);
@@ -543,10 +543,10 @@
              $.post('/gatekeepers/revoke/' + id).then(function() {
                $overlayDiv.addClass('overlay-change').fadeOut(0).fadeIn('fast')
                $overlayDiv.html('<i class="fas fa-8x fa-check-circle text-success"></i>')
-               window.setTimeout(function(){ 
+               window.setTimeout(function(){
                   $modalDiv.modal('hide')
-                  $(row_id).fadeOut('slow', function(here){ 
-                     $(row_id).remove();                    
+                  $(row_id).fadeOut('slow', function(here){
+                     $(row_id).remove();
                   });
                }, 1500);
              });
@@ -556,7 +556,7 @@
             var data = $(e.relatedTarget).data();
             $('.title', this).text(data.recordTitle);
             $('.btn-ok', this).data('recordId', data.recordId);
-         });         
+         });
 
          $.ajaxSetup({
             headers: {

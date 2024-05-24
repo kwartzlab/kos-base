@@ -13,7 +13,7 @@
 	<div class="card-header">
 		<a class="btn btn-primary" href="/roles/create" role="button">Add User Role</a>
 	</div>
-	
+
 	<div class="card-body">
 		<div class="table-responsive">
 			<table class="table table-striped" id="data-table">
@@ -43,7 +43,7 @@
 								<a class="btn btn-primary btn-sm" href="/roles/{{ $role->id }}/edit" role="button"><i class="fas fa-user-tag"></i>&nbsp;&nbsp;Manage</a>&nbsp;
 							</td>
 						</tr>
-			
+
 					@endforeach
 				</tbody>
 			</table>
@@ -66,7 +66,7 @@
 			iDisplayLength: 25,
 			"language": {
 				"emptyTable": "No roles."
-			}				
+			}
 		});
 	});
 </script>
