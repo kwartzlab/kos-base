@@ -10,6 +10,7 @@ use GuzzleHttp\RequestOptions;
 class Slack implements SlackInterface
 {
     private string $token;
+
     private Client $http;
 
     public function __construct(string $token, Client $http)

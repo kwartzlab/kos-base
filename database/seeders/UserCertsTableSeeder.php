@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\RolePermission;
 use App\Models\User;
 use App\Models\UserCert;
 use App\Models\UserStatus;
@@ -38,7 +36,7 @@ class UserCertsTableSeeder extends Seeder
                 UserStatus::STATUS_TERMINATED,
             ])
             ->get()
-            ->filter(fn() => random_int(1, 20) === 1)
+            ->filter(fn () => random_int(1, 20) === 1)
             ->each(function (User $user) {
                 UserCert::query()->create([
                     'user_id' => $user->id,

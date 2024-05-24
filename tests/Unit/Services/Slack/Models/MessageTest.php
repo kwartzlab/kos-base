@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\Slack\Models;
 
-use App\Services\Slack\Models\Channel;
 use App\Services\Slack\Models\Message;
 use Tests\TestCase;
 

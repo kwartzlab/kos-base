@@ -5,7 +5,6 @@ namespace Tests\Unit\Mail;
 use App\Mail\SlackInvite;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Crypt;
 use Tests\TestCase;
 
 class SlackInviteTest extends TestCase

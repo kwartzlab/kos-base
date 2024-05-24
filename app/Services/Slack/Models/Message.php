@@ -5,6 +5,7 @@ namespace App\Services\Slack\Models;
 class Message
 {
     private ?string $id;
+
     private ?string $text;
 
     public function __construct(?string $id = null)
@@ -20,6 +21,7 @@ class Message
     public function setText(string $text): Message
     {
         $this->text = $text;
+
         return $this;
     }
 

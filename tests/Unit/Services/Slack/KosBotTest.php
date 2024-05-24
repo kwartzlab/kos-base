@@ -17,6 +17,7 @@ class KosBotTest extends TestCase
     use RefreshDatabase;
 
     private MockObject|Slack $slack;
+
     private KosBot $kosBot;
 
     public function setUp(): void

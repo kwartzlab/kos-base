@@ -39,7 +39,7 @@ class MemberApp extends Mailable implements ShouldQueue
         if (isset($email_data['recipient'])) {
             $this->recipient = $email_data['recipient'];
         } else {
-            $this->recipient = NULL;
+            $this->recipient = null;
         }
     }
 
@@ -53,7 +53,7 @@ class MemberApp extends Mailable implements ShouldQueue
         switch ($this->destination) {
             case 'admin':
 
-                if ($this->recipient == NULL) {
+                if ($this->recipient == null) {
                     $this->to(config('kwartzlabos.membership_app.admin.to'));
                     $this->subject(config('kwartzlabos.membership_app.admin.subject').' - '.$this->name);
                     if (config('kwartzlabos.membership_app.admin.cc') != null) {
@@ -70,7 +70,7 @@ class MemberApp extends Mailable implements ShouldQueue
                 break;
             case 'members':
 
-                if ($this->recipient == NULL) {
+                if ($this->recipient == null) {
                     $this->to(config('kwartzlabos.membership_app.members.to'));
                     $this->subject(config('kwartzlabos.membership_app.members.subject').' - '.$this->name);
                     if (config('kwartzlabos.membership_app.members.cc') != null) {
@@ -90,7 +90,7 @@ class MemberApp extends Mailable implements ShouldQueue
         // only send the message if there is a valid email address from the config, otherwise skip
         if (count($this->to) > 0) {
             return $this->view('emails.memberapp')
-                        ->text('emails.memberapp_plain');
+                ->text('emails.memberapp_plain');
         }
     }
 }

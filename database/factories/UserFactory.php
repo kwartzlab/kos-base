@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
@@ -47,11 +46,12 @@ class UserFactory extends Factory
 
     public function status(string $status)
     {
-        if(method_exists($this, $status)) {
+        if (method_exists($this, $status)) {
             $factory = $this->{$status}();
         }
 
         $factory = $factory ?? $this;
+
         return $factory->state(['status' => $status]);
     }
 

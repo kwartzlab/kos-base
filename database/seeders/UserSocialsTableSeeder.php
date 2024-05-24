@@ -20,7 +20,7 @@ class UserSocialsTableSeeder extends Seeder
     public function run()
     {
         User::all()->each(function (User $user) {
-            if(random_int(0, 10) >= 2) {
+            if (random_int(0, 10) >= 2) {
                 return;
             }
 
@@ -30,7 +30,7 @@ class UserSocialsTableSeeder extends Seeder
                 ['facebook'],
                 ['instagram', 'twitter'],
                 ['twitter', 'facebook'],
-                ['instagram', 'twitter', 'facebook']
+                ['instagram', 'twitter', 'facebook'],
             ];
 
             collect(collect($socialsToCreate)->random())
@@ -48,9 +48,9 @@ class UserSocialsTableSeeder extends Seeder
     {
         switch ($service) {
             case 'twitter':
-                return '@' . $this->faker->word;
+                return '@'.$this->faker->word;
             case 'facebook':
-                return 'https://facebook.com/' . $this->faker->word;
+                return 'https://facebook.com/'.$this->faker->word;
             case 'instagram':
                 return $this->faker->word;
             default:

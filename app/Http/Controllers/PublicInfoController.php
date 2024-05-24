@@ -29,6 +29,7 @@ class PublicInfoController extends Controller
     {
         $count = User::where('status', 'active')->count();
         $count = max(0, $count - 10); // Ensure count is not negative
+
         return round($count / 10) * 10;
     }
 }

@@ -12,7 +12,6 @@ class Gatekeeper extends Model implements Auditable
         'last_seen' => 'datetime',
     ];
 
-
     /**
      * Attributes to exclude from the Audit.
      *

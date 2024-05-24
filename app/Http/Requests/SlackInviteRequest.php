@@ -30,14 +30,14 @@ class SlackInviteRequest extends FormRequest
 
     private function abortIfNotEnabled(): void
     {
-        if (!config('services.slack.auto_invite.enabled', false)) {
+        if (! config('services.slack.auto_invite.enabled', false)) {
             abort(Response::HTTP_NOT_FOUND);
         }
     }
 
     private function abortIfNoToken(): void
     {
-        if (!$this->input('t', false)) {
+        if (! $this->input('t', false)) {
             abort(Response::HTTP_UNAUTHORIZED);
         }
     }
@@ -45,7 +45,7 @@ class SlackInviteRequest extends FormRequest
     private function abortIfInvalidToken(): void
     {
         try {
-            if (!User::query()->find(Crypt::decrypt($this->input('t')))) {
+            if (! User::query()->find(Crypt::decrypt($this->input('t')))) {
                 abort(Response::HTTP_UNAUTHORIZED);
             }
         } catch (DecryptException $exception) {

@@ -14,6 +14,7 @@ class SlackInvite extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public User $user;
+
     public string $inviteUrl;
 
     public function __construct(User $user)
