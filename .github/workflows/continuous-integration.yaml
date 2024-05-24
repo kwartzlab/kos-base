@@ -17,7 +17,8 @@ jobs:
         with:
           php_version: "8.1"
 
-      - uses: actions/setup-sqlite@v1
+      - name: Setup SQLite environment
+        uses: ccorsi/setup-sqlite@v1
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit
