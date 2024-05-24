@@ -12,3 +12,9 @@ repos:
     rev: 1.4.0
     hooks:
     -   id: php-lint-all
+exclude: |
+  (?x)^(
+    public\/vendor\/.*|
+    .*\.min\.js|
+    .*\.js\.map
+  )$
