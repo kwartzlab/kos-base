@@ -18,7 +18,7 @@ jobs:
           php_version: "8.1"
 
       - name: Seed Database
-        run: php artisan db:seed
+        run: php artisan db:seed --force
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit
