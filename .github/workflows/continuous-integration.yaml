@@ -17,8 +17,7 @@ jobs:
         with:
           php_version: "8.1"
 
-      - name: Seed Database
-        run: php artisan db:seed --force
+      - uses: actions/setup-sqlite@v1
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit
