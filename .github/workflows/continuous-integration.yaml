@@ -16,9 +16,10 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "8.1"
+          php_extensions: mbstring xml curl mysql sqlite3 zip gd
 
-      - name: Setup SQLite environment
-        uses: ccorsi/setup-sqlite@v1
+      - name: Install SQLite
+        run: sudo apt-get sqlite3 -y
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit
