@@ -14,6 +14,9 @@ jobs:
 
       - name: Prepare The Environment
         run: cp .env.example .env
+
+      - name: Prepare The Environment
+        run: mkdir -p public/storage/images/users
       
       - name: Install Composer Dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
