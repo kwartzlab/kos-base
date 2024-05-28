@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Prepare The Environment
+        run: cp .env.example .env
       
       - name: Install Composer Dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
