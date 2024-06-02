@@ -158,7 +158,7 @@
       ordering: false,
       paging: false,
       searching: false,
-      iDisplayLength: 25,
+      iDisplayLength: {{ config('kwartzlabos.results_per_page.default') }},
       "language": {
         "emptyTable": "No authorized users."
       }

@@ -197,5 +197,8 @@ return [
         'keys_disabled' => 'Keys Disabled',
         'covid_vaccine' => 'Vaccinated/Exempt',
     ],
+    'results_per_page' => [
+        'default' => 50,
+    ],
 
 ];
