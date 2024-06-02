@@ -109,7 +109,7 @@
 		$('#data-table').dataTable({
 			ordering: true,
 			pagingType: "simple_numbers",
-			iDisplayLength: 25,
+			iDisplayLength: {{ config('kwartzlabos.results_per_page.default') }},
 			"language": {
 				"emptyTable": "No gatekeepers."
 			}
