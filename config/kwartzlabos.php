@@ -199,6 +199,6 @@ return [
     ],
     'results_per_page' => [
         'default' => 50,
-    ]
+    ],
 
 ];
