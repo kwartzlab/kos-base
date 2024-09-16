@@ -12,7 +12,7 @@ git fetch origin main
 
 php artisan down || true
 
-git merge --ff-only origin/main
+git checkout origin/main
 
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
