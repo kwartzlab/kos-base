@@ -75,6 +75,12 @@ return [
             'colour' => 'danger',
             'send-notifications' => true,
         ],
+        'inactive-in-memoriam' => [
+            'name' => 'In Memoriam',
+            'icon' => 'fa-user-slash',
+            'colour' => 'danger',
+            'send-notifications' => false,
+        ],
         'terminated' => [
             'name' => 'Withdrawn [Terminated]',
             'icon' => 'fa-user-slash',
