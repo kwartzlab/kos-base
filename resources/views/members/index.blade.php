@@ -16,6 +16,7 @@
          <table class="table table-striped" id="data-table">
             <thead><tr>
                <th>Name</th>
+               <th>Email</th>
                <th>Joined</th>
                <th>Status</th>
                <th>Team(s)</th>
@@ -25,6 +26,7 @@
                @foreach($users as $user)
                   <tr>
                      <td>{{ $user->get_name() }}</td>
+                     <td>{{ $user->email }}</td>
                      <td nowrap>@isset($user->date_admitted) {{ $user->date_admitted->toDateString() }} @endisset</td>
                      <td>@include('users.status')
                      @php ($roles = $user->roles()->get())
@@ -73,8 +75,18 @@
 				iDisplayLength: {{ config('kwartzlabos.results_per_page.default') }},
 				"language": {
 					"emptyTable": "No results???"
-				}
+				},
+                                // Enable member search by email without displaying the email address.
+                                columnDefs: [{
+                                        targets: 1, // Email column
+                                        visible: false
+                                }]
 			});
+
+            // Hiding a column with data tables gives the table a goofy behaviour where the table itself shrinks in width.
+            // This is a known issue where the "fix" is to reset the table back to full width once the column has been
+            // hidden.
+            $('#data-table').width('100%');
         });
     </script>
 @stop
