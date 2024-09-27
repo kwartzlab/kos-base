@@ -29,4 +29,6 @@ RUN composer install --prefer-dist
 # Composer doesn't always set owner properly so let's globally repair that.
 RUN chown -R app:app .
 
+RUN chmod +x ./docker-entrypoint.sh
+
 CMD ./docker-entrypoint.sh
