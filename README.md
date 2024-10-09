@@ -29,9 +29,9 @@ cd kos-base
 As part of the repository we have an example environment file with a '.example' extension.
 Create a copy of this file with the example extension removed.
 
-'''shell
+```shell
 cp .env.example .env
-'''
+```
 
 #### 2. Build Docker image
 Files provided in the repository are pre-configured to build Kos from the application source code previously cloned in the last step. The Kos Docker image is built in steps. Once each step completes, it's stored in a cache for later to speed up following builds.
