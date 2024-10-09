@@ -25,6 +25,14 @@ This will clone the repository from GitHub. Once cloned, navigate into the new d
 cd kos-base
 ```
 
+#### 1.5. Environment Variables
+As part of the repository we have an example environment file with a '.example' extension.
+Create a copy of this file with the example extension removed.
+
+'''shell
+cp .env.example .env
+'''
+
 #### 2. Build Docker image
 Files provided in the repository are pre-configured to build Kos from the application source code previously cloned in the last step. The Kos Docker image is built in steps. Once each step completes, it's stored in a cache for later to speed up following builds.
 
@@ -32,6 +40,9 @@ To build the application image, run:
 ```shell
 docker compose build
 ```
+
+If the build fails, the composer dependencies may be out of date.
+A short term solution is to delete the "composer.lock" file.
 
 #### 3. Run Kos
 With the application image built, we can now stand up Kos with necessary dependencies. To run Kos, run:
