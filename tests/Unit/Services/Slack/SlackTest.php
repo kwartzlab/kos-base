@@ -46,7 +46,7 @@ class SlackTest extends TestCase
         );
 
         $slack = new Slack('some-oauth-token', $this->getGuzzleClient());
-        $message = (new Message())->setText('Wind\'s howling.');
+        $message = (new Message)->setText('Wind\'s howling.');
         $channel = new Channel('CH4NN3L1D');
 
         $slack->postMessageToChannel($message, $channel);

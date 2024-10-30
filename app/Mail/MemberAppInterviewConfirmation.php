@@ -12,9 +12,7 @@ class MemberAppInterviewConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public $email_data)
-    {
-    }
+    public function __construct(public $email_data) {}
 
     public function envelope(): Envelope
     {
