@@ -72,7 +72,5 @@ class RegisterController extends Controller
         return redirect('/');
     }
 
-    public function register()
-    {
-    }
+    public function register() {}
 }

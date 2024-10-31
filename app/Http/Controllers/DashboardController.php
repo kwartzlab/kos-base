@@ -33,7 +33,7 @@ class DashboardController extends Controller
         }));
         $events = $events->slice(0, 9);
 
-        $lab_activity_chart = new LabActivityChart();
+        $lab_activity_chart = new LabActivityChart;
 
         return view('dashboard.index', compact(
             'latest_members',
