@@ -87,7 +87,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // Reports
-Route::get('/reports', [ReportsController::class, 'index'])->middleware('auth');
+Route::middleware(['auth', 'can:manage-reports'])->group(function () {
+    Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
+    Route::get('/reports/member-status-report', [ReportsController::class, 'member_status_report'])->name('reports.member-status-report');
+});
 
 // Gatekeeper sync and key authentication routes
 Route::post('/keys', [KeysController::class, 'index']);
