@@ -20,7 +20,7 @@ class KosBot
         $formattedDateString = now()->toFormattedDateString();
 
         return $this->slack->postMessageToChannel(
-            (new Message())->setText("{$user->get_name()} - applied {$formattedDateString}"),
+            (new Message)->setText("{$user->get_name()} - applied {$formattedDateString}"),
             new Channel(config('services.slack.channels.applicants'))
         );
     }
