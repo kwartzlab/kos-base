@@ -105,6 +105,7 @@ class GatekeepersController extends Controller
                 'auth_key' => $request->input('auth_key'),
                 'shared_auth' => $request->input('shared_auth'),
                 'team_id' => $request->input('team_id'),
+                'wiki_page' => $request->input('wiki_page'),
             ]);
 
             $message = 'Gatekeeper added successfully.';
@@ -213,6 +214,7 @@ class GatekeepersController extends Controller
             $gatekeeper->is_default = $is_default;
             $gatekeeper->team_id = $request->input('team_id');
             $gatekeeper->shared_auth = $request->input('shared_auth');
+            $gatekeeper->wiki_page = $request->input('wiki_page');
 
             if (request('auth_key') == null) {
                 $gatekeeper->auth_key = $this->generate_auth_key();
