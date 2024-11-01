@@ -20,32 +20,30 @@
 	</div>
 
 	<div class="card-body">
-		<div class="table-responsive">
-			<table class="table table-striped" id="data-table">
-				<thead><tr>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Status</th>
-					<th>Actions</th>
-				</tr></thead>
-				<tbody>
-					@foreach($forms as $form)
-						<tr>
-							<td>{{ $form->name }}</td>
-							<td>{{ $form->description }}</td>
-							<td>@if($form->status == 'enabled')<span class="label label-success">Enabled</span>
-							@else
-							<span class="label label-danger">Disabled</span>@endif</td>
-							<td>
-							<a class="btn btn-default btn-sm" href="/form/{{ $form->id }}/edit" role="button">Edit</a>
+                <table class="table table-striped" id="data-table">
+                        <thead><tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                        </tr></thead>
+                        <tbody>
+                                @foreach($forms as $form)
+                                        <tr>
+                                                <td>{{ $form->name }}</td>
+                                                <td>{{ $form->description }}</td>
+                                                <td>@if($form->status == 'enabled')<span class="label label-success">Enabled</span>
+                                                @else
+                                                <span class="label label-danger">Disabled</span>@endif</td>
+                                                <td>
+                                                <a class="btn btn-default btn-sm" href="/form/{{ $form->id }}/edit" role="button">Edit</a>
 
-							</td>
-						</tr>
+                                                </td>
+                                        </tr>
 
-					@endforeach
-				</tbody>
-			</table>
-		</div>
+                                @endforeach
+                        </tbody>
+                </table>
 	</div>
 
 @stop
@@ -55,7 +53,7 @@
 @stop
 
 @section('js')
-	<script>
+    <script>
         $(document).ready(function () {
             $('#data-table').dataTable({
 				ordering: false,
