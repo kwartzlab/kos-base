@@ -69,7 +69,6 @@
 @stop
 
 @section('js')
-	<script src="/js/datatables.min.js"></script>
 	<script>
         $(document).ready(function () {
             $('#data-table').dataTable({
