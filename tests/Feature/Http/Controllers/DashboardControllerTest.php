@@ -23,7 +23,7 @@ class DashboardControllerTest extends TestCase
     public function testItLoadsCalendarEventsInProductionEnvironment()
     {
         config(['app.env' => 'production']);
-        $this->app->bind(Event::class, fn () => new FakeEvent());
+        $this->app->bind(Event::class, fn () => new FakeEvent);
 
         $this->followingRedirects()->actingAs($this->user)->get('/');
 
@@ -45,7 +45,7 @@ class DashboardControllerTest extends TestCase
     public function testItDoesNotLoadCalendarEventsInNonProductionEnvironment(string $environment)
     {
         config(['app.env' => $environment]);
-        $this->app->bind(Event::class, fn () => new FakeEvent());
+        $this->app->bind(Event::class, fn () => new FakeEvent);
 
         $this->actingAs($this->user)->get('/');
 

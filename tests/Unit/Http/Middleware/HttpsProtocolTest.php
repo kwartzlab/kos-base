@@ -17,13 +17,12 @@ class HttpsProtocolTest extends TestCase
 
         /** @var Request $request */
         $request = app(Request::class);
-        $middleware = new HttpsProtocol();
+        $middleware = new HttpsProtocol;
 
         $this->assertFalse($request->isSecure());
 
         /** @var RedirectResponse $response */
-        $response = $middleware->handle(app(Request::class), function () {
-        });
+        $response = $middleware->handle(app(Request::class), function () {});
 
         $this->assertTrue(
             $response->isRedirect(URL::to('/', [], true)),
@@ -39,7 +38,7 @@ class HttpsProtocolTest extends TestCase
 
         /** @var Request $request */
         $request = app(Request::class);
-        $middleware = new HttpsProtocol();
+        $middleware = new HttpsProtocol;
 
         $this->assertFalse($request->isSecure());
 

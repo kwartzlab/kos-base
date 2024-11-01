@@ -49,7 +49,13 @@
                               <a href="/members/{{ $maintainer->user()->first()->id }}/profile" title="View Profile"><span class="badge badge-primary badge-large">{{ $maintainer->user()->first()->get_name() }}</span></a>&nbsp;
                            @endforeach
                         @endif
-
+                        @if ($gatekeeper->wiki_page)
+                          <div class="row" style="margin-top:15px;margin-bottom:0px;">
+                            <div class="col">
+                              <a href="{{ $gatekeeper->wiki_page }}" title="Kwartzlab Wiki"><i class="fab fa-wikipedia-w fa-2x circle-icon-64"></i></a>
+                            </div>
+                          </div>
+                        @endif
                      </div>
                   </div>
                </div>

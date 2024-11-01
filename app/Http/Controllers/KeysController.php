@@ -77,7 +77,7 @@ class KeysController extends Controller
 
                     // if no record, create one
                     if ($status == null) {
-                        $status = new \App\Models\GatekeeperStatus();
+                        $status = new \App\Models\GatekeeperStatus;
                     }
 
                     // verify more parameters if tool is in use

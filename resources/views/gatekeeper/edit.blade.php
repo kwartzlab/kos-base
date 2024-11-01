@@ -69,6 +69,13 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="form-group col-md-3">
+          <label for="name">Wiki Page</label>
+          <input type="text" class="form-control" name="wiki_page" id="wiki_page" value="@if(!old('wiki_page')){{$gatekeeper->wiki_page}}@endif{{ old('wiki_page') }}">
+        </div>
+      </div>
+
       <div class="row" style="margin-top:10px;">
         <div class="form-group col-md-0.5">
           <label class="switch">
