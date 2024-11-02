@@ -34,7 +34,7 @@
           @if((!$team_data['is_trainer']) && (!$team_data['is_maintainer']))
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="{{ $team_role }}[]">{{ $team_data['name'] }}s</label>
+                <label for="{{ $team_role }}[]">{{ $team_data['plural_name'] }}</label>
                 <select multiple class="form-control" name="{{ $team_role }}[]" id="{{ $team_role }}">
                   @foreach($user_list as $key => $value)
                       <option value="{{ $key }}" @if(old($team_role, null) != null) @if (in_array($key, old($team_role))) selected="selected" @endif @endif>{{ $value }}</option>
