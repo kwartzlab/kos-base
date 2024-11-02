@@ -41,11 +41,11 @@
       </div>
    @endif
 @else
-   <div class="info-box bg-warning">
-      <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+   <div class="info-box bg-secondary">
+      <span class="info-box-icon"><i class="fas fa-eye-slash"></i></span>
       <div class="info-box-content">
          <span class="info-box-text">Status</span>
-         <span class="info-box-number">Unknown</span>
+         <span class="info-box-number">Offline - Does not report status</span>
       </div>
    </div>
 @endif

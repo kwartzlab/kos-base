@@ -29,7 +29,7 @@
                <div class="col-md-8">
                   <div class="row">
                      <div class="col-md-8">
-                        @php($status = $gatekeeper->current_status()->get()->first())
+                        @php($status = $gatekeeper->current_status()->first())
                         @include('gatekeeper.status')
                      </div>
                   </div>
