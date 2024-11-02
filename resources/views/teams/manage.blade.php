@@ -19,30 +19,28 @@
 
    <div class="card-body">
       @if(count($team_assignments) > 0)
-      <div class="table-responsive">
-         <table class="table table-striped" id="data-table">
-            <thead><tr>
-               <th>Gatekeeper</th>
-               <th>User</th>
-               <th>Team Assignment</th>
-               <th>Actions</th>
-            </tr></thead>
-            <tbody>
-               @foreach($team_assignments as $assignment)
-                  <tr class="request_row" id="request-{{ $assignment->id }}">
-                     <td>{{ $assignment->gatekeeper()->first()->name }}</td>
-                     <td>{{ $assignment->user()->first()->get_name() }}</td>
-                     <td>{{ config('kwartzlabos.team_roles.' . $assignment->team_role . '.name') }}</td>
-                     <td>
-                        <button class="btn btn-success btn-sm approve_button" data-record-id="{{ $assignment->id }}" id="{{ $assignment->id }}" role="button"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Approve</button>
-                        &nbsp;<button class="btn btn-danger btn-sm confirm-remove-request" data-record-id="{{ $assignment->id }}" data-toggle="modal" data-target="#confirm-remove-request"><i class="fas fa-ban"></i>&nbsp;&nbsp;Remove</button>
-                     </td>
-                  </tr>
+      <table class="table table-striped" id="data-table">
+         <thead><tr>
+            <th>Gatekeeper</th>
+            <th>User</th>
+            <th>Team Assignment</th>
+            <th>Actions</th>
+         </tr></thead>
+         <tbody>
+            @foreach($team_assignments as $assignment)
+               <tr class="request_row" id="request-{{ $assignment->id }}">
+                  <td>{{ $assignment->gatekeeper()->first()->name }}</td>
+                  <td>{{ $assignment->user()->first()->get_name() }}</td>
+                  <td>{{ config('kwartzlabos.team_roles.' . $assignment->team_role . '.name') }}</td>
+                  <td>
+                     <button class="btn btn-success btn-sm approve_button" data-record-id="{{ $assignment->id }}" id="{{ $assignment->id }}" role="button"><i class="fas fa-check-circle"></i>&nbsp;&nbsp;Approve</button>
+                     &nbsp;<button class="btn btn-danger btn-sm confirm-remove-request" data-record-id="{{ $assignment->id }}" data-toggle="modal" data-target="#confirm-remove-request"><i class="fas fa-ban"></i>&nbsp;&nbsp;Remove</button>
+                  </td>
+               </tr>
 
-               @endforeach
-            </tbody>
-         </table>
-      </div>
+            @endforeach
+         </tbody>
+      </table>
       @else
          <p>No pending assignment requests.</p>
       @endif
@@ -59,36 +57,34 @@
    </div>
 
    <div class="card-body">
-      <div class="table-responsive">
-         <table class="table table-striped table-responsive" id="data-table">
-            <thead><tr>
-               <th>Name</th>
-               @foreach(config('kwartzlabos.team_roles') as $team_role => $team_data)
-                  @if (($team_data['is_admin']) || ($team_data['is_trainer']) || ($team_data['is_maintainer']))
-                     <th>{{ $team_data['name'] }}s</th>
-                  @endif
-               @endforeach
-               <th>Actions</th>
-            </tr></thead>
-            <tbody>
-               @foreach($teams as $team)
-                  <tr>
-                     <td>{{ $team->name }}</td>
-                     @foreach(config('kwartzlabos.team_roles') as $team_role => $team_data)
-                        @if (($team_data['is_admin']) || ($team_data['is_trainer']) || ($team_data['is_maintainer']))
-                           <td>@php($role_members = $team->role_members($team_role)->get())@if ($role_members != NULL) @foreach ($role_members->unique('user_id') as $role_member)<a href="/members/{{ $role_member->user->id }}/profile" TITLE="View Profile"><span class="badge @if($role_member->user->status != 'active') badge-danger @else badge-primary @endif">{{ $role_member->user->get_name() }}</a></span> @endforeach @endif &nbsp;</td>
-                        @endif
-                     @endforeach
-                     <td style="min-width:220px;">
-                        <a class="btn btn-primary btn-sm" href="/teams/{{ $team->id }}/dashboard" role="button"><i class="fas fa-cog"></i>&nbsp;&nbsp;Manage</a>&nbsp;
-                        <a class="btn btn-primary btn-sm" href="/teams/{{ $team->id }}/edit" role="button"><i class="fas fa-user-check"></i>&nbsp;&nbsp;Assignments</a>
-                     </td>
-                  </tr>
+      <table class="table table-striped" id="data-table">
+         <thead><tr>
+            <th>Name</th>
+            @foreach(config('kwartzlabos.team_roles') as $team_role => $team_data)
+               @if (($team_data['is_admin']) || ($team_data['is_trainer']) || ($team_data['is_maintainer']))
+                  <th>{{ $team_data['name'] }}s</th>
+               @endif
+            @endforeach
+            <th>Actions</th>
+         </tr></thead>
+         <tbody>
+            @foreach($teams as $team)
+               <tr>
+                  <td>{{ $team->name }}</td>
+                  @foreach(config('kwartzlabos.team_roles') as $team_role => $team_data)
+                     @if (($team_data['is_admin']) || ($team_data['is_trainer']) || ($team_data['is_maintainer']))
+                        <td>@php($role_members = $team->role_members($team_role)->get())@if ($role_members != NULL) @foreach ($role_members->unique('user_id') as $role_member)<a href="/members/{{ $role_member->user->id }}/profile" TITLE="View Profile"><span class="badge @if($role_member->user->status != 'active') badge-danger @else badge-primary @endif">{{ $role_member->user->get_name() }}</a></span> @endforeach @endif &nbsp;</td>
+                     @endif
+                  @endforeach
+                  <td style="min-width:220px;">
+                     <a class="btn btn-primary btn-sm" href="/teams/{{ $team->id }}/dashboard" role="button"><i class="fas fa-cog"></i>&nbsp;&nbsp;Manage</a>&nbsp;
+                     <a class="btn btn-primary btn-sm" href="/teams/{{ $team->id }}/edit" role="button"><i class="fas fa-user-check"></i>&nbsp;&nbsp;Assignments</a>
+                  </td>
+               </tr>
 
-               @endforeach
-            </tbody>
-         </table>
-      </div>
+            @endforeach
+         </tbody>
+      </table>
    </div>
 </div>
 

@@ -130,28 +130,26 @@
       </div>
 
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead><tr>
-              <th>Key ID</th>
-              <th>Description</th>
-              <th>Added</th>
-              <th>Actions</th>
-            </tr></thead>
-            <tbody>
-              @foreach($user->keys as $key)
-                <tr>
-                  <td>{{ substr($key->rfid,-8) }}</td>
-                  <td>{{ $key->description }}</td>
-                  <td>{{ $key->created_at->diffForHumans() }}</td>
-                  <td>
-                  <a class="btn btn-danger btn-sm" href="/users/{{ $user->id }}/destroy_key/{{ $key->id }}" role="button">Delete</a>
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
+        <table class="table table-striped">
+          <thead><tr>
+            <th>Key ID</th>
+            <th>Description</th>
+            <th>Added</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody>
+            @foreach($user->keys as $key)
+              <tr>
+                <td>{{ substr($key->rfid,-8) }}</td>
+                <td>{{ $key->description }}</td>
+                <td>{{ $key->created_at->diffForHumans() }}</td>
+                <td>
+                <a class="btn btn-danger btn-sm" href="/users/{{ $user->id }}/destroy_key/{{ $key->id }}" role="button">Delete</a>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -162,28 +160,26 @@
       </div>
 
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-striped" id="forms-table">
-            <thead><tr>
-              <th>Form Name</th>
-              <th>Submitted</th>
-              <th>Actions</th>
-            </tr></thead>
-            <tbody>
-              @forelse ($user->submitted_forms as $form_submission)
-              <tr>
-                  <td>{{ $form_submission->form_name }}</td>
-                  <td>{{ $form_submission->created_at }}</td>
-                  <td class="col-action">
-                    <a href="/forms/submission/{{ $form_submission->id }}" class="btn btn-success btn-sm" role="button"><i class="far fa-file-alt"></i>View</a>
-                  </td>
+        <table class="table table-striped" id="forms-table">
+          <thead><tr>
+            <th>Form Name</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody>
+            @forelse ($user->submitted_forms as $form_submission)
+            <tr>
+                <td>{{ $form_submission->form_name }}</td>
+                <td>{{ $form_submission->created_at }}</td>
+                <td class="col-action">
+                  <a href="/forms/submission/{{ $form_submission->id }}" class="btn btn-success btn-sm" role="button"><i class="far fa-file-alt"></i>View</a>
+                </td>
 
-                </tr>
-              @empty
-              @endforelse
-            </tbody>
-          </table>
-        </div>
+              </tr>
+            @empty
+            @endforelse
+          </tbody>
+        </table>
       </div>
     </div>
 </section>
