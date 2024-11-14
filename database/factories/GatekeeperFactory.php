@@ -4,19 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+//It might be worthwhile to randomize the 'status' and 'last seen' attributes
+
 class GatekeeperFactory extends Factory
 {
-    private static int $toolIdIncrement = 0;//This might be useless
 
     public function definition(): array
     {
-        $name = $this->faker->firstname();//Temporarily use firstname generator from faker - replace with own list of tool names
-        self::$toolIdIncrement++;
 
         return[
-            "name" => $name,
-            "status" => "enabled",//Experiment with this attribute in kos
-            "id" => self::$toolIdIncrement,//This might also be useless
+            "name" => "name",
+            "status" => "enabled",
             "type" => "lockout",
             "is_default" => 0,
             "ip_address" => NULL,
@@ -29,7 +27,7 @@ class GatekeeperFactory extends Factory
             "training_eta" => NULL,
             "training_prereq" => 0,
             "photo" => NULL,
-            "last_seen" => NULL,//Insert random date prior to current
+            "last_seen" => NULL,
             "created_at" => now(),
             "updated_at" => now(),
             "wiki_page" => NULL
