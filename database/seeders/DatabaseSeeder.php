@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserCertsTableSeeder::class,
             KeysTableSeeder::class,
             FormsTableSeeder::class,
+            GatekeepersTableSeeder::class
         ]);
     }
 }

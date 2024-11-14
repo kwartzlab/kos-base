@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ToolFactory extends Factory
+class GatekeeperFactory extends Factory
 {
     private static int $toolIdIncrement = 1;
 
