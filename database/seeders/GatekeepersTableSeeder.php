@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class GatekeepersTableSeeder extends Seeder
 {
 
-    private array $names = ["bandsaw", "laser cutter"];
+    private array $names = ["Band Saw", "Laser Cutter", "Table Saw", "3D Printer"];
     public function run()
     {
      foreach ($this->names as $name) {
@@ -19,6 +19,6 @@ class GatekeepersTableSeeder extends Seeder
 
     private function createGatekeeper(int $count = 1, string $name): void
     {
-        GateKeeper::factory()->count($count)->create(["name" => $name]);//create(["name" => "bandsaw"])
+        GateKeeper::factory()->count($count)->create(["name" => $name]);
     }
 }

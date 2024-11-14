@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-//It might be worthwhile to randomize the 'status' and 'last seen' attributes
 
 class GatekeeperFactory extends Factory
 {
