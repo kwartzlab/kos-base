@@ -7,8 +7,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Gatekeeper extends Model implements Auditable
 {
-    use \OwenIt\Auditing\Auditable;
     use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     protected $casts = [
         'last_seen' => 'datetime',
