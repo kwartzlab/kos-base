@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GatekeeperFactory extends Factory
 {
-    private static int $toolIdIncrement = 1;
+    private static int $toolIdIncrement = 0;//This might be useless
 
     public function definition(): array
     {
@@ -15,8 +15,8 @@ class GatekeeperFactory extends Factory
 
         return[
             "name" => $name,
-            "status" => "enabled",
-            "id" => self::$toolIdIncrement,
+            "status" => "enabled",//Experiment with this attribute in kos
+            "id" => self::$toolIdIncrement,//This might also be useless
             "type" => "lockout",
             "is_default" => 0,
             "ip_address" => NULL,
@@ -29,7 +29,7 @@ class GatekeeperFactory extends Factory
             "training_eta" => NULL,
             "training_prereq" => 0,
             "photo" => NULL,
-            "last_seen" => NULL,
+            "last_seen" => NULL,//Insert random date prior to current
             "created_at" => now(),
             "updated_at" => now(),
             "wiki_page" => NULL
