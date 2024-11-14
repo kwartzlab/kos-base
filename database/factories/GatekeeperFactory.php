@@ -16,11 +16,11 @@ class GatekeeperFactory extends Factory
         return[
             "name" => $name,
             "status" => "enabled",
-            "tool_id" => $toolIdIncrement,
+            "id" => self::$toolIdIncrement,
             "type" => "lockout",
             "is_default" => 0,
             "ip_address" => NULL,
-            "auth_key" => generate_auth_key(),
+            "auth_key" => $this->generate_auth_key(),
             "shared_auth" => 0,
             "auth_expires" => 0,
             "auth_expiry_type" => "revoke",

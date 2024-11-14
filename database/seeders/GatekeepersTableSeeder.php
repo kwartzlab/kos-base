@@ -6,7 +6,7 @@ use App\Models\Role;
 use App\Models\Gatekeeper;
 use Illuminate\Database\Seeder;
 
-class GatekeeperTableSeeder extends Seeder
+class GatekeepersTableSeeder extends Seeder
 {
     public function run()
     {
