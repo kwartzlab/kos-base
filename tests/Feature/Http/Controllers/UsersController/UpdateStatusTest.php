@@ -73,7 +73,7 @@ class UpdateStatusTest extends TestCase
     }
 
     /** @dataProvider provideValidInviteStatuses */
-    public function testItQueuesSlackInviteEmailWhenUserIsMovedFromValidStatusToActive(
+    public function test_it_queues_slack_invite_email_when_user_is_moved_from_valid_status_to_active(
         string $status,
         bool $shouldSend
     ): void {
@@ -102,7 +102,7 @@ class UpdateStatusTest extends TestCase
     }
 
     /** @dataProvider provideValidInviteStatuses */
-    public function testItDoesNotQueueSlackInviteEmailWhenUserIsMovedFromValidStatusToActiveWhenNotEnabled(
+    public function test_it_does_not_queue_slack_invite_email_when_user_is_moved_from_valid_status_to_active_when_not_enabled(
         string $status
     ): void {
         Mail::fake();
