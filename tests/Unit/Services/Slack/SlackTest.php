@@ -13,19 +13,19 @@ class SlackTest extends TestCase
 {
     use MocksGuzzleHistory;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->mockGuzzleHistory($this->guzzleHistory, ['base_uri' => 'https://slack.com/api/']);
     }
 
-    public function testItCanBeConstructedWithAnOauthToken(): void
+    public function test_it_can_be_constructed_with_an_oauth_token(): void
     {
         $slack = new Slack('geralt-of-rivia', $this->getGuzzleClient());
         $this->assertEquals('geralt-of-rivia', $slack->getToken());
     }
 
-    public function testItIsConstructedFromTheAppContainerWithTheConfiguredOauthToken(): void
+    public function test_it_is_constructed_from_the_app_container_with_the_configured_oauth_token(): void
     {
         $originalOauthToken = config('services.slack.oauth_token');
         config()->set('services.slack.oauth_token', 'geralt-of-rivia');
@@ -38,7 +38,7 @@ class SlackTest extends TestCase
         config()->set('services.slack.oauth_token', $originalOauthToken);
     }
 
-    public function testItMakesAnHttpRequestToPostANewMessageToAChannel(): void
+    public function test_it_makes_an_http_request_to_post_a_new_message_to_a_channel(): void
     {
         $this->appendJsonResponse(
             Response::HTTP_CREATED,

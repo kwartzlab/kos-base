@@ -11,7 +11,7 @@ abstract class MailingListSubscribeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testItBuildsWithExpectedRecipientAndContent()
+    public function test_it_builds_with_expected_recipient_and_content()
     {
         config([$this->getToAddressConfigPath() => 'geralt@rivia.of']);
         config([$this->getPasswordConfigPath() => 'w1nd5h0wl1ng']);

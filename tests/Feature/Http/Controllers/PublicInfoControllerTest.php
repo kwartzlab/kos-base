@@ -13,7 +13,7 @@ class PublicInfoControllerTest extends TestCase
     /**
      * @dataProvider publicUserCountData
      */
-    public function testPublicUserCount(int $activeUsers, int $expectedUserCount, int $hiatusUsers = 0): void
+    public function test_public_user_count(int $activeUsers, int $expectedUserCount, int $hiatusUsers = 0): void
     {
         User::factory($activeUsers)->active()->create();
         User::factory($hiatusUsers)->hiatus()->create();
