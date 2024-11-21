@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class HttpsProtocolTest extends TestCase
 {
-    public function testItRedirectsToHttpsInProductionEnvironment(): void
+    public function test_it_redirects_to_https_in_production_environment(): void
     {
         config(['app.env' => 'production']);
         $_SERVER['HTTPS'] = false;
@@ -31,7 +31,7 @@ class HttpsProtocolTest extends TestCase
     }
 
     /** @dataProvider provideNonProductionEnvironments */
-    public function testItDoesNotRedirectToHttpsOutsideProductionEnvironment(string $environment): void
+    public function test_it_does_not_redirect_to_https_outside_production_environment(string $environment): void
     {
         config(['app.env' => $environment]);
         $_SERVER['HTTPS'] = false;

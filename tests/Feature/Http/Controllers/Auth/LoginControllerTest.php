@@ -13,14 +13,14 @@ class LoginControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testItRendersTheLoginPage(): void
+    public function test_it_renders_the_login_page(): void
     {
         $this->get('/login')
             ->assertStatus(Response::HTTP_OK)
             ->assertSeeText('Sign in to start your session');
     }
 
-    public function testItLogsInAValidUser(): void
+    public function test_it_logs_in_a_valid_user(): void
     {
         $user = User::factory()
             ->create(['email' => 'geralt@rivia.of', 'password' => Hash::make('winds_howling')]);
@@ -31,7 +31,7 @@ class LoginControllerTest extends TestCase
         $this->assertEquals($user->id, Auth::user()->id);
     }
 
-    public function testItRedirectsAnInvalidUserBackToLogin(): void
+    public function test_it_redirects_an_invalid_user_back_to_login(): void
     {
         User::factory()
             ->create(['email' => 'geralt@rivia.of', 'password' => Hash::make('winds_howling')]);
