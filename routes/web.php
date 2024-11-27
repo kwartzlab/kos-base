@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/gatekeepers/{id}/add_trainer', [GatekeepersController::class, 'add_trainer']);
     Route::get('/gatekeepers/{id}/dashboard', [GatekeepersController::class, 'dashboard']);
     Route::post('/gatekeepers/revoke/{auth_id}', [GatekeepersController::class, 'revoke_auth']);
+    Route::get('/gatekeepers/{id}/revoke_all_auth', [GatekeepersController::class, 'revoke_all_auth'])->middleware(['auth', 'can:manage-gatekeepers']);
     Route::post('/gatekeepers/authorize', [GatekeepersController::class, 'grant_auth']);
 });
 

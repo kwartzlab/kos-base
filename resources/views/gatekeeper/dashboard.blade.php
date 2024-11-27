@@ -229,6 +229,7 @@
                               <span class="input-group-btn">
                                  <button type="submit" class="btn btn-primary">Add User</button>
                               </span>
+                              <a href="/gatekeepers/{{ $gatekeeper->id }}/revoke_all_auth" class="btn btn-primary btn-ok">Revoke All Access</a>
                            </div>
                      </div>
                   </div>
