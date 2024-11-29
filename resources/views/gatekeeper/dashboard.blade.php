@@ -230,6 +230,7 @@
                                  <button type="submit" class="btn btn-primary">Add User</button>
                               </span>
                               <a href="/gatekeepers/{{ $gatekeeper->id }}/revoke_all_auth" class="btn btn-danger">Revoke All Access</a>
+                              <button class="btn btn=danger btn-sm revoke_button" data-record-id="{{ $gatekeeper->id }}" data-toggle="modal" data-target="#confirm-delete-all-authorization"><i class="fas fa-ban"></i> Revoke All Access</button>
                            </div>
                      </div>
                   </div>
@@ -404,7 +405,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger btn-ok">Revoke</button>
+        <a href="/gatekeepers/{{ $gatekeeper->id }}/revoke_all_auth" class="btn btn-danger">Revoke</a>
       </div>
     </div>
   </div>
