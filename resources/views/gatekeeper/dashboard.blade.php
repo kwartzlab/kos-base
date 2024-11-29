@@ -416,7 +416,7 @@
 
 <div class="modal fade" id="confirm-delete-all-authorization" tabindex ="-1" role ="dialog" aria-labelledby="modal-remove-all-authorization" aria-hidden="true">
    <div class="modal-dialog">
-      <div class="model-content">
+      <div class="modal-content">
          <div class="overlay d-flex justify-content-center align-items-center invisible">
             <i class="fas fa-2x fa-sync fa-spin"></i>
          </div>
