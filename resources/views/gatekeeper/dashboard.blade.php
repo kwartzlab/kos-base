@@ -205,11 +205,6 @@
 
          <div class="card-body">
          @if($gatekeeper->shared_auth == 0)
-               @if(\Auth::user()->can('manage-gatekeepers'))
-               <div>
-                  <button class="btn btn-danger btn-sm revoke_button" data-record-id="{{ $gatekeeper->id }}" data-toggle="modal" data-target="#confirm-delete-all-authorization"><i class="fas fa-ban"></i> Revoke All Access</button>
-               </div>
-               @endif
                @if($gatekeeper->is_trainer())
 
                <form method="POST" action="/gatekeepers/authorize">
@@ -264,6 +259,11 @@
                      </tbody>
                   </table>
                </div>
+               @if(\Auth::user()->can('manage-gatekeepers'))
+               <div>
+                  <button class="btn btn-danger btn-sm revoke_button" data-record-id="{{ $gatekeeper->id }}" data-toggle="modal" data-target="#confirm-delete-all-authorization"><i class="fas fa-ban"></i> Revoke All Access</button>
+               </div>
+               @endif
             @else
                <h5>This tool is using authorizations from <a href="/gatekeepers/{{ \App\Models\Gatekeeper::find($gatekeeper->shared_auth)->id }}/dashboard" title="View Tool"><span class="badge badge-info badge-large">{{ \App\Models\Gatekeeper::find($gatekeeper->shared_auth)->name }}</span></a></h5>
             @endif
