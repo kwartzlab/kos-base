@@ -20,29 +20,27 @@
          </div>
 
          <div class="card-body no-padding">
-            <div class="table-responsive">
-               <table class="table table-striped no-padding">
-                  <thead><tr>
-                     <th>Name</th>
-                     <th>Request Date</th>
-                     <th>Training Result</th>
-                  </tr></thead>
-                  <tbody>
-                     @foreach($new_requests as $new_request)
-                        @php($request_user = $new_request->user()->first())
-                        <tr class="request_row" id="{{ $new_request->id }}">
-                           <td>{{ $request_user->get_name() }}</td>
-                           <td>{{ $new_request->created_at->diffForHumans() }}</td>
-                           <td>
-                              <button class="btn btn-success btn-sm pass_button" id="btnpass{{ $new_request->id }}" role="button"><i class="far fa-check-circle"></i> Pass & Authorize</button>&nbsp;&nbsp;
-                              <button class="btn btn-danger btn-sm fail_button" id="btnfail{{ $new_request->id }}" role="button"><i class="far fa-frown"></i> Did Not Finish</button>&nbsp;&nbsp;
-                              <button class="btn btn-primary btn-sm cancel_button" id="btncancel{{ $new_request->id }}" role="button"><i class="fas fa-ban"></i> Cancel Request</button>
-                           </td>
-                        </tr>
-                     @endforeach
-                  </tbody>
-               </table>
-            </div>
+            <table class="table table-striped no-padding">
+               <thead><tr>
+                  <th>Name</th>
+                  <th>Request Date</th>
+                  <th>Training Result</th>
+               </tr></thead>
+               <tbody>
+                  @foreach($new_requests as $new_request)
+                     @php($request_user = $new_request->user()->first())
+                     <tr class="request_row" id="{{ $new_request->id }}">
+                        <td>{{ $request_user->get_name() }}</td>
+                        <td>{{ $new_request->created_at->diffForHumans() }}</td>
+                        <td>
+                           <button class="btn btn-success btn-sm pass_button" id="btnpass{{ $new_request->id }}" role="button"><i class="far fa-check-circle"></i> Pass & Authorize</button>&nbsp;&nbsp;
+                           <button class="btn btn-danger btn-sm fail_button" id="btnfail{{ $new_request->id }}" role="button"><i class="far fa-frown"></i> Did Not Finish</button>&nbsp;&nbsp;
+                           <button class="btn btn-primary btn-sm cancel_button" id="btncancel{{ $new_request->id }}" role="button"><i class="fas fa-ban"></i> Cancel Request</button>
+                        </td>
+                     </tr>
+                  @endforeach
+               </tbody>
+            </table>
          </div>
       </div>
       @endif
@@ -58,41 +56,39 @@
       </div>
 
       <div class="card-body no-padding">
-         <div class="table-responsive">
-            <table class="table table-striped" id="data-table">
-               <thead><tr>
-                  <th>Name</th>
-                  <th>Gatekeeper</th>
-                  <th>Status</th>
-                  <th>Request Date</th>
-                  <th>Last Updated</th>
-               </tr></thead>
-               <tbody>
-                  @foreach($request_history as $new_request)
-                  @php($request_user = $new_request->user()->first())
-                  @php($request_gk = $new_request->gatekeeper()->first())
-                     <tr>
-                        <td>{{ $request_user->get_name() }}</td>
-                        <td>{{ $request_gk->name }}</td>
-                        <td>@switch($new_request->status)
-                              @case('cancelled')
-                                 <span class="badge badge-warning">{{ $request_status[$new_request->status] }}</span>
-                                 @break
-                              @case('completed')
-                                 <span class="badge badge-success">{{ $request_status[$new_request->status] }}</span>
-                                 @break
-                              @case('failed')
-                              <span class="badge badge-danger">{{ $request_status[$new_request->status] }}</span>
+         <table class="table table-striped" id="data-table">
+            <thead><tr>
+               <th>Name</th>
+               <th>Gatekeeper</th>
+               <th>Status</th>
+               <th>Request Date</th>
+               <th>Last Updated</th>
+            </tr></thead>
+            <tbody>
+               @foreach($request_history as $new_request)
+               @php($request_user = $new_request->user()->first())
+               @php($request_gk = $new_request->gatekeeper()->first())
+                  <tr>
+                     <td>{{ $request_user->get_name() }}</td>
+                     <td>{{ $request_gk->name }}</td>
+                     <td>@switch($new_request->status)
+                           @case('cancelled')
+                              <span class="badge badge-warning">{{ $request_status[$new_request->status] }}</span>
                               @break
-                           @endswitch
-                        </td>
-                        <td>{{ $new_request->created_at->diffForHumans() }}</td>
-                        <td>{{ $new_request->updated_at->diffForHumans() }}</td>
-                     </tr>
-                  @endforeach
-               </tbody>
-            </table>
-         </div>
+                           @case('completed')
+                              <span class="badge badge-success">{{ $request_status[$new_request->status] }}</span>
+                              @break
+                           @case('failed')
+                           <span class="badge badge-danger">{{ $request_status[$new_request->status] }}</span>
+                           @break
+                        @endswitch
+                     </td>
+                     <td>{{ $new_request->created_at->diffForHumans() }}</td>
+                     <td>{{ $new_request->updated_at->diffForHumans() }}</td>
+                  </tr>
+               @endforeach
+            </tbody>
+         </table>
       </div>
    </div>
 @endif
