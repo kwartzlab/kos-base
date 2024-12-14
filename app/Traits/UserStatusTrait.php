@@ -43,7 +43,7 @@ trait UserStatusTrait
                     $extra_tasks = '(New Member Induction)';
                     $user->date_admitted = $current_status->created_at;
                 }
-                if (($current_status->status == 'inactive') || ($current_status->status == 'inactive-abandoned') || ($current_status->status == 'terminated')) {
+                if (($current_status->status == 'inactive') || ($current_status->status == 'inactive-abandoned') || ($current_status->status == 'terminated') || ($current_status->status == 'terminated')) {
                     $user->date_withdrawn = $current_status->created_at;
                 }
 
