@@ -20,7 +20,7 @@ class DashboardControllerTest extends TestCase
         $this->user = User::factory()->active()->create();
     }
 
-    public function testItLoadsCalendarEventsInProductionEnvironment()
+    public function test_it_loads_calendar_events_in_production_environment()
     {
         config(['app.env' => 'production']);
         $this->app->bind(Event::class, fn () => new FakeEvent);
@@ -42,7 +42,7 @@ class DashboardControllerTest extends TestCase
     /**
      * @dataProvider provideNonProductionEnvironments
      */
-    public function testItDoesNotLoadCalendarEventsInNonProductionEnvironment(string $environment)
+    public function test_it_does_not_load_calendar_events_in_non_production_environment(string $environment)
     {
         config(['app.env' => $environment]);
         $this->app->bind(Event::class, fn () => new FakeEvent);
