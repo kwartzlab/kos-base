@@ -20,14 +20,14 @@ class KosBotTest extends TestCase
 
     private KosBot $kosBot;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->slack = $this->createMock(Slack::class);
         $this->kosBot = new KosBot($this->slack);
     }
 
-    public function testItPostsANewApplicantMessageToTheApplicantsSlackChannel(): void
+    public function test_it_posts_a_new_applicant_message_to_the_applicants_slack_channel(): void
     {
         config()->set('services.slack.channels.applicants', '0987654321');
 
