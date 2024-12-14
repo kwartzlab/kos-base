@@ -184,6 +184,10 @@ class UsersController extends Controller
                     $status->status = 'inactive-abandoned';
                     $status->save();
                     break;
+                case 'inactive-in-memoriam':
+                    $status->status = 'inactive-in-memoriam';
+                    $status->save();
+                    break;
                 case 'hiatus':
                     // create both the hiatus record and the active record for when hiatus is over
                     $status->status = 'hiatus';
