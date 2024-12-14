@@ -37,7 +37,7 @@ trait MocksGuzzleHistory
 
     protected function mockGuzzleHistory(array &$container, array $config = []): array
     {
-        $this->guzzleHandler = new MockHandler();
+        $this->guzzleHandler = new MockHandler;
         $history = Middleware::history($container);
         $stack = HandlerStack::create($this->guzzleHandler);
         $stack->push($history);

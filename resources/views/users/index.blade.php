@@ -25,6 +25,7 @@
             <thead><tr>
                <th scope="col">First Name</th>
                <th scope="col">Last Name</th>
+               <th scope="col">Email</th>
                <th scope="col">Status / Role</th>
                <th scope="col">Team(s)</th>
                <th scope="col"># Keys</th>
@@ -35,6 +36,7 @@
                   <tr>
                      <td>{{ $user->get_name('first') }}</td>
                      <td>{{ $user->get_name('last') }}</td>
+                     <td>{{ $user->email }}</td>
                      <td>@include('users.status')
                      @foreach($user->roles()->get() as $role)
                         @if($role->id>1)
@@ -73,15 +75,14 @@
 @section('js')
    <script>
         $(document).ready(function () {
-            $('#data-table').dataTable({
+          $('#data-table').dataTable({
             ordering: false,
             pagingType: "simple_numbers",
             iDisplayLength: {{ config('kwartzlabos.results_per_page.default') }},
             "language": {
-               "emptyTable": "No results."
+              "emptyTable": "No results."
             }
-         });
-
+          });
         });
 
         function modal_do_stuff_success(data) {

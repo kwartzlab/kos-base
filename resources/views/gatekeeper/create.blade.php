@@ -50,7 +50,14 @@
               @endforeach
             </select>
           </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="name">Wiki Page</label>
+            <input type="text" class="form-control @if($errors->has('wiki_page')) is-invalid @endif" name="wiki_page" id="wiki_page" value="{{ old('wiki_page') }}">
           </div>
+        </div>
 
         <div class="row" style="margin-top:10px;">
           <div class="form-group col-md-0.5">

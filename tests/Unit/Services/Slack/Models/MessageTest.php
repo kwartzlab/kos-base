@@ -15,13 +15,13 @@ class MessageTest extends TestCase
 
     public function testItCanBeConstructedWithoutAnId(): void
     {
-        $message = new Message();
+        $message = new Message;
         $this->assertNull($message->getId());
     }
 
     public function testItCanFluentlySetTheText(): void
     {
-        $message = new Message();
+        $message = new Message;
 
         $this->assertSame($message, $message->setText('Damn, a storm.'));
         $this->assertEquals('Damn, a storm.', $message->getText());

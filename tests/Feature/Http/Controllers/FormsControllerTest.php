@@ -76,7 +76,7 @@ class FormsControllerTest extends TestCase
             $mail->assertHasSubject('Application Received - Kwartzlab Makerspace');
             $mail->assertSeeInOrderInHtml([
                 $newUser->get_name(),
-                'Ian Edington',
+                config('kwartzlabos.membership_coordinator.name'),
                 'Membership Coordinator',
                 'membership@kwartzlab.ca',
             ]);
