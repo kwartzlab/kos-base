@@ -554,6 +554,7 @@ class GatekeepersController extends Controller
     public function revoke_all_auth($gatekeeper_id)
     {
         \App\Models\Authorization::where('gatekeeper_id', $gatekeeper_id)->delete();
-        return redirect('/gatekeepers/' . $gatekeeper_id . '/dashboard');
+
+        return redirect('/gatekeepers/'.$gatekeeper_id.'/dashboard');
     }
 }
