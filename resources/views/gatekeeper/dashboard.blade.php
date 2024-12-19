@@ -236,7 +236,7 @@
                   </div>
                </form>
                @endif
-               
+
                <div class="table-responsive">
                   <table class="table table-striped" id="data-table">
                      <thead><tr>
