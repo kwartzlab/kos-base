@@ -205,7 +205,9 @@
 
          <div class="card-body">
          @if($gatekeeper->shared_auth == 0)
+
                @if($gatekeeper->is_trainer())
+
                <form method="POST" action="/gatekeepers/authorize">
 
                <input name="gatekeeper_id" type="hidden" value="{{ $gatekeeper->id }}">
@@ -258,6 +260,14 @@
                      </tbody>
                   </table>
                </div>
+               @if(\Auth::user()->can('manage-gatekeepers'))
+               <div>
+                  <p><br><br></p>
+                  <div>
+                     <button class="btn btn-danger btn-sm revoke_button" data-record-id="{{ $gatekeeper->id }}" data-toggle="modal" data-target="#confirm-delete-all-authorization"><i class="fas fa-ban"></i> Revoke All Access</button>
+                  </div>
+               </div>
+               @endif
             @else
                <h5>This tool is using authorizations from <a href="/gatekeepers/{{ \App\Models\Gatekeeper::find($gatekeeper->shared_auth)->id }}/dashboard" title="View Tool"><span class="badge badge-info badge-large">{{ \App\Models\Gatekeeper::find($gatekeeper->shared_auth)->name }}</span></a></h5>
             @endif
@@ -407,6 +417,27 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal fade" id="confirm-delete-all-authorization" tabindex ="-1" role ="dialog" aria-labelledby="modal-remove-all-authorization" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="overlay d-flex justify-content-center align-items-center invisible">
+            <i class="fas fa-2x fa-sync fa-spin"></i>
+         </div>
+         <div class="modal-header">
+            <h4 class="modal-title" id="modal-remove-authorization">Revoke All Users Authorization</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+         </div>
+         <div class="modal-body">
+            <p>Are you sure you want to revoke access of all users for this gatekeeper?</p>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <a href="/gatekeepers/{{ $gatekeeper->id }}/revoke_all_auth" class="btn btn-danger">Revoke</a>
+         </div>
+      </div>
+   </div>
 </div>
 
 @stop
