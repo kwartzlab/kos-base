@@ -20,49 +20,47 @@
    </div>
 
    <div class="card-body">
-      <div class="table-responsive">
-         <table class="table table-striped" id="data-table">
-            <thead><tr>
-               <th scope="col">First Name</th>
-               <th scope="col">Last Name</th>
-               <th scope="col">Email</th>
-               <th scope="col">Status / Role</th>
-               <th scope="col">Team(s)</th>
-               <th scope="col"># Keys</th>
-               <th scope="col">Actions</th>
-            </tr></thead>
-            <tbody>
-               @foreach($users as $user)
-                  <tr>
-                     <td>{{ $user->get_name('first') }}</td>
-                     <td>{{ $user->get_name('last') }}</td>
-                     <td>{{ $user->email }}</td>
-                     <td>@include('users.status')
-                     @foreach($user->roles()->get() as $role)
-                        @if($role->id>1)
-                        <span class="badge badge-primary">{{ $role->name }}</span>&nbsp;
-                        @endif
-                     @endforeach
-                     @if($user->is_superuser())<span class="badge badge-primary">Superuser</span>@endif
-                     <td>
-                        <?php $teams = $user->teams()->get(); ?>
-                        @if(count($teams) > 0)
-                           @foreach($teams->unique() as $team)
-                              &nbsp;<a href="/teams/{{ $team->id }}" title="View Team Profile"><span class="badge badge-warning badge-team">{{ $team->name }}</span></a>
-                           @endforeach
-                        @endif
-                     </td>
-                     <td>{{ count($user->keys) }}</td>
-                     <td>
-                     <a class="btn btn-primary btn-sm" href="/users/{{ $user->id }}/edit" role="button"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
+      <table class="table table-striped" id="data-table">
+         <thead><tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Status / Role</th>
+            <th scope="col">Team(s)</th>
+            <th scope="col"># Keys</th>
+            <th scope="col">Actions</th>
+         </tr></thead>
+         <tbody>
+            @foreach($users as $user)
+               <tr>
+                  <td>{{ $user->get_name('first') }}</td>
+                  <td>{{ $user->get_name('last') }}</td>
+                  <td>{{ $user->email }}</td>
+                  <td>@include('users.status')
+                  @foreach($user->roles()->get() as $role)
+                     @if($role->id>1)
+                     <span class="badge badge-primary">{{ $role->name }}</span>&nbsp;
+                     @endif
+                  @endforeach
+                  @if($user->is_superuser())<span class="badge badge-primary">Superuser</span>@endif
+                  <td>
+                     <?php $teams = $user->teams()->get(); ?>
+                     @if(count($teams) > 0)
+                        @foreach($teams->unique() as $team)
+                           &nbsp;<a href="/teams/{{ $team->id }}" title="View Team Profile"><span class="badge badge-warning badge-team">{{ $team->name }}</span></a>
+                        @endforeach
+                     @endif
+                  </td>
+                  <td>{{ count($user->keys) }}</td>
+                  <td>
+                  <a class="btn btn-primary btn-sm" href="/users/{{ $user->id }}/edit" role="button"><i class="fas fa-edit"></i>&nbsp;&nbsp;Edit</a>
 
-                     </td>
-                  </tr>
+                  </td>
+               </tr>
 
-               @endforeach
-            </tbody>
-         </table>
-      </div>
+            @endforeach
+         </tbody>
+      </table>
    </div>
 </div>
 

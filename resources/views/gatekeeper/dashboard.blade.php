@@ -113,39 +113,37 @@
                <div style="float:right;"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#confirm-add-trainer"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;Add Trainer</button></div>
             @endif
             <h3>Trainers</h3>
-               <div class="table-responsive">
-                  <table class="table table-striped" id="trainers_table">
-                     <thead><tr>
-                        <th>Name</th>
-                        <th>Last Updated</th>
-                        <th>Actions</th>
-                     </tr></thead>
-                     <tbody>
-                        @foreach($gatekeeper->trainers()->get() as $trainer)
-                           <tr class="request_row" id="trainer-{{ $trainer->user_id }}">
-                              <td>{{ $trainer->user()->get()->first()->get_name() }}</td>
-                              <td>
-                                 @switch($trainer->status)
-                                    @case('active')
-                                       {{ $trainer->updated_at->diffForHumans() }}
-                                       @break
-                                    @case('new')
-                                       Awaiting Approval
-                                       @break
-                                 @endswitch
+               <table class="table table-striped" id="trainers_table">
+                  <thead><tr>
+                     <th>Name</th>
+                     <th>Last Updated</th>
+                     <th>Actions</th>
+                  </tr></thead>
+                  <tbody>
+                     @foreach($gatekeeper->trainers()->get() as $trainer)
+                        <tr class="request_row" id="trainer-{{ $trainer->user_id }}">
+                           <td>{{ $trainer->user()->get()->first()->get_name() }}</td>
+                           <td>
+                              @switch($trainer->status)
+                                 @case('active')
+                                    {{ $trainer->updated_at->diffForHumans() }}
+                                    @break
+                                 @case('new')
+                                    Awaiting Approval
+                                    @break
+                              @endswitch
 
-                              </td>
-                              <td>
-                                 <a href="/members/{{ $trainer->user->id }}/profile/" class="btn btn-primary btn-sm" id="btnprofile" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Profile</a>&nbsp;&nbsp;
-                                 @if((($has_team) && ($team->is_lead(\Auth::user()->id))) || (\Auth::user()->can('manage-gatekeepers')))
-                                    <button class="btn btn-danger btn-sm remove_button" data-record-id="{{ $trainer->user->id }}" data-toggle="modal" data-target="#confirm-delete-trainer"><i class="fas fa-ban"></i> Remove</button>
-                                 @endif
-                              </td>
-                           </tr>
-                        @endforeach
-                     </tbody>
-                  </table>
-               </div>
+                           </td>
+                           <td>
+                              <a href="/members/{{ $trainer->user->id }}/profile/" class="btn btn-primary btn-sm" id="btnprofile" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Profile</a>&nbsp;&nbsp;
+                              @if((($has_team) && ($team->is_lead(\Auth::user()->id))) || (\Auth::user()->can('manage-gatekeepers')))
+                                 <button class="btn btn-danger btn-sm remove_button" data-record-id="{{ $trainer->user->id }}" data-toggle="modal" data-target="#confirm-delete-trainer"><i class="fas fa-ban"></i> Remove</button>
+                              @endif
+                           </td>
+                        </tr>
+                     @endforeach
+                  </tbody>
+               </table>
             </div>
             @if($gatekeeper->type != 'training')
             <div class="col-md-6">
@@ -153,39 +151,37 @@
                <div style="float:right;"><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#confirm-add-maintainer"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;Add Maintainer</button></div>
             @endif
             <h3>Maintainers</h3>
-            <div class="table-responsive">
-                  <table class="table table-striped">
-                     <thead><tr>
-                        <th>Name</th>
-                        <th>Last Updated</th>
-                        <th>Actions</th>
-                     </tr></thead>
-                     <tbody>
-                        @foreach($gatekeeper->maintainers()->get() as $maintainer)
-                           <tr class="request_row" id="maintainer-{{ $maintainer->user_id }}">
-                              <td>{{ $maintainer->user()->get()->first()->get_name() }}</td>
-                              <td>
-                                 @switch($maintainer->status)
-                                    @case('active')
-                                       {{ $maintainer->updated_at->diffForHumans() }}
-                                       @break
-                                    @case('new')
-                                       Awaiting Approval
-                                       @break
-                                 @endswitch
+               <table class="table table-striped">
+                  <thead><tr>
+                     <th>Name</th>
+                     <th>Last Updated</th>
+                     <th>Actions</th>
+                  </tr></thead>
+                  <tbody>
+                     @foreach($gatekeeper->maintainers()->get() as $maintainer)
+                        <tr class="request_row" id="maintainer-{{ $maintainer->user_id }}">
+                           <td>{{ $maintainer->user()->get()->first()->get_name() }}</td>
+                           <td>
+                              @switch($maintainer->status)
+                                 @case('active')
+                                    {{ $maintainer->updated_at->diffForHumans() }}
+                                    @break
+                                 @case('new')
+                                    Awaiting Approval
+                                    @break
+                              @endswitch
 
-                              </td>
-                              <td>
-                                 <a href="/members/{{ $maintainer->user->id }}/profile/" class="btn btn-primary btn-sm" id="btnprofile" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Profile</a>&nbsp;&nbsp;
-                                 @if((($has_team) && ($team->is_lead(\Auth::user()->id))) || (\Auth::user()->can('manage-gatekeepers')))
-                                    <button class="btn btn-danger btn-sm remove_button" data-record-id="{{ $maintainer->user->id }}" data-toggle="modal" data-target="#confirm-delete-maintainer"><i class="fas fa-ban"></i> Remove</button>
-                                 @endif
-                              </td>
-                           </tr>
-                        @endforeach
-                     </tbody>
-                  </table>
-               </div>
+                           </td>
+                           <td>
+                              <a href="/members/{{ $maintainer->user->id }}/profile/" class="btn btn-primary btn-sm" id="btnprofile" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Profile</a>&nbsp;&nbsp;
+                              @if((($has_team) && ($team->is_lead(\Auth::user()->id))) || (\Auth::user()->can('manage-gatekeepers')))
+                                 <button class="btn btn-danger btn-sm remove_button" data-record-id="{{ $maintainer->user->id }}" data-toggle="modal" data-target="#confirm-delete-maintainer"><i class="fas fa-ban"></i> Remove</button>
+                              @endif
+                           </td>
+                        </tr>
+                     @endforeach
+                  </tbody>
+               </table>
             </div>
             @endif
          </div>
@@ -236,7 +232,6 @@
                   </div>
                </form>
                @endif
-
                <div class="table-responsive">
                   <table class="table table-striped" id="data-table">
                      <thead><tr>

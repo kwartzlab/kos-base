@@ -210,28 +210,26 @@
       </div>
 
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-striped" id="forms-table">
-            <thead><tr>
-              <th>Form Name</th>
-              <th>Submitted</th>
-              <th>Actions</th>
-            </tr></thead>
-            <tbody>
-              @forelse ($user->submitted_forms as $form_submission)
-              <tr>
-                  <td>{{ $form_submission->form_name }}</td>
-                  <td>{{ $form_submission->created_at }}</td>
-                  <td class="col-action">
-                    <a href="/forms/submission/{{ $form_submission->id }}" class="btn btn-success btn-sm" role="button"><i class="far fa-file-alt"></i>View</a>
-                  </td>
+        <table class="table table-striped" id="forms-table">
+          <thead><tr>
+            <th>Form Name</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody>
+            @forelse ($user->submitted_forms as $form_submission)
+            <tr>
+                <td>{{ $form_submission->form_name }}</td>
+                <td>{{ $form_submission->created_at }}</td>
+                <td class="col-action">
+                  <a href="/forms/submission/{{ $form_submission->id }}" class="btn btn-success btn-sm" role="button"><i class="far fa-file-alt"></i>View</a>
+                </td>
 
-                </tr>
-              @empty
-              @endforelse
-            </tbody>
-          </table>
-        </div>
+              </tr>
+            @empty
+            @endforelse
+          </tbody>
+        </table>
       </div>
     </div>
 

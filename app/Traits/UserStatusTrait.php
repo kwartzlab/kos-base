@@ -39,7 +39,7 @@ trait UserStatusTrait
                 $extra_tasks = null;
                 // applicant becoming a member
                 if (($user->status == 'applicant') && ($current_status->status == 'active')) {
-                    //$this->new_member_induction($user);
+                    // $this->new_member_induction($user);
                     $extra_tasks = '(New Member Induction)';
                     $user->date_admitted = $current_status->created_at;
                 }
