@@ -12,7 +12,7 @@ class UserNameTest extends TestCase
 
     private $unique_name = 'noenveriovfero';
 
-    public function testGetNameWorksWithPreferredLastName(): void
+    public function test_get_name_works_with_preferred_last_name(): void
     {
         $user = User::factory()->create();
 
@@ -25,7 +25,7 @@ class UserNameTest extends TestCase
         $this->assertEquals($expected_name, $user->get_name());
     }
 
-    public function testGetNameWorksWithPreferredFirstName(): void
+    public function test_get_name_works_with_preferred_first_name(): void
     {
         $user = User::factory()->create();
 
@@ -38,7 +38,7 @@ class UserNameTest extends TestCase
         $this->assertEquals($expected_name, $user->get_name());
     }
 
-    public function testGetNameWorksWithNoPreferredName(): void
+    public function test_get_name_works_with_no_preferred_name(): void
     {
         $user = User::factory()->create();
 
@@ -51,7 +51,7 @@ class UserNameTest extends TestCase
         $this->assertEquals($expected_name, $user->get_name());
     }
 
-    public function testGetNameWorksWithBothPreferredNames(): void
+    public function test_get_name_works_with_both_preferred_names(): void
     {
         $user = User::factory()->create();
 
