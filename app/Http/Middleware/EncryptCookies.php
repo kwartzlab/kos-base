@@ -12,7 +12,7 @@ class EncryptCookies extends BaseEncrypter
      * @var array
      */
     protected $except = [
-        //'XDEBUG_SESSION'
+        // 'XDEBUG_SESSION'
         //
     ];
 }

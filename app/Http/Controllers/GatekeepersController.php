@@ -550,7 +550,7 @@ class GatekeepersController extends Controller
         return response()->json(['status' => 'error']);
     }
 
-    //de-authroizaes all users from a gatekeeper
+    // de-authroizaes all users from a gatekeeper
     public function revoke_all_auth($gatekeeper_id)
     {
         \App\Models\Authorization::where('gatekeeper_id', $gatekeeper_id)->delete();
