@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/gatekeepers/{id}/add_trainer', [GatekeepersController::class, 'add_trainer']);
     Route::get('/gatekeepers/{id}/dashboard', [GatekeepersController::class, 'dashboard']);
     Route::post('/gatekeepers/revoke/{auth_id}', [GatekeepersController::class, 'revoke_auth']);
+    Route::get('/gatekeepers/{id}/revoke_all_auth', [GatekeepersController::class, 'revoke_all_auth'])->middleware(['auth', 'can:manage-gatekeepers']);
     Route::post('/gatekeepers/authorize', [GatekeepersController::class, 'grant_auth']);
 });
 
@@ -87,7 +88,11 @@ Route::middleware('auth')->group(function () {
 });
 
 // Reports
-Route::get('/reports', [ReportsController::class, 'index'])->middleware('auth');
+Route::middleware(['auth', 'can:manage-reports'])->group(function () {
+    Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
+    Route::get('/reports/member-status-report', [ReportsController::class, 'member_status_report'])->name('reports.member-status-report');
+    Route::get('/reports/member-activity-report', [ReportsController::class, 'member_activity_report'])->name('reports.member-activity-report');
+});
 
 // Gatekeeper sync and key authentication routes
 Route::post('/keys', [KeysController::class, 'index']);

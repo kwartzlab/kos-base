@@ -56,6 +56,7 @@ class UsersTableSeeder extends Seeder
         $this->createUsers(UserStatus::STATUS_APPLICANT_ABANDONED, 10);
         $this->createUsers(UserStatus::STATUS_APPLICANT_DENIED, 5);
         $this->createUsers(UserStatus::STATUS_APPLICANT, 5);
+        $this->createUsers(UserStatus::STATUS_INACTIVE_IN_MEMORIAM, 5);
     }
 
     private function createUsers(string $status, int $count = 1): void

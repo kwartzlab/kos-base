@@ -23,8 +23,11 @@
                @case('inactive')
                   <h5>Withdrawn {{ $user->last_status('inactive')->first()->created_at->format('Y-m-d') }}</h5>
                @break
-               @case('abandoned')
-                  <h5>Withdrawn {{ $user->last_status('abandoned')->first()->created_at->format('Y-m-d') }}</h5>
+               @case('inactive-abandoned')
+                  <h5>Withdrawn {{ $user->last_status('inactive-abandoned')->first()->created_at->format('Y-m-d') }}</h5>
+               @break
+               @case('inactive-in-memoriam')
+                  <h5>In Memoriam {{ $user->last_status('inactive-in-memoriam')->first()->created_at->format('Y-m-d') }}
                @break
                @case('hiatus')
                   <h5>On Hiatus until {{ $user->last_status('active')->first()->created_at->format('Y-m-d') }}</h5>

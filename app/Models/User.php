@@ -57,6 +57,11 @@ class User extends Authenticatable implements AuditableContract
         return $this->hasMany(Key::class);
     }
 
+    public function authentications()
+    {
+        return $this->hasMany(Authentication::class);
+    }
+
     public function authorizations()
     {
         return $this->hasMany(Authorization::class);

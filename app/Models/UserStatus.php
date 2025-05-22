@@ -29,6 +29,8 @@ class UserStatus extends Model implements Auditable
 
     public const STATUS_APPLICANT = 'applicant';
 
+    public const STATUS_INACTIVE_IN_MEMORIAM = 'inactive-in-memoriam';
+
     public const STATUSES_TO_ACTIVE_SEND_INVITES = [
         self::STATUS_INACTIVE,
         self::STATUS_TERMINATED,
