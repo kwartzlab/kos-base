@@ -23,6 +23,11 @@ class Gatekeeper extends Model implements Auditable
         'last_seen',
     ];
 
+    public function authentications()
+    {
+        return $this->hasMany(Authentication::class);
+    }
+
     // returns active trainers
     public function trainers($with_status = null)
     {
