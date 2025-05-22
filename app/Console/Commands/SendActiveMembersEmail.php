@@ -44,15 +44,17 @@ class SendActiveMembersEmail extends Command
         $users = \App\Models\User::where('status', 'active')->orderby('first_preferred')->orderby('last_preferred')->get();
 
         // find authentications from the past month, if more than 3 add them to the list
-        $email_data['member_list'] = [];
-        foreach ($users as $user) {
-            // Member entrance gatekeeper ID = 11
-            // Member entrance 2 backdoor gatekeeper ID = 28
-            $recs = \App\Models\Authentication::where('user_id', $user['id'])->where('gatekeeper_id', '11')->orWhere('gatekeeper_id', '28')->where('created_at', '>=', Carbon::now()->subMonth()->toDateTimeString())->get();
-            if (count($recs) >= 3) {
-                $email_data['member_list'][] = $user['first_preferred'].' '.$user['last_preferred'];
-            }
-        }
+        $email_data['member_list'] = \App\Models\User::where('status', 'active')
+            ->whereHas('authentications', function ($query) {
+                $query->whereRelation('gatekeeper', 'type', 'doorway')
+                    ->where('lock_in', '>=', Carbon::now()->subMonth()->toDateTimeString());
+            }, '>', 3)
+            ->orderby('first_preferred')
+            ->orderby('last_preferred')
+            ->get()
+            ->map(function ($member) {
+                return $member->get_name();
+            });
 
         $date = \Carbon\Carbon::now();
         $email_data['month_reported'] = $date->subMonth()->format('F Y');
