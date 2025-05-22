@@ -55,7 +55,7 @@ class ReportsController extends Controller
                 'toDate' => 'required|date',
             ]);
 
-            $report_name = 'Member Activity Report ('. $validated['fromDate'] .' - '. $validated['toDate'] .')';
+            $report_name = 'Member Activity Report ('.$validated['fromDate'].' - '.$validated['toDate'].')';
             $data = \App\Models\Authentication::where('lock_in', '>=', $validated['fromDate'])
                 ->where('lock_in', '<=', $validated['toDate'])
                 ->orderBy('lock_in', 'desc')
@@ -67,10 +67,10 @@ class ReportsController extends Controller
                     return $authentication->lock_in;
                 }],
                 ['name' => 'Name', 'callback' => function ($authentication) {
-                    return !is_null($authentication->user) ? $authentication->user->get_name() : '';
+                    return ! is_null($authentication->user) ? $authentication->user->get_name() : '';
                 }],
                 ['name' => 'Gatekeeper', 'callback' => function ($authentication) {
-                    return !is_null($authentication->gatekeeper) ?  $authentication->gatekeeper->name : '';
+                    return ! is_null($authentication->gatekeeper) ? $authentication->gatekeeper->name : '';
                 }],
             ];
 
@@ -79,8 +79,7 @@ class ReportsController extends Controller
                 'data' => $data,
                 'fields' => $fields,
             ]);
-        }
-        else {
+        } else {
             $report_name = 'Member Activity Report';
             $filters = ['daterange'];
 
