@@ -14,7 +14,7 @@ php artisan down || true
 
 git checkout origin/main
 
-composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+HOME=`echo ~` composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-ansi
 
 php artisan cache:clear
 php artisan optimize:clear
