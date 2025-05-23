@@ -10,30 +10,30 @@
 @include('shared.alerts')
 
 <div class="card card-outline card-success">
-	<div class="card-body">
-                <table class="table table-striped" id="data-table">
-                        <thead>
-                            <tr>
-                                @foreach($fields as $field)
-                                <th>{{ $field['name'] }}</th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                                @forelse($data as $datum)
-                                    <tr>
-                                    @foreach($fields as $field)
-                                        <td>{{ $field['callback']($datum) }}</td>
-                                    @endforeach
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td>No data to report.</td>
-                                    </tr>
-                                @endforelse
-                        </tbody>
-                </table>
-	</div>
+    <div class="card-body">
+        <table class="table table-striped" id="data-table">
+            <thead>
+                <tr>
+                    @foreach($fields as $field)
+                        <th>{{ $field['name'] }}</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($data as $datum)
+                    <tr>
+                        @foreach($fields as $field)
+                            <td>{{ $field['callback']($datum) }}</td>
+                        @endforeach
+                    </tr>
+                @empty
+                    <tr>
+                        <td>No data to report.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @stop
@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="/css/kos.css">
 @stop
 
+@if (!empty($data))
 @section('js')
     <script>
         $(document).ready(function () {
@@ -61,3 +62,4 @@
         });
     </script>
 @stop
+@endif
