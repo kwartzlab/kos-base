@@ -27,7 +27,7 @@ class DeployController extends Controller
             //     });
 
             $process = new Process(['./deploy.sh']);
-            +$process->setWorkingDirectory(base_path());
+            $process->setWorkingDirectory(base_path());
             $process->run(function ($type, $buffer) {
                 echo $buffer;
                 Log::info($buffer);
