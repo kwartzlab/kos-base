@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeployController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\GatekeepersController;
 use App\Http\Controllers\HelpdeskController;

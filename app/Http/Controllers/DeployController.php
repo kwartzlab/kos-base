@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Process;
+use Symfony\Component\Process\Process;
 
 class DeployController extends Controller
 {
@@ -15,11 +15,20 @@ class DeployController extends Controller
         $localHash = 'sha1='.hash_hmac('sha1', $githubPayload, $localToken, false);
         if (hash_equals($githubHash, $localHash)) {
             $root_path = base_path();
-            $result = Process::path(__DIR__)
-                ->timeout(10 * 60)
-                ->run('./deploy.sh', function (string $type, string $output) {
-                    echo $output;
-                });
+
+            // refactored example to use Process available in Laravel v10.
+            // but we're still using v9.
+
+            // $result = Process::path(__DIR__)
+            //     ->timeout(10 * 60)
+            //     ->run('./deploy.sh', function (string $type, string $output) {
+            //         echo $output;
+            //     });
+
+            $process = new Process('cd '.$root_path.'; ./deploy.sh');
+            $process->run(function ($type, $buffer) {
+                echo $buffer;
+            });
         }
     }
 }
