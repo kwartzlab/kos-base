@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 
 class DeployController extends Controller
@@ -25,9 +26,11 @@ class DeployController extends Controller
             //         echo $output;
             //     });
 
-            $process = new Process('cd '.$root_path.'; ./deploy.sh');
+            $process = new Process(['./deploy.sh']);
+            +$process->setWorkingDirectory(base_path());
             $process->run(function ($type, $buffer) {
                 echo $buffer;
+                Log::info($buffer);
             });
         }
     }
