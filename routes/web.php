@@ -145,3 +145,6 @@ Route::middleware(['auth'])->group(function () {
 
 // Slack route
 Route::get('/slack/invite', SlackInviteController::class)->name('slack.invite');
+
+// Deploy (from Github Actions) route
+Route::post('/deploy', [DeployController::class, 'deploy']);

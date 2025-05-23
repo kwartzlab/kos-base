@@ -14,5 +14,6 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         'keys/*',
         'keys',
+        '/deploy',
     ];
 }
