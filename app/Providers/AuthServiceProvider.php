@@ -57,6 +57,14 @@ class AuthServiceProvider extends ServiceProvider
             return Auth::user()->is_allowed('reports', 'manage');
         });
 
+        Gate::define('view-user-reports', function ($user) {
+            return Auth::user()->is_allowed('reports', 'users');
+        });
+
+        Gate::define('view-gatekeeper-reports', function ($user) {
+            return Auth::user()->is_allowed('reports', 'gatekeepers');
+        });
+
         Gate::define('manage-users-keys', function ($user) {
             if (Auth::user()->is_allowed('users', 'manage')) {
                 return true;

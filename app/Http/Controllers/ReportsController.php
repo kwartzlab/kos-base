@@ -13,15 +13,26 @@ class ReportsController extends Controller
                 'name' => 'Member Status',
                 'description' => 'A view of all members in the database and current membership status.',
                 'route' => route('reports.member-status-report'),
+                'permission' => 'view-user-reports',
             ],
             [
                 'name' => 'Member Activity',
                 'description' => 'A view of all gatekeeper authentications in the database by member.',
                 'route' => route('reports.member-activity-report'),
+                'permission' => 'view-gatekeeper-reports',
             ],
         ];
 
-        return view('reports.index', ['reports' => $reports]);
+        $filtered_reports = [];
+
+        foreach ($reports as $report) {
+            // if no additional permissions are required or the user has the permission
+            if (! isset($report['permission']) || \Gate::allows($report['permission'])) {
+                $filtered_reports[] = $report;
+            }
+        }
+
+        return view('reports.index', ['reports' => $filtered_reports]);
     }
 
     public function member_status_report()
@@ -49,13 +60,15 @@ class ReportsController extends Controller
 
     public function member_activity_report(Request $request)
     {
+        $report_name = 'Member Activity Report';
+
         if ($request->has('fromDate', 'toDate')) {
             $validated = $request->validate([
                 'fromDate' => 'required|date',
                 'toDate' => 'required|date',
             ]);
 
-            $report_name = 'Member Activity Report ('.$validated['fromDate'].' - '.$validated['toDate'].')';
+            $report_name = $report_name.' ('.$validated['fromDate'].' - '.$validated['toDate'].')';
             $data = \App\Models\Authentication::where('lock_in', '>=', $validated['fromDate'])
                 ->where('lock_in', '<=', $validated['toDate'])
                 ->orderBy('lock_in', 'desc')
@@ -80,7 +93,6 @@ class ReportsController extends Controller
                 'fields' => $fields,
             ]);
         } else {
-            $report_name = 'Member Activity Report';
             $filters = ['daterange'];
 
             return view('reports.filter', [
