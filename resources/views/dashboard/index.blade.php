@@ -120,7 +120,7 @@
                                   @break
                                 @endswitch
                             @else
-                                <span class="badge badge-warning">Unknown</span>
+                                <span class="badge badge-secondary">Offline</span>
                             @endif
                         </td>
                       </tr>
