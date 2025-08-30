@@ -27,7 +27,7 @@
 <form id="form-rfid" method="POST" action="{{ $page['form_url'] }}" style="height:1px">
   {{ csrf_field() }}
   <div class="form-group no-opacity">
-    <input type="password" class="form-control" name="rfid" id="rfid" autofocus>
+    <input type="password" class="form-control" name="rfid" id="rfid" autocomplete="new-password" autofocus>
   </div>
   <div class="form-group">
     <button type="submit" class="btn btn-primary" style="display:none">Submit</button>
