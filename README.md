@@ -33,6 +33,12 @@ Create a copy of this file with the example extension removed.
 cp .env.example .env
 ```
 
+On linux, we need to adjust the permissions on the .env file. It seems that the proper way to do this would be to find the UID/GID of the user running the PHP process inside the container, then change the ownership of the .env file on the host machine. For now, chmod 777 works.
+
+```shell
+sudo chmod 777 .env
+```
+
 #### 2. Build Docker image
 Files provided in the repository are pre-configured to build Kos from the application source code previously cloned in the last step. The Kos Docker image is built in steps. Once each step completes, it's stored in a cache for later to speed up following builds.
 
