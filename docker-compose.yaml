@@ -11,7 +11,7 @@ services:
       - "./:/app/"
       - /app/vendor # Use dependencies installed by composer during image building.
                     # Remove the above line to use the local `vendor` directory.
-      - /app
+      - /app/storage/logs
     networks:
       - data-network
 
