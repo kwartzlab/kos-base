@@ -1,7 +1,7 @@
 services:
   # Kos application container
   app:
-    depends_on: 
+    depends_on:
       - db
     user: app
     build: .
