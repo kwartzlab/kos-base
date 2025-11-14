@@ -1,6 +1,9 @@
 services:
   # Kos application container
   app:
+    depends_on: 
+      - db
+    user: app
     build: .
     ports:
       - 8000:8000
@@ -8,6 +11,7 @@ services:
       - "./:/app/"
       - /app/vendor # Use dependencies installed by composer during image building.
                     # Remove the above line to use the local `vendor` directory.
+      - /app
     networks:
       - data-network
 
