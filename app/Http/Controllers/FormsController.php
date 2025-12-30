@@ -494,6 +494,10 @@ class FormsController extends Controller
                 'data' => json_encode($responses),
             ]);
 
+            \App\Models\FormSubmissionOutbox::insertOrIgnore([
+                'form_submission_id' => $form_submission->id,
+            ]);
+
             // append text from form actions to $message
             if ($append_message != null) {
                 $message .= $append_message;
