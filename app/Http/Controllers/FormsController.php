@@ -461,13 +461,13 @@ class FormsController extends Controller
                         'form_data' => $responses,
                     ];
 
-                    // send email to members (limited contact info)
-                    \Mail::send(new \App\Mail\MemberApp($email_data, 'members'));
+                    // // send email to members (limited contact info)
+                    // \Mail::send(new \App\Mail\MemberApp($email_data, 'members'));
 
-                    // send email to admins (full contact info)
-                    \Mail::send(new \App\Mail\MemberApp($email_data, 'admin'));
+                    // // send email to admins (full contact info)
+                    // \Mail::send(new \App\Mail\MemberApp($email_data, 'admin'));
 
-                    \Mail::send(new MemberAppInterviewConfirmation($email_data));
+                    // \Mail::send(new MemberAppInterviewConfirmation($email_data));
 
                     app(KosBot::class)->postNewAppplicantMessage($user);
 
@@ -492,6 +492,10 @@ class FormsController extends Controller
                 'submitter_agent' => substr($request->header('User-Agent'), 0, 250),
                 'user_id' => $user_id,
                 'data' => json_encode($responses),
+            ]);
+
+            \App\Models\FormSubmissionOutbox::insertOrIgnore([
+                'form_submission_id' => $form_submission->id,
             ]);
 
             // append text from form actions to $message
