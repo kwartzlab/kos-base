@@ -40,11 +40,13 @@ class CreateApiToken extends Command
                 $expiresAt = Carbon::parse($expiresInput);
             } catch (\Throwable $e) {
                 $this->error('Invalid expiration date. Example: 2025-12-31');
+
                 return self::FAILURE;
             }
 
             if ($expiresAt->isPast()) {
                 $this->error('Expiration date must be in the future.');
+
                 return self::FAILURE;
             }
         }

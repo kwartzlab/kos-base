@@ -38,11 +38,10 @@ class FormSubmissionOutboxController extends Controller
 
     public function markProcessed(Request $request, FormSubmissionOutbox $formSubmissionOutbox)
     {
-
         $lastError = $request->input('last_error');
         $updates = ['last_error' => $lastError];
 
-        if (!$lastError) {
+        if (! $lastError) {
             $updates['processed_at'] = now();
         }
 
@@ -74,6 +73,4 @@ class FormSubmissionOutboxController extends Controller
             'created_at' => optional($formSubmission->created_at)->toDateTimeString(),
         ]);
     }
-
-
 }
