@@ -33,7 +33,7 @@ class RevokeApiToken extends Command
 
         if ($token === null) {
             $this->error('API token not found.');
-            
+
             return self::FAILURE;
         }
 

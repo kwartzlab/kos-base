@@ -48,7 +48,7 @@ class ListApiTokens extends Command
 
         if ($tokens->isEmpty()) {
             $this->info('No API tokens found.');
-            
+
             return self::SUCCESS;
         }
 
