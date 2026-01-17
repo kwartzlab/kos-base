@@ -48,12 +48,14 @@ class ListApiTokens extends Command
 
         if ($tokens->isEmpty()) {
             $this->info('No API tokens found.');
+            
             return self::SUCCESS;
         }
 
         $this->table(
             ['ID', 'Name', 'Abilities', 'Last Used', 'Expires', 'Revoked', 'Created'],
             $tokens->map(function (ApiToken $token) {
+
                 return [
                     $token->id,
                     $token->name,

@@ -33,11 +33,13 @@ class RevokeApiToken extends Command
 
         if ($token === null) {
             $this->error('API token not found.');
+            
             return self::FAILURE;
         }
 
         if ($token->revoked_at !== null) {
             $this->info('API token is already revoked.');
+
             return self::SUCCESS;
         }
 
