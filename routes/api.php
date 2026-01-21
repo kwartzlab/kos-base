@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ApiTokenController;
 use App\Http\Controllers\Api\FormSubmissionOutboxController;
 use App\Http\Controllers\Api\FormSubmissionsController;
-use App\Http\Controllers\Api\ApiTokenController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\PublicInfoController;
 use Illuminate\Http\Request;

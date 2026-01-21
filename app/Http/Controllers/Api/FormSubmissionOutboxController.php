@@ -41,7 +41,7 @@ class FormSubmissionOutboxController extends Controller
         $lastError = $request->input('last_error');
         $updates = ['last_error' => $lastError];
 
-        if (!$lastError) {
+        if (! $lastError) {
             $updates['processed_at'] = now();
         }
 
