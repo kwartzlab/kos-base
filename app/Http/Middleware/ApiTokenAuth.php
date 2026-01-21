@@ -19,14 +19,14 @@ class ApiTokenAuth
             $token = $request->header('X-Api-Token');
         }
 
-        if (!$token) {
+        if (! $token) {
             return response()->json(['message' => 'API token required.'], 401);
         }
 
         $tokenHash = ApiToken::hashToken($token);
         $apiToken = ApiToken::where('token_hash', $tokenHash)->first();
 
-        if ($apiToken === null || !$apiToken->isActive()) {
+        if ($apiToken === null || ! $apiToken->isActive()) {
             return response()->json(['message' => 'Invalid API token.'], 401);
         }
 

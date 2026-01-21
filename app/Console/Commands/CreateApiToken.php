@@ -62,11 +62,11 @@ class CreateApiToken extends Command
         ]);
 
         $this->info('API token created.');
-        $this->line('Token ID: ' . $apiToken->id);
-        $this->line('Token: ' . $plainToken);
+        $this->line('Token ID: '.$apiToken->id);
+        $this->line('Token: '.$plainToken);
 
         if ($expiresAt !== null) {
-            $this->line('Expires: ' . $expiresAt->toDateTimeString());
+            $this->line('Expires: '.$expiresAt->toDateTimeString());
         }
 
         $this->line('Store this token securely. It will not be shown again.');
