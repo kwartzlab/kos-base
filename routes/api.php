@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiTokenController;
 use App\Http\Controllers\PublicInfoController;
 use Illuminate\Http\Request;
 
@@ -17,5 +18,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('api_token')->get('/token', [ApiTokenController::class, 'show']);
 
 Route::get('/public-info', [PublicInfoController::class, 'index']);
+Route::middleware('api_token')->get('/hello', function () {
+    return response()->json(['message' => 'Hello World']);
+});
