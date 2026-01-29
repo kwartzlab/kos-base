@@ -8,6 +8,24 @@ use Illuminate\Http\Request;
 
 class FormSubmissionOutboxController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $perPage = (int) $request->query('per_page', 50);
+        $perPage = max(1, min($perPage, 200));
+        return FormSubmissionOutbox::query()
+            ->select([
+                'id',
+                'form_submission_id',
+                'processed_at',
+                'last_error',
+                'last_error_at',
+                'created_at',
+            ])
+            ->orderBy('id')
+            ->paginate($perPage);
+    }
+
     public function next()
     {
         $cutoff = now()->subMinutes(5);
