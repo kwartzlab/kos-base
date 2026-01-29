@@ -43,7 +43,7 @@ class RevokeApiToken extends Command
             return self::SUCCESS;
         }
 
-        $token->forceFill(['revoked_at' => now()])->save();
+        $token->fill(['revoked_at' => now()])->save();
 
         $this->info('API token revoked.');
 

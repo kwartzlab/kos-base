@@ -15,6 +15,13 @@ class FormSubmissionOutbox extends Model
         'form_submission_id',
         'processed_at',
         'last_error',
+        'last_error_at',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'processed_at' => 'datetime',
+        'last_error_at' => 'datetime',
     ];
 
     /**

@@ -26,7 +26,9 @@ Route::middleware('api_token')->get('/token', [ApiTokenController::class, 'show'
 Route::middleware('api_token')->get('/token', [ApiTokenController::class, 'show']);
 Route::middleware('api_token')->get('/users', [UsersController::class, 'index']);
 Route::middleware('api_token')->get('/users/{user}', [UsersController::class, 'show']);
+Route::middleware('api_token')->get('/form_submissions', [FormSubmissionsController::class, 'index']);
 Route::middleware('api_token')->get('/form_submissions/{form_submission}', [FormSubmissionsController::class, 'show']);
+Route::middleware('api_token')->get('/form_submissions/outbox', [FormSubmissionOutboxController::class, 'index']);
 Route::middleware('api_token')->get('/form_submissions/outbox/next', [FormSubmissionOutboxController::class, 'next']);
 Route::middleware('api_token')->post('/form_submissions/outbox/{form_submission_outbox}', [FormSubmissionOutboxController::class, 'markProcessed']);
 Route::middleware('api_token')->get('/form_submissions/outbox/{form_submission_outbox}', [FormSubmissionOutboxController::class, 'show']);
