@@ -12,6 +12,7 @@ class FormSubmissionsController extends Controller
     {
         return response()->json([
             'form_id' => $formSubmission->form_id,
+            'form_submission_id' => $formSubmission->id,
             'form_name' => $formSubmission->form_name,
             'user_id' => $formSubmission->user_id,
             'data' => json_decode($formSubmission->data, true),
