@@ -10,7 +10,13 @@ class FormSubmissionOutboxController extends Controller
 {
     public function next()
     {
+        $cutoff = now()->subMinutes(5);
+
         $outboxItem = FormSubmissionOutbox::whereNull('processed_at')
+            ->where(function ($query) use ($cutoff) {
+                $query->whereNull('last_error_at')
+                    ->orWhere('last_error_at', '<=', $cutoff);
+            })
             ->orderBy('created_at')
             ->first();
 
@@ -33,24 +39,31 @@ class FormSubmissionOutboxController extends Controller
             'user_id' => $formSubmission->user_id,
             'data' => json_decode($formSubmission->data, true),
             'created_at' => optional($formSubmission->created_at)->toDateTimeString(),
+            'last_error' => $outboxItem->last_error,
+            'last_error_at' => optional($outboxItem->last_error_at)->toDateTimeString(),
         ]);
     }
 
     public function markProcessed(Request $request, FormSubmissionOutbox $formSubmissionOutbox)
     {
         $lastError = $request->input('last_error');
-        $updates = ['last_error' => $lastError];
+        $updates = [];
 
         if (! $lastError) {
             $updates['processed_at'] = now();
+        } else {
+            $updates['processed_at'] = null;
+            $updates['last_error'] = $lastError;
+            $updates['last_error_at'] = now();
         }
 
-        $formSubmissionOutbox->forceFill($updates)->save();
+        $formSubmissionOutbox->fill($updates)->save();
 
         return response()->json([
             'outbox_id' => $formSubmissionOutbox->id,
             'processed_at' => optional($formSubmissionOutbox->processed_at)->toDateTimeString(),
             'last_error' => $formSubmissionOutbox->last_error,
+            'last_error_at' => optional($formSubmissionOutbox->last_error_at)->toDateTimeString(),
         ]);
     }
 
@@ -71,6 +84,8 @@ class FormSubmissionOutboxController extends Controller
             'user_id' => $formSubmission->user_id,
             'data' => json_decode($formSubmission->data, true),
             'created_at' => optional($formSubmission->created_at)->toDateTimeString(),
+            'last_error' => $formSubmissionOutbox->last_error,
+            'last_error_at' => optional($formSubmissionOutbox->last_error_at)->toDateTimeString(),
         ]);
     }
 }
