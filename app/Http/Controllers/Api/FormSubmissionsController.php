@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class FormSubmissionsController extends Controller
 {
-
     public function index(Request $request)
     {
         $perPage = (int) $request->query('per_page', 50);
@@ -24,7 +23,7 @@ class FormSubmissionsController extends Controller
             ->orderBy('id')
             ->paginate($perPage);
     }
-    
+
     public function show(Request $request, FormSubmission $formSubmission)
     {
         return response()->json([
