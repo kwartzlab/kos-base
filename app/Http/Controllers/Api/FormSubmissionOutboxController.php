@@ -12,6 +12,7 @@ class FormSubmissionOutboxController extends Controller
     {
         $perPage = (int) $request->query('per_page', 50);
         $perPage = max(1, min($perPage, 200));
+
         return FormSubmissionOutbox::query()
             ->select([
                 'id',
