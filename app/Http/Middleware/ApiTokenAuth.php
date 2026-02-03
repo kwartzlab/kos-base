@@ -30,7 +30,7 @@ class ApiTokenAuth
             return response()->json(['message' => 'Invalid API token.'], 401);
         }
 
-        $apiToken->forceFill(['last_used_at' => now()])->save();
+        $apiToken->fill(['last_used_at' => now()])->save();
         $request->attributes->set('api_token', $apiToken);
 
         return $next($request);
