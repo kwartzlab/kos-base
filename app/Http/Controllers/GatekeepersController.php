@@ -147,8 +147,8 @@ class GatekeepersController extends Controller
                         $query->where('status', 'active');
                     })->get();
 
-            } 
-            
+            }
+
             return view('gatekeeper.show', compact('gatekeeper', 'authorizations', 'active_users', 'authorization_source_gatekeeper'));
         }
     }
