@@ -129,7 +129,27 @@ class GatekeepersController extends Controller
         $gatekeeper = \App\Models\Gatekeeper::find($id);
 
         if ($gatekeeper != null) {
-            return view('gatekeeper.show', compact('gatekeeper'));
+            $active_users = \App\Models\User::where('status', 'active')->orderby('first_preferred')->get();
+            $authorizations = [];
+            $authorization_source_gatekeeper = null;
+
+            if ($gatekeeper->is_default != 1) {
+                $authorization_gatekeeper_id = $gatekeeper->id;
+                // Saw this was used in other places; don't think any of our tools use it
+                if ($gatekeeper->shared_auth != 0) {
+                    $authorization_gatekeeper_id = $gatekeeper->shared_auth;
+                    $authorization_source_gatekeeper = \App\Models\Gatekeeper::find($gatekeeper->shared_auth);
+                }
+
+                $authorizations = \App\Models\Authorization::with('user')
+                    ->where('gatekeeper_id', $authorization_gatekeeper_id)
+                    ->whereHas('user', function ($query) {
+                        $query->where('status', 'active');
+                    })->get();
+
+            } 
+            
+            return view('gatekeeper.show', compact('gatekeeper', 'authorizations', 'active_users', 'authorization_source_gatekeeper'));
         }
     }
 

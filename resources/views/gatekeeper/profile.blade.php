@@ -6,7 +6,12 @@
 
 <div class="card card-outline card-info" style="margin-bottom:40px;">
          <div class="card-header">
-            <h3 class="card-title">{{ $gatekeeper->name }}
+            <h3 class="card-title">
+               @if(isset($link_gatekeeper_name) && $link_gatekeeper_name)
+                  <a href="/gatekeepers/{{ $gatekeeper->id }}" title="View Gatekeeper">{{ $gatekeeper->name }}</a>
+               @else
+                  {{ $gatekeeper->name }}
+               @endif
                @if (($gatekeeper->is_authorized()) || ($gatekeeper->is_default))
                   &nbsp;<i class="fas fa-check-circle text-success" title="You are authorized to use this tool"></i>
                @else
