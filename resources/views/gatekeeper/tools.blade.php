@@ -11,6 +11,7 @@
 
 
 @forelse($gatekeepers as $gatekeeper)
+   @php($link_gatekeeper_name = true)
    @include('gatekeeper.profile')
 @empty
    <div class="card card-outline card-warning">
