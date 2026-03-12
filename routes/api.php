@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ApiTokenController;
 use App\Http\Controllers\Api\FormSubmissionOutboxController;
 use App\Http\Controllers\Api\FormSubmissionsController;
 use App\Http\Controllers\Api\UsersController;
+use App\Http\Controllers\Api\UserStatusesController;
 use App\Http\Controllers\PublicInfoController;
 use Illuminate\Http\Request;
 
@@ -32,6 +33,10 @@ Route::middleware('api_token')->get('/form_submissions/outbox', [FormSubmissionO
 Route::middleware('api_token')->get('/form_submissions/outbox/next', [FormSubmissionOutboxController::class, 'next']);
 Route::middleware('api_token')->post('/form_submissions/outbox/{form_submission_outbox}', [FormSubmissionOutboxController::class, 'markProcessed']);
 Route::middleware('api_token')->get('/form_submissions/outbox/{form_submission_outbox}', [FormSubmissionOutboxController::class, 'show']);
+
+Route::middleware('api_token')->get('/user_statuses/latest', [UserStatusesController::class, 'latest']);
+Route::middleware('api_token')->get('/user_statuses/upcoming', [UserStatusesController::class, 'upcoming']);
+Route::middleware('api_token')->get('/user_statuses', [UserStatusesController::class, 'index']);
 
 Route::get('/public-info', [PublicInfoController::class, 'index']);
 Route::middleware('api_token')->get('/hello', function () {
