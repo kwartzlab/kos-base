@@ -192,7 +192,7 @@ class UsersController extends Controller
                     $status->save();
                     $endingNote = 'Ending Hiatus';
                     if ($request->filled('note')) {
-                        $endingNote .= ' - ' . $request->input('note');
+                        $endingNote .= ' - '.$request->input('note');
                     }
                     $status_end = new \App\Models\UserStatus([
                         'user_id' => $user->id,
