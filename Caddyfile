@@ -1,0 +1,4 @@
+https://172.16.18.19:443 {
+    tls internal 
+    reverse_proxy app:8000
+}
