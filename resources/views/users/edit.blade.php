@@ -367,6 +367,10 @@
                 </div>
                </div>
             </div>
+            <div style="margin-top:15px;">
+              <label for="status_note">Note <small class="text-muted">(optional)</small></label>
+              <input type="text" class="form-control" name="note" id="status-note" placeholder="Optional note">
+            </div>
       </div>
       </form>
       <div class="modal-footer">

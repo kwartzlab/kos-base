@@ -156,7 +156,7 @@ class UsersController extends Controller
                 'created_at' => $request->input('effective_date'),
                 'updated_at' => date('Y-m-d'),
             ]);
-            if ($request->has('note')) {
+            if ($request->filled('note') && $request->input('status_type') !== 'hiatus') {
                 $status->note = $request->input('note');
             }
 
@@ -190,11 +190,15 @@ class UsersController extends Controller
                     // create both the hiatus record and the active record for when hiatus is over
                     $status->status = 'hiatus';
                     $status->save();
+                    $endingNote = 'Ending Hiatus';
+                    if ($request->filled('note')) {
+                        $endingNote .= ' - '.$request->input('note');
+                    }
                     $status_end = new \App\Models\UserStatus([
                         'user_id' => $user->id,
                         'updated_by' => \Auth::user()->id,
                         'status' => 'active',
-                        'note' => 'Ending Hiatus',
+                        'note' => $endingNote,
                         'created_at' => $request->input('effective_date_ending'),
                         'updated_at' => date('Y-m-d'),
                     ]);
