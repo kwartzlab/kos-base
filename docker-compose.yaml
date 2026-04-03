@@ -1,6 +1,9 @@
 services:
   # Kos application container
   app:
+    depends_on:
+      - db
+    user: app
     build: .
     ports:
       - 8000:8000
@@ -8,6 +11,9 @@ services:
       - "./:/app/"
       - /app/vendor # Use dependencies installed by composer during image building.
                     # Remove the above line to use the local `vendor` directory.
+      - /app/storage/logs
+      - /app/storage/images
+      - /app/storage/framework
     networks:
       - data-network
 
@@ -38,5 +44,23 @@ services:
     networks:
       - data-network
 
+  # Caddy for reverse proxy so that gatekeeper can connect over https
+  caddy:
+      image: caddy:latest
+      ports:
+        - "443:443"
+      volumes:
+        - ./Caddyfile:/etc/caddy/Caddyfile
+        - caddy_data:/data
+        - caddy_config:/config
+      networks:
+        - data-network
+      depends_on:
+        - app
+
 networks:
   data-network: {}
+
+volumes:
+  caddy_data: {}
+  caddy_config: {}
