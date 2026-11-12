@@ -33,9 +33,11 @@
                         <td>{{ $request_user->get_name() }}</td>
                         <td>{{ $new_request->created_at->diffForHumans() }}</td>
                         <td>
+                           @if($gatekeeper->is_active_trainer())
                            <button class="btn btn-success btn-sm pass_button" id="btnpass{{ $new_request->id }}" role="button"><i class="far fa-check-circle"></i> Pass & Authorize</button>&nbsp;&nbsp;
                            <button class="btn btn-danger btn-sm fail_button" id="btnfail{{ $new_request->id }}" role="button"><i class="far fa-frown"></i> Did Not Finish</button>&nbsp;&nbsp;
                            <button class="btn btn-primary btn-sm cancel_button" id="btncancel{{ $new_request->id }}" role="button"><i class="fas fa-ban"></i> Cancel Request</button>
+                           @endif
                         </td>
                      </tr>
                   @endforeach
@@ -125,12 +127,13 @@
             success: function(result){
                if (result.status == 'success') {
                   $(button_id).replaceWith('<span class="btn btn-success btn-sm"><i class="far fa-check-circle"></i> Cancelled</span>');
+                  $(row_id).find('td').delay(600).fadeOut('slow', function(here){
+                     $(row_id).remove();
+                  });
                } else if (result.status == 'error') {
+                  // the request was not changed, so leave its row on the page
                   $(button_id).replaceWith('<span class="btn btn-danger btn-sm"><i class="fas fa-ban"></i> Error</span>');
                }
-               $(row_id).find('td').delay(600).fadeOut('slow', function(here){
-                  $(row_id).remove();
-               });
             }});
          });
 
@@ -144,16 +147,18 @@
 
          jQuery.ajax({
             url: "{{ url('/teams/training_pass/') }}" + '/' + request_id,
-            method: 'get',
+            method: 'post',
+            data: { _token: '{{ csrf_token() }}' },
             success: function(result){
                if (result.status == 'success') {
                   $(button_id).replaceWith('<span class="btn btn-success btn-sm"><i class="far fa-check-circle"></i> Request Complete</span>');
+                  $(row_id).find('td').delay(600).fadeOut('slow', function(here){
+                     $(row_id).remove();
+                  });
                } else if (result.status == 'error') {
+                  // the request was not changed, so leave its row on the page
                   $(button_id).replaceWith('<span class="btn btn-danger btn-sm"><i class="fas fa-ban"></i> Error</span>');
                }
-               $(row_id).find('td').delay(600).fadeOut('slow', function(here){
-                  $(row_id).remove();
-               });
             }});
          });
 
@@ -167,16 +172,18 @@
 
          jQuery.ajax({
             url: "{{ url('/teams/training_fail/') }}" + '/' + request_id,
-            method: 'get',
+            method: 'post',
+            data: { _token: '{{ csrf_token() }}' },
             success: function(result){
                if (result.status == 'success') {
                   $(button_id).replaceWith('<span class="btn btn-success btn-sm"><i class="far fa-check-circle"></i> Request Complete</span>');
+                  $(row_id).find('td').delay(600).fadeOut('slow', function(here){
+                     $(row_id).remove();
+                  });
                } else if (result.status == 'error') {
+                  // the request was not changed, so leave its row on the page
                   $(button_id).replaceWith('<span class="btn btn-danger btn-sm"><i class="fas fa-ban"></i> Error</span>');
                }
-               $(row_id).find('td').delay(600).fadeOut('slow', function(here){
-                  $(row_id).remove();
-               });
             }});
          });
 

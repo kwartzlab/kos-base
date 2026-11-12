@@ -202,7 +202,7 @@
          <div class="card-body">
          @if($gatekeeper->shared_auth == 0)
 
-               @if($gatekeeper->is_trainer())
+               @if($gatekeeper->is_active_trainer())
 
                <form method="POST" action="/gatekeepers/authorize">
 
@@ -246,7 +246,7 @@
                               <td>{{ $gkauth->created_at->diffForHumans() }}</td>
                               <td>
                                  <a href="/members/{{ $gkauth->user->id }}/profile/" class="btn btn-primary btn-sm" id="btnprofile" role="button"><i class="fas fa-user"></i>&nbsp;&nbsp;Profile</a>&nbsp;&nbsp;
-                                 @if($gatekeeper->is_trainer())
+                                 @if($gatekeeper->is_active_trainer())
                                     <button class="btn btn-danger btn-sm revoke_button" data-record-id="{{ $gkauth->id }}" data-record-title="{{ $gkauth->user->get_name() }}" data-toggle="modal" data-target="#confirm-delete-authorization"><i class="fas fa-ban"></i> Revoke</button>
                                  @endif
                               </td>

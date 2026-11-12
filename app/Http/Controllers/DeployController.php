@@ -13,6 +13,13 @@ class DeployController extends Controller
         $githubPayload = $request->getContent();
         $githubHash = $request->header('X-Hub-Signature-256');
         $localToken = config('app.deploy_secret');
+
+        // fail closed: with no secret configured the signature is forgeable, so never deploy
+        if ((! is_string($localToken)) || ($localToken === '') || (! is_string($githubHash))) {
+            Log::warning('Deploy webhook refused: missing deploy secret or signature.');
+            abort(403);
+        }
+
         $localHash = 'sha256='.hash_hmac('sha256', $githubPayload, $localToken, false);
         if (hash_equals($githubHash, $localHash)) {
             $root_path = base_path();
@@ -32,6 +39,8 @@ class DeployController extends Controller
                 echo $buffer;
                 Log::info($buffer);
             });
+        } else {
+            abort(403);
         }
     }
 }

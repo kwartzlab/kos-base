@@ -64,6 +64,22 @@ class Gatekeeper extends Model implements Auditable
         }
     }
 
+    // determines if a user (default: the current user) is an approved trainer for this gatekeeper.
+    // A trainer assignment that is still awaiting approval does not count.
+    public function is_active_trainer($user_id = 0)
+    {
+        if ($user_id == 0) {
+            $user_id = \Auth::user()->id;
+        }
+
+        return TeamAssignment::where([
+            'gatekeeper_id' => $this->id,
+            'user_id' => $user_id,
+            'team_role' => 'trainer',
+            'status' => 'active',
+        ])->exists();
+    }
+
     // determines if current user is a maintainer for this gatekeeper
     public function is_maintainer()
     {
