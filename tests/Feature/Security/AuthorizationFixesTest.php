@@ -598,6 +598,50 @@ class AuthorizationFixesTest extends TestCase
     }
 
     /**
+     * An application arrives with a record id or an email that is not the kind of value the form
+     * sends: a list instead of a single value, an id that is not a number, or an email that is not
+     * an address. Run once per case, for a returning applicant and for a new one.
+     *
+     * Why: asked for in review of the fix. Both values come straight from the browser and are used
+     * to look up and match a member record, so their shape must be checked first. Each case must be
+     * refused as an ordinary form error (not a crash), the former member's record must be unchanged
+     * and no new account may be created.
+     *
+     * @dataProvider malformedApplications
+     */
+    public function test_an_application_with_a_malformed_record_id_or_email_is_refused(string $case, string $fieldInError)
+    {
+        $victim = User::factory()->create(['status' => 'inactive', 'first_name' => 'Victor', 'email' => 'victor@example.com']);
+        $passwordBefore = $victim->password;
+
+        $overrides = [
+            'returning, email is a list' => ['user_id' => $victim->id, 'email' => ['victor@example.com']],
+            'returning, email is not an address' => ['user_id' => $victim->id, 'email' => 'not-an-address'],
+            'returning, record id is a list' => ['user_id' => [$victim->id], 'email' => 'victor@example.com'],
+            'returning, record id is not a number' => ['user_id' => $victim->id.' or 1=1', 'email' => 'victor@example.com'],
+            'new applicant, email is not an address' => ['email' => 'not-an-address'],
+        ][$case];
+
+        $this->submitApplication($overrides)->assertStatus(302)->assertSessionHasErrors($fieldInError);
+
+        $victim->refresh();
+        $this->assertSame(['Victor', 'inactive', $passwordBefore], [$victim->first_name, $victim->status, $victim->password]);
+        $this->assertFalse(User::where('first_name', 'Mallory')->exists());
+    }
+
+    // each malformed application, and the form field the error must be reported on
+    public function malformedApplications(): array
+    {
+        return [
+            'returning, email is a list' => ['returning, email is a list', 'email'],
+            'returning, email is not an address' => ['returning, email is not an address', 'email'],
+            'returning, record id is a list' => ['returning, record id is a list', 'user_id'],
+            'returning, record id is not a number' => ['returning, record id is not a number', 'user_id'],
+            'new applicant, email is not an address' => ['new applicant, email is not an address', 'email'],
+        ];
+    }
+
+    /**
      * A former member or abandoned applicant applies again with their own email (typed with
      * different capital letters), run once per status that is allowed to be re-used.
      *

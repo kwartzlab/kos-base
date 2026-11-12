@@ -303,7 +303,14 @@ class FormsController extends Controller
                     // own: only a withdrawn or abandoned record whose email matches the application may be re-used.
                     $user_id = 0;
                     if (($request->has('user_id')) && ($request->input('user_id') > 0)) {
-                        $returning_user = $this->returning_applicant($request->input('user_id'), $request->input('email'));
+                        // check the shape of both values before either is used to look up or match a record:
+                        // the id must be a whole number and the email a single, well-formed address
+                        $returning = $request->validate([
+                            'user_id' => 'integer',
+                            'email' => 'required|string|email|max:255',
+                        ]);
+
+                        $returning_user = $this->returning_applicant((int) $returning['user_id'], $returning['email']);
                         if ($returning_user == null) {
                             throw ValidationException::withMessages([
                                 'email' => 'That member record cannot be re-used for a new application. Please contact the Board.',
@@ -324,11 +331,11 @@ class FormsController extends Controller
 
                     if ($user_id > 0) {
                         $validation_list = array_merge($validation_list, [
-                            'email' => 'required',
+                            'email' => 'required|string|email|max:255',
                         ]);
                     } else {
                         $validation_list = array_merge($validation_list, [
-                            'email' => 'required|unique:users',
+                            'email' => 'required|string|email|max:255|unique:users',
                         ]);
                     }
                     break;
