@@ -513,15 +513,13 @@ class GatekeepersController extends Controller
         // get gatekeeper ID from request
         $gatekeeper = \App\Models\Gatekeeper::find($request->input('gatekeeper_id'));
 
-        $team = $gatekeeper->team()->first();
-        if ($team == null) {
-            $has_team = false;
-        } else {
-            $has_team = true;
+        if ($gatekeeper == null) {
+            abort(404);
         }
 
-        // ensure user actually has access
-        if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_member()))) {
+        // ensure user actually has access: gatekeeper managers, or an approved trainer for this gatekeeper
+        // (being a member of the team that owns the gatekeeper is not enough)
+        if ((\Gate::allows('manage-gatekeepers')) || ($gatekeeper->is_active_trainer())) {
 
             // make sure authorization isn't already in there
             $authorization = \App\Models\Authorization::where(['gatekeeper_id' => $gatekeeper->id, 'user_id' => request('user_id')])->get();
@@ -541,24 +539,22 @@ class GatekeepersController extends Controller
 
             return redirect('/gatekeepers/'.$gatekeeper->id.'/dashboard')->with($message_type, $message);
         }
+
+        $message = 'You do not have access to that resource.';
+
+        return redirect('/')->with('error', $message);
     }
 
     // de-authorizes a user from a gatekeeper
     public function revoke_auth($auth_id)
     {
         $auth_record = \App\Models\Authorization::find($auth_id);
-        $gatekeeper = $auth_record->gatekeeper()->first();
-
-        $team = $gatekeeper->team()->first();
-        if ($team == null) {
-            $has_team = false;
-        } else {
-            $has_team = true;
-        }
+        $gatekeeper = ($auth_record != null) ? $auth_record->gatekeeper()->first() : null;
 
         if (($auth_record != null) && ($gatekeeper != null)) {
-            // ensure managing user has permission to do this
-            if ((\Gate::allows('manage-gatekeepers')) || (($has_team) && ($team->is_member()))) {
+            // ensure managing user has permission to do this: gatekeeper managers, or an approved trainer
+            // for this gatekeeper (being a member of the team that owns the gatekeeper is not enough)
+            if ((\Gate::allows('manage-gatekeepers')) || ($gatekeeper->is_active_trainer())) {
                 $auth_record->delete();
 
                 return response()->json(['status' => 'success', 'message' => 'Auth Revoked']);

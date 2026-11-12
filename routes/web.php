@@ -132,8 +132,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teams/training', [TeamsController::class, 'training']);
     Route::get('/teams/training_request/{gatekeeper}', [TeamsController::class, 'training_request']);
     Route::get('/teams/training_cancel/{request_id}', [TeamsController::class, 'training_cancel']);
-    Route::get('/teams/training_pass/{request_id}', [TeamsController::class, 'training_pass']);
-    Route::get('/teams/training_fail/{request_id}', [TeamsController::class, 'training_fail']);
+    Route::post('/teams/training_pass/{request_id}', [TeamsController::class, 'training_pass']);
+    Route::post('/teams/training_fail/{request_id}', [TeamsController::class, 'training_fail']);
     Route::get('/teams/{team_id}/requests/{request_type}', [TeamsController::class, 'requests']);
     Route::get('/teams/{team_id}/dashboard', [TeamsController::class, 'dashboard']);
     Route::resource('teams', TeamsController::class);

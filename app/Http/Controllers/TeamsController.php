@@ -107,12 +107,30 @@ class TeamsController extends Controller
         }
     }
 
+    // is the current user an approved trainer for the gatekeeper this training request is for?
+    private function is_trainer_for_request($training_request)
+    {
+        if ($training_request == null) {
+            return false;
+        }
+
+        $gatekeeper = $training_request->gatekeeper()->first();
+
+        return ($gatekeeper != null) && ($gatekeeper->is_active_trainer());
+    }
+
+    // may the current user edit this team? (team managers, or a lead of this team)
+    private function can_edit_team($team)
+    {
+        return ($team != null) && ((\Auth::user()->can('manage-teams')) || ($team->is_lead()));
+    }
+
     public function training_cancel($request_id)
     {
         $training_request = \App\Models\TeamRequest::find($request_id);
 
         // ensure it's the user's request (or is a trainer for the gatekeeper)
-        if (($training_request->user_id == \Auth::user()->id) || ($training_request->team()->is_trainer())) {
+        if (($training_request != null) && (($training_request->user_id == \Auth::user()->id) || ($this->is_trainer_for_request($training_request)))) {
             $training_request->status = 'cancelled';
             $training_request->save();
 
@@ -126,8 +144,8 @@ class TeamsController extends Controller
     {
         $training_request = \App\Models\TeamRequest::find($request_id);
 
-        // ensure it's the user's request (or is a trainer for the gatekeeper)
-        if (($training_request->user_id == \Auth::user()->id) || ($training_request->team()->is_trainer())) {
+        // only an approved trainer for the gatekeeper may pass a request (never the requester themselves)
+        if ($this->is_trainer_for_request($training_request)) {
             $training_request->status = 'completed';
             $training_request->save();
 
@@ -152,8 +170,8 @@ class TeamsController extends Controller
     {
         $training_request = \App\Models\TeamRequest::find($request_id);
 
-        // ensure it's the user's request (or is a trainer for the gatekeeper)
-        if (($training_request->user_id == \Auth::user()->id) || ($training_request->team()->is_trainer())) {
+        // only an approved trainer for the gatekeeper may fail a request
+        if ($this->is_trainer_for_request($training_request)) {
             $training_request->status = 'failed';
             $training_request->save();
 
@@ -169,7 +187,8 @@ class TeamsController extends Controller
 
         if ($team != null) {
             if ($request_type == 'training') {
-                // ensure user is a trainer for this team
+                // ensure user is a trainer for this team. A trainer still awaiting approval may see the
+                // list of requests, but the page only offers the action buttons to an approved trainer.
                 if (($team->is_trainer()) || ($team->is_lead())) {
                     $gatekeepers = $team->gatekeepers()->where('status', 'enabled')->orderby('name')->get();
                     $request_status = config('kwartzlabos.team_request_status');
@@ -278,6 +297,12 @@ class TeamsController extends Controller
     {
         $team = \App\Models\Team::find($id);
 
+        if (! $this->can_edit_team($team)) {
+            $message = 'You do not have access to that resource.';
+
+            return redirect('/teams')->with('error', $message);
+        }
+
         // get all users
         $user_list = [];
         foreach (\App\Models\User::where('status', 'active')->orderby('first_preferred')->get() as $user) {
@@ -311,12 +336,18 @@ class TeamsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // load existing record
+        $team = \App\Models\Team::find($id);
+
+        if (! $this->can_edit_team($team)) {
+            $message = 'You do not have access to that resource.';
+
+            return redirect('/teams')->with('error', $message);
+        }
+
         $request->validate([
             'name' => 'required',
         ]);
-
-        // load existing record and update
-        $team = \App\Models\Team::find($id);
 
         $team->name = $request->input('name');
         $team->description = $request->input('description');
@@ -326,6 +357,12 @@ class TeamsController extends Controller
 
         // process team assignment changes
         foreach (config('kwartzlabos.team_roles') as $team_role => $team_data) {
+            // only allow team leads to be changed by team managers. The edit form does not show the
+            // lead field to anyone else, so skipping it here also stops a lead's save from removing every lead.
+            if (($team_data['is_admin']) && (! \Auth::user()->can('manage-teams'))) {
+                continue;
+            }
+
             // prevent trainers and maintainers from being assigned (requires approval and gatekeeper assignment)
             if ((! $team_data['is_trainer']) && (! $team_data['is_maintainer'])) {
                 if ($request->has($team_role)) {

@@ -7,6 +7,7 @@ use App\Services\Slack\KosBot;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class FormsController extends Controller
 {
@@ -242,6 +243,33 @@ class FormsController extends Controller
         return $string;
     }
 
+    // statuses whose record a returning applicant may re-use
+    private const RETURNING_APPLICANT_STATUSES = [
+        \App\Models\UserStatus::STATUS_INACTIVE,
+        \App\Models\UserStatus::STATUS_INACTIVE_ABANDONED,
+        \App\Models\UserStatus::STATUS_APPLICANT_ABANDONED,
+    ];
+
+    // Returns the existing user a new application may re-use, or null.
+    // TODO: interim narrowing of the overwrite issue only. Any logged-in member who knows a former member's email can still
+    // re-open that record; the returning-applicant flow is flagged for redesign after the Laravel 13 upgrade.
+    private function returning_applicant($user_id, $email)
+    {
+        $user = \App\Models\User::find($user_id);
+
+        if ($user == null) {
+            return null;
+        }
+        if (! in_array($user->status, self::RETURNING_APPLICANT_STATUSES, true)) {
+            return null;
+        }
+        if (strcasecmp(trim((string) $email), trim((string) $user->email)) !== 0) {
+            return null;
+        }
+
+        return $user;
+    }
+
     // saves a form submission
     public function save(Request $request)
     {
@@ -271,10 +299,24 @@ class FormsController extends Controller
             switch ($form->special_form) {
 
                 case 'new_user_app':
+                    // A returning applicant re-uses their old record. Never trust the submitted user_id on its
+                    // own: only a withdrawn or abandoned record whose email matches the application may be re-used.
+                    $user_id = 0;
                     if (($request->has('user_id')) && ($request->input('user_id') > 0)) {
-                        $user_id = $request->user_id;
-                    } else {
-                        $user_id = 0;
+                        // check the shape of both values before either is used to look up or match a record:
+                        // the id must be a whole number and the email a single, well-formed address
+                        $returning = $request->validate([
+                            'user_id' => 'integer',
+                            'email' => 'required|string|email|max:255',
+                        ]);
+
+                        $returning_user = $this->returning_applicant((int) $returning['user_id'], $returning['email']);
+                        if ($returning_user == null) {
+                            throw ValidationException::withMessages([
+                                'email' => 'That member record cannot be re-used for a new application. Please contact the Board.',
+                            ]);
+                        }
+                        $user_id = $returning_user->id;
                     }
 
                     $validation_list = array_merge($validation_list, [
@@ -286,19 +328,17 @@ class FormsController extends Controller
                         'postal' => 'required',
                         'photo' => 'required',
                     ]);
-                    break;
 
                     if ($user_id > 0) {
                         $validation_list = array_merge($validation_list, [
-                            'email' => 'required',
+                            'email' => 'required|string|email|max:255',
                         ]);
-                        break;
                     } else {
                         $validation_list = array_merge($validation_list, [
-                            'email' => 'required|unique:users',
+                            'email' => 'required|string|email|max:255|unique:users',
                         ]);
-                        break;
                     }
+                    break;
 
             }
 
