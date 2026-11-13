@@ -16,9 +16,9 @@ class ReportsController extends Controller
                 'permission' => 'view-user-reports',
             ],
             [
-                'name' => 'Member Activity',
-                'description' => 'A view of all gatekeeper authentications in the database by member.',
-                'route' => route('reports.member-activity-report'),
+                'name' => 'Gatekeeper Activity',
+                'description' => 'A view of all gatekeeper authentications by time base.',
+                'route' => route('reports.gatekeeper-activity-report'),
                 'permission' => 'view-gatekeeper-reports',
             ],
         ];
@@ -58,9 +58,9 @@ class ReportsController extends Controller
         ]);
     }
 
-    public function member_activity_report(Request $request)
+    public function gatekeeper_activity_report(Request $request)
     {
-        $report_name = 'Member Activity Report';
+        $report_name = 'Gatekeeper Activity Report';
 
         if ($request->has('fromDate', 'toDate')) {
             $validated = $request->validate([
@@ -78,9 +78,6 @@ class ReportsController extends Controller
             $fields = [
                 ['name' => 'Timestamp', 'callback' => function ($authentication) {
                     return $authentication->lock_in;
-                }],
-                ['name' => 'Name', 'callback' => function ($authentication) {
-                    return ! is_null($authentication->user) ? $authentication->user->get_name() : '';
                 }],
                 ['name' => 'Gatekeeper', 'callback' => function ($authentication) {
                     return ! is_null($authentication->gatekeeper) ? $authentication->gatekeeper->name : '';
