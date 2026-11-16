@@ -32,6 +32,11 @@ trait UserStatusTrait
             // grab status that would be in effect now
             $current_status = $user->current_status()->get()->first();
 
+            // nothing to compare against if the user has no status history
+            if ($current_status == null) {
+                return null;
+            }
+
             // update user if status field is inconsistent with computed current_status
             if ($user->status != $current_status->status) {
                 $prev_status = $user->status;
@@ -43,7 +48,7 @@ trait UserStatusTrait
                     $extra_tasks = '(New Member Induction)';
                     $user->date_admitted = $current_status->created_at;
                 }
-                if (($current_status->status == 'inactive') || ($current_status->status == 'inactive-abandoned') || ($current_status->status == 'terminated') || ($current_status->status == 'terminated')) {
+                if (in_array($current_status->status, ['inactive', 'inactive-abandoned', 'inactive-in-memoriam', 'terminated'])) {
                     $user->date_withdrawn = $current_status->created_at;
                 }
 
