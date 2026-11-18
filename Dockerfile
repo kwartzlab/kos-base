@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 # Install core packages.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
