@@ -18,7 +18,7 @@ return [
     'entrance_gatekeepers' => [11],             // which gatekeepers are building entrances (used for metrics)
 
     'membership_coordinator' => [
-        'name' => 'Laura Schuhbauer',
+        'name' => 'Carlo Isola',
     ],
     'membership_app' => [                       // membership app email configuration for admin and members mailings
         'admin' => [
