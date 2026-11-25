@@ -53,6 +53,13 @@ class HttpsProtocolTest extends TestCase
         );
     }
 
+    /** $_SERVER is shared by every test in the run, so the HTTPS flag set above must not leak out. */
+    protected function tearDown(): void
+    {
+        unset($_SERVER['HTTPS']);
+        parent::tearDown();
+    }
+
     public function provideNonProductionEnvironments(): array
     {
         return [

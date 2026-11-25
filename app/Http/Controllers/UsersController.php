@@ -141,12 +141,17 @@ class UsersController extends Controller
         $user = \App\Models\User::find($id);
 
         if ($user == null) {
-            return view('errors.403', null, 403);
+            abort(403);
         }
 
         if ($request->isMethod('post')) {
             if (! $request->has('status_type')) {
-                return view('errors.403', null, 403);
+                abort(403);
+            }
+
+            // refuse status types the switch below does not handle, so nothing is silently skipped
+            if (! in_array($request->input('status_type'), ['active', 'inactive', 'inactive-abandoned', 'inactive-in-memoriam', 'hiatus', 'suspended', 'terminated', 'applicant-abandoned', 'applicant-denied'])) {
+                abort(422);
             }
 
             // create new status update
@@ -227,7 +232,7 @@ class UsersController extends Controller
                 $status = \App\Models\UserStatus::find($request->input('status_id'));
 
                 // ensure this update is related to supplied user and was not created by kOS (not deletable)
-                if (($status->user_id == $user->id) && ($status->updated_by > 0)) {
+                if (($status != null) && ($status->user_id == $user->id) && ($status->updated_by > 0)) {
                     $status->delete();
                 } else {
                     return response()->json(['error' => 'error']);

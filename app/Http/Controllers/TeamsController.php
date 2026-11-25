@@ -38,6 +38,10 @@ class TeamsController extends Controller
             $team_assignments = \App\Models\TeamAssignment::where('status', 'new')->orderby('gatekeeper_id')->get();
 
             return view('teams.manage', compact('teams', 'team_assignments'));
+        } else {
+            $message = 'You do not have access to that resource.';
+
+            return redirect('/')->with('error', $message);
         }
     }
 
@@ -219,6 +223,10 @@ class TeamsController extends Controller
             }
 
             return view('teams.create', ['user_list' => $user_list]);
+        } else {
+            $message = 'You do not have access to that resource.';
+
+            return redirect('/')->with('error', $message);
         }
     }
 

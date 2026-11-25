@@ -23,7 +23,7 @@ class User extends Authenticatable implements AuditableContract
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'password', 'status', 'acl', 'member_id', 'phone', 'address', 'city', 'province', 'postal', 'photo', 'notes', 'pronouns',
+        'first_name', 'last_name', 'first_preferred', 'last_preferred', 'email', 'password', 'status', 'acl', 'member_id', 'phone', 'address', 'city', 'province', 'postal', 'photo', 'notes', 'pronouns', 'date_applied',
     ];
 
     protected $casts = [
